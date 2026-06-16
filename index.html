@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>гетто симулятор 5.0: зимняя хрущевка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>гетто симулятор 6.0: 3d хрущевка</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
@@ -19,27 +19,31 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            position: relative;
-            padding: 20px;
+            padding: 10px;
             box-sizing: border-box;
             user-select: none;
+            touch-action: manipulation;
         }
         .main-menu {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 500px;
         }
         .menu-btn {
+            flex: 1;
             background-color: #202428;
             color: #8c969e;
             border: 1px solid #31373e;
-            padding: 12px 24px;
+            padding: 10px 5px;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 11px;
+            text-align: center;
         }
         .menu-btn.active {
             background-color: #00cc52;
@@ -48,45 +52,46 @@
         }
         .casino-card {
             background-color: #141619;
-            padding: 25px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             text-align: center;
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
             border: 1px solid #1f2326;
+            box-sizing: border-box;
         }
         .balance-main {
             color: #4ef060;
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 20px;
+            margin-bottom: 3px;
         }
         .balance-letters {
             color: #7a828a;
-            font-size: 12px;
-            line-height: 1.4;
-            margin-bottom: 15px;
+            font-size: 11px;
+            margin-bottom: 10px;
         }
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
             background: #0b0c0d;
-            padding: 12px;
+            padding: 8px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .stat-bar-container {
             text-align: left;
         }
         .stat-label {
-            font-size: 11px;
+            font-size: 10px;
             color: #8c969e;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             text-transform: uppercase;
         }
         .bar-bg {
             background: #202428;
-            height: 12px;
+            height: 10px;
             border-radius: 4px;
             overflow: hidden;
             border: 1px solid #31373e;
@@ -102,55 +107,78 @@
         .fill-poop { background: #8a6d3b; }
         .fill-cpu { background: #00cc52; }
 
-        /* 8-битный экран от первого лица */
-        .view-3d-retro {
+        /* НАСТОЯЩЕЕ 3D ОКНО РЭЙКАСТИНГА */
+        .view-3d-container {
             width: 100%;
-            height: 180px;
+            height: 200px;
             background-color: #000;
-            border: 4px solid #31373e;
+            border: 3px solid #31373e;
             border-radius: 6px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             position: relative;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         .retro-canvas {
             image-rendering: pixelated;
             width: 100%;
             height: 100%;
-            background: #111;
+            display: block;
         }
         .location-badge {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(0,0,0,0.75);
-            padding: 4px 8px;
+            top: 6px;
+            left: 6px;
+            background: rgba(0,0,0,0.8);
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             color: #00ff55;
             border: 1px solid #31373e;
+            z-index: 10;
+        }
+
+        /* Мобильный геймпад управления */
+        .mobile-gamepad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 180px;
+            margin: 10px auto 0 auto;
+        }
+        .pad-btn {
+            background: #2a2f35;
+            border: 2px solid #3d454e;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .pad-btn:active {
+            background: #00cc52;
+            color: #000;
         }
 
         .sasun-spec, .phone-spec, .time-spec {
             background: #1c2e4a;
             border: 2px dashed #0051ff;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             text-align: left;
-            font-size: 12px;
+            font-size: 11px;
         }
         .phone-spec { background: #221c2e; border-color: #9b59b6; }
-        .time-spec { background: #2e281c; border-color: #e67e22; text-align: center; font-size: 15px; color: #ff9f43; }
+        .time-spec { background: #2e281c; border-color: #e67e22; text-align: center; font-size: 13px; color: #ff9f43; padding: 4px; }
 
         .game-screen { display: none; }
         .game-screen.active { display: block; }
         
-        select, input {
+        select {
             background-color: #202428;
             color: #ffffff;
             border: 1px solid #31373e;
@@ -160,127 +188,128 @@
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
             outline: none;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .btn-action {
             background-color: #00cc52;
             color: #000000;
             border: none;
-            padding: 14px;
+            padding: 12px;
             border-radius: 30px;
             width: 100%;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .btn-action:hover { background-color: #00ff66; }
         .btn-action:disabled { background-color: #444 !important; color: #888 !important; cursor: not-allowed; }
         
         .student-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 5px;
+            margin-bottom: 10px;
         }
         .btn-sub {
             background: #202428;
             color: #fff;
             border: 1px solid #31373e;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             text-transform: uppercase;
         }
-        .btn-sub:hover { background: #31373e; }
         .btn-sub:disabled { background: #151719; color: #555; border-color: #222; cursor: not-allowed; }
 
         .bankrupt-zone {
             background: #291c1c;
             border: 2px dashed #ff3333;
-            padding: 40px 20px;
+            padding: 20px 10px;
             border-radius: 8px;
             color: #ff5555;
             text-transform: uppercase;
-            font-size: 18px;
-            line-height: 1.6;
+            font-size: 14px;
         }
         
         #poop-game-overlay, #bsod-overlay, .shop-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; flex-direction: column;
         }
-        #bsod-overlay { background: #0000aa; color: #fff; font-family: monospace; font-weight: normal; align-items: flex-start; padding: 40px; box-sizing: border-box; }
-        .shop-modal { background: rgba(0,0,0,0.85); z-index: 998; }
-        .shop-content { background: #141619; border: 2px solid #9b59b6; padding: 25px; border-radius: 12px; width: 400px; text-align: center; }
+        #bsod-overlay { background: #0000aa; color: #fff; font-family: monospace; font-weight: normal; align-items: flex-start; padding: 20px; box-sizing: border-box; }
+        .shop-content { background: #141619; border: 2px solid #9b59b6; padding: 15px; border-radius: 12px; width: 90%; max-width: 360px; text-align: center; }
         
         .face-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 10px;
         }
         .face-option {
-            background: #202428; border: 2px solid #31373e; border-radius: 6px; padding: 5px; font-size: 24px; cursor: pointer;
+            background: #202428; border: 2px solid #31373e; border-radius: 6px; padding: 5px; font-size: 20px; cursor: pointer;
         }
         .face-option.selected { border-color: #00cc52; background: #163516; }
-        .secret-alert { position: absolute; top: 10px; left: 10px; color: #ff3333; font-size: 11px; opacity: 0; transition: opacity 0.3s; }
+        .secret-alert { position: absolute; top: 5px; left: 5px; color: #ff3333; font-size: 10px; opacity: 0; transition: opacity 0.3s; z-index: 100; }
         
-        .hud-face { font-size: 20px; background: #202428; border: 1px solid #31373e; border-radius: 4px; padding: 2px 6px; display: inline-block; vertical-align: middle; margin-right: 5px; }
+        .hud-face { font-size: 16px; background: #202428; border: 1px solid #31373e; border-radius: 4px; padding: 1px 4px; display: inline-block; vertical-align: middle; margin-right: 4px; }
+        .inv-display { background: #0b0c0d; padding: 5px; border-radius: 4px; font-size: 11px; margin-top: 5px; text-align: left; border: 1px dashed #31373e; }
     </style>
 </head>
 <body>
 
 <div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
+<!-- экран больницы -->
+<div id="hospital-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#201414; z-index:1000; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box;">
+    <h1 style="color:#ff3333; text-transform:uppercase; margin:0;">🚑 ТЫ ПОПАЛ В БОЛЬНИЦУ!</h1>
+    <p id="hospital-reason" style="font-size:13px; margin:15px 0; color:#ccc;"></p>
+    <p style="font-size:11px; color:#888;">Врачи содрали деньги за капельницу, выписали анальгин и вернули тебя домой.</p>
+    <button class="btn-action" style="max-width:250px;" onclick="exitHospital()">Выйти из палаты</button>
+</div>
+
 <!-- синий экран сасуна -->
 <div id="bsod-overlay">
-    <p>A problem has been detected and Windows has been shut down to prevent damage to your computer.</p>
+    <p>A problem has been detected and Windows has been shut down...</p>
     <p>DRIVER_IRQL_NOT_LESS_OR_EQUAL (SASUN_XP_LAPTOP_EXPLODE)</p>
-    <p>Technical Information:</p>
-    <p>*** STOP: 0x000000D1 (0x0000000C, 0x00000002, 0x00000000, 0xF7312AE4)</p>
-    <p>*** sasun_cooler.sys - Address F7312AE4 base at F7312000</p>
-    <br>
-    <button class="btn-action" style="background:#ff3333; color:#fff; width:auto; border-radius:6px; font-family:monospace;" onclick="rebootSasun()">ПИЗДАНУТЬ ПО КОРПУСУ (ПЕРЕЗАГРУЗКА)</button>
+    <p>*** STOP: 0x000000D1</p>
+    <button class="btn-action" style="background:#ff3333; color:#fff; width:auto; border-radius:6px; font-family:monospace;" onclick="rebootSasun()">УДАРЯТЬ ПО КОРПУСУ</button>
 </div>
 
 <!-- кте мини игра если клапан сорвало -->
 <div id="poop-game-overlay">
-    <h2 style="color: #8a6d3b; text-transform: uppercase; margin:0 0 10px 0;">КЛАПАН НЕ ДЕРЖИТ!</h2>
-    <p style="font-size: 12px; color: #aaa; margin:0 0 15px 0;">жми пробел когда красный ползунок будет внутри зеленой зоны!</p>
-    <div style="width: 300px; height: 30px; background: #222; border: 3px solid #fff; position: relative; border-radius: 6px;">
-        <div style="position: absolute; top: 0; left: 120px; width: 40px; height: 100%; background: #00cc52;"></div>
+    <h2 style="color: #8a6d3b; text-transform: uppercase; margin:0 0 5px 0; font-size:16px;">КЛАПАН НЕ ДЕРЖИТ!</h2>
+    <p style="font-size: 10px; color: #aaa; margin:0 0 10px 0;">Жми кнопку на экране или Пробел внутри зеленой зоны!</p>
+    <div style="width: 260px; height: 25px; background: #222; border: 3px solid #fff; position: relative; border-radius: 6px;">
+        <div style="position: absolute; top: 0; left: 100px; width: 40px; height: 100%; background: #00cc52;"></div>
         <div id="qte-slider" style="position: absolute; top: 0; left: 0; width: 8px; height: 100%; background: #ff3333;"></div>
     </div>
-    <h1 style="margin-top: 20px; font-size: 24px; color: #fff;">ЖМИ ПРОБЕЛ!</h1>
+    <button class="btn-action" style="margin-top:15px; background:#fff; color:#000;" onclick="triggerQtePress()">ЖМЯК КЛАПАН!</button>
 </div>
 
 <!-- эдикладно маркетплейс -->
 <div id="shop-overlay" class="shop-modal">
     <div class="shop-content">
-        <h3 style="color:#9b59b6; text-transform:uppercase; margin-top:0; margin-bottom:15px;">📦 Маркетплейс "ЭдикЛадно"</h3>
-        <p style="font-size:12px; color:#aaa; margin-bottom:15px;">доставка до хрущевки занимает 3 игровых часа. можно промотать время сном на кровати.</p>
+        <h3 style="color:#9b59b6; text-transform:uppercase; margin-top:0; margin-bottom:10px; font-size:14px;">📦 Маркетплейс "ЭдикЛадно"</h3>
         
-        <div style="background:#202428; padding:10px; border-radius:6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-            <div style="text-align:left;"><b style="font-size:13px;">Сифон 6s (Б/У)</b><br><span style="font-size:11px; color:#8c969e;">дает х1.5 к заработку руками</span></div>
+        <div style="background:#202428; padding:8px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;"><b style="font-size:11px;">Сифон 6s (Б/У)</b><br><span style="font-size:9px; color:#8c969e;">дает х1.5 к заработку руками</span></div>
             <button class="btn-sub" style="color:#00cc52; border-color:#00cc52;" onclick="buyPhoneFromShop('сифон 6s', 4000)">4 000 р.</button>
         </div>
-        <div style="background:#202428; padding:10px; border-radius:6px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
-            <div style="text-align:left;"><b style="font-size:13px;">Сифон 15 ПроМагнат</b><br><span style="font-size:11px; color:#4ef060;">дает х3 к заработку везде</span></div>
+        <div style="background:#202428; padding:8px; border-radius:6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;"><b style="font-size:11px;">Сифон 15 ПроМагнат</b><br><span style="font-size:9px; color:#4ef060;">дает х3 к заработку везде</span></div>
             <button class="btn-sub" style="color:#00cc52; border-color:#00cc52;" onclick="buyPhoneFromShop('сифон 15 промагнат', 85000)">85 000 р.</button>
         </div>
-        <button class="btn-sub" style="width:100%;" onclick="closeShop()">выведи меня отсюда</button>
+        <button class="btn-sub" style="width:100%;" onclick="closeShop()">Выйти</button>
     </div>
 </div>
 
-<!-- кастомизация ебала и выбор роли -->
+<!-- старт -->
 <div class="casino-card" id="screen-start-choice">
-    <h2 style="color: #4ef060; margin-top:0; margin-bottom: 20px; text-transform: uppercase;">создание гетто-паспорта</h2>
+    <h2 style="color: #4ef060; margin-top:0; margin-bottom: 15px; text-transform: uppercase; font-size:16px;">создание гетто-паспорта</h2>
     
     <span class="stat-label" style="display:block; text-align:left;">выбери лицо персонажа:</span>
     <div class="face-grid">
@@ -294,36 +323,45 @@
         <div class="face-option" onclick="selectFace(this, '🐗')">🐗</div>
     </div>
 
-    <span class="stat-label" style="display:block; text-align:left;">кто ты по жизни?</span>
+    <span class="stat-label" style="display:block; text-align:left;">выбери профессию жизни:</span>
     <select id="role-select">
-        <option value="bandit">бандит (+15% к оплате на черных делах)</option>
+        <option value="bandit">бандит (+15% к грабежам на улице)</option>
         <option value="mac">легенда фастфуда (быстрее жарит котлеты)</option>
         <option value="coder">кодер-самоучка (буст к написанию скриптов)</option>
+        <option value="courier">курьер самоката (буст за разнос заказов ногами)</option>
+        <option value="factory">заводчанин (стабильный хардкор на заводе)</option>
     </select>
     <button class="btn-action" style="margin-top: 10px;" onclick="initGame()">войти в хрущевку</button>
 </div>
 
 <!-- основной интерфейс -->
-<div id="main-ui" style="display: none; flex-direction: column; align-items: center;">
+<div id="main-ui" style="display: none; flex-direction: column; align-items: center; width:100%;">
     <div class="main-menu">
         <button class="menu-btn active" id="tab-casino" onclick="switchTab('casino')">казино</button>
-        <button class="menu-btn" id="tab-student" onclick="switchTab('student')">хрущевка и город</button>
+        <button class="menu-btn" id="tab-student" onclick="switchTab('student')">3d мир</button>
     </div>
 
     <div class="casino-card">
-        <div class="balance-container">
-            <div style="display:flex; justify-content:center; align-items:center; margin-bottom:5px;">
+        <div>
+            <div style="display:flex; justify-content:center; align-items:center; margin-bottom:3px;">
                 <span class="hud-face" id="hud-face-display">😎</span>
-                <span id="role-badge" style="font-size: 11px; color: #8c969e; text-transform: uppercase;"></span>
+                <span id="role-badge" style="font-size: 10px; color: #8c969e; text-transform: uppercase;"></span>
             </div>
             <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
             <div class="balance-letters" id="balance-letters-display">прописью: 0 руб.</div>
         </div>
 
-        <!-- 8-битный экран локации -->
-        <div class="view-3d-retro">
-            <div class="location-badge" id="loc-badge">комната в хрущевке</div>
-            <canvas id="retroCanvas" class="retro-canvas" width="120" height="60"></canvas>
+        <!-- 3D ЭКРАН ОТ ПЕРВОГО ЛИЦА -->
+        <div class="view-3d-container">
+            <div class="location-badge" id="loc-badge">Загрузка...</div>
+            <canvas id="retroCanvas" class="retro-canvas" width="160" height="120"></canvas>
+        </div>
+
+        <!-- Мобильные кнопки навигации в 3D пространстве -->
+        <div class="mobile-gamepad" id="pad-container" style="display:none;">
+            <div></div><div class="pad-btn" onclick="movePlayer(1)">↑</div><div></div>
+            <div class="pad-btn" onclick="rotatePlayer(-1)">←</div><div class="pad-btn" onclick="actionInteract3D()">🎯</div><div class="pad-btn" onclick="rotatePlayer(1)">→</div>
+            <div></div><div class="pad-btn" onclick="movePlayer(-1)">↓</div><div></div>
         </div>
 
         <div class="time-spec" id="time-display">🕒 Время: 12:00</div>
@@ -357,73 +395,83 @@
         <!-- СИМУЛЯТОР: ЗИМНЯЯ ХРУЩЕВКА И ЖИЗНЬ -->
         <div id="screen-student" class="game-screen">
             
-            <!-- навигация по локациям -->
-            <span class="stat-label" style="display:block; text-align:left; margin-bottom:5px;">перемещение (ногами):</span>
-            <div class="student-actions" style="margin-bottom:15px;">
-                <button class="btn-sub" id="nav-home" onclick="changeLocation('home')">🏠 Домой</button>
-                <button class="btn-sub" id="nav-street" onclick="changeLocation('street')">❄️ Улица (путь к унику)</button>
-                <button class="btn-sub" id="nav-mac" onclick="changeLocation('mac')">🍟 Макдак</button>
+            <span class="stat-label" style="display:block; text-align:left; margin-bottom:3px;">перемещение по локациям (ногами):</span>
+            <div class="student-actions">
+                <button class="btn-sub" id="nav-home" onclick="changeLocation('home')">🏠 Хрущ</button>
+                <button class="btn-sub" id="nav-street" onclick="changeLocation('street')">❄️ Улица</button>
+                <button class="btn-sub" id="nav-mac" onclick="changeLocation('mac')">🍟 Мак</button>
+                <button class="btn-sub" id="nav-shop" onclick="changeLocation('shop')">🛒 Магаз</button>
+                <button class="btn-sub" id="nav-factory" onclick="changeLocation('factory')">🏭 Завод</button>
                 <button class="btn-sub" id="nav-uni" onclick="changeLocation('uni')">🏫 Колледж</button>
             </div>
 
             <!-- интерактивный контекст локаций -->
-            <div style="background:#0b0c0d; padding:12px; border-radius:8px; margin-bottom:15px; border:1px solid #202428;">
+            <div style="background:#0b0c0d; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #202428;">
                 
                 <!-- дома -->
                 <div id="loc-content-home" class="loc-content">
-                    <p style="font-size:12px; color:#aaa; margin-top:0;">ты у себя в комнате. тут тепло и пахнет сыростью.</p>
                     <div class="student-actions">
-                        <button class="btn-sub" style="border-color:#00bcff; color:#00bcff;" onclick="actionSleepHome()">💤 Спать до 6:00</button>
+                        <button class="btn-sub" style="border-color:#00bcff; color:#00bcff;" onclick="actionSleepHome()">💤 Спать до утра</button>
                         <button class="btn-sub" onclick="actionGoToToilet()">🚽 Сходить в толчок</button>
-                        <button class="btn-sub" onclick="actionEatShawarma()">🌯 Заточить шаверму (-250р)</button>
                     </div>
+                    <div class="inv-display" id="inventory-display">Рюкзак еды: пуст</div>
                 </div>
 
-                <!-- улица / путь к унику -->
+                <!-- улица -->
                 <div id="loc-content-street" class="loc-content" style="display:none;">
-                    <p style="font-size:12px; color:#aaa; margin-top:0;" id="street-text">до колледжа идти 10 шагов по сугробам.</p>
-                    <div id="walk-controls">
-                        <button class="btn-action" style="background:#e67e22; color:#000;" id="btn-step" onclick="actionMakeStep()">👣 СДЕЛАТЬ ШАГ СКВОЗЬ СУГРОБ</button>
+                    <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;" id="street-text">до колледжа топать далеко сквозь сугробы.</p>
+                    <button class="btn-action" style="background:#e67e22; color:#000;" onclick="actionStreetWork()">👊 ГРАБИТЬ ПРОХОЖЕГО РУКАМИ</button>
+                </div>
+
+                <!-- макдак -->
+                <div id="loc-content-mac" class="loc-content" style="display:none;">
+                    <button class="btn-action" style="background:#ffcc00; color:#000;" onclick="actionWorkMac()">🍔 ЖАРИТЬ КОТЛЕТУ ВРУЧНУЮ</button>
+                    <button class="btn-sub" style="width:100%;" onclick="actionStealFood()">🍟 Спиздить наггетсы под столом</button>
+                </div>
+
+                <!-- супермаркет -->
+                <div id="loc-content-shop" class="loc-content" style="display:none;">
+                    <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;">Полки Пятерочки Белого Яра. Набери еды.</p>
+                    <div class="student-actions">
+                        <button class="btn-sub" onclick="buyFoodItem('Черствый батон', 40, 20)">🥖 Батон (40р, +20 сытость)</button>
+                        <button class="btn-sub" onclick="buyFoodItem('Дошик говяжий', 70, 45)">🍜 Дошик (70р, +45 сытость)</button>
+                        <button class="btn-sub" onclick="buyFoodItem('Пачка пельменей', 220, 85)">🥟 Пельмени (220р, +85 сытость)</button>
+                        <button class="btn-sub" style="color:#ffcc00;" onclick="actionEatShawarma()">🌯 Шавуха на месте (250р)</button>
                     </div>
                 </div>
 
-                <!-- макдак (работа) -->
-                <div id="loc-content-mac" class="loc-content" style="display:none;">
-                    <p style="font-size:12px; color:#aaa; margin-top:0;">кухня патнодальса. менеджер орет. работай руками!</p>
-                    <button class="btn-action" style="background:#ffcc00; color:#000;" id="btn-work-mac" onclick="actionWorkMac()">🍔 ПЕРЕВЕРНУТЬ КОТЛЕТУ (РАБОТАТЬ)</button>
-                    <div class="student-actions" style="margin-top:8px;">
-                        <button class="btn-sub" id="btn-steal-food" onclick="actionStealFood()">🍟 Спиздить наггетсы</button>
-                    </div>
+                <!-- завод -->
+                <div id="loc-content-factory" class="loc-content" style="display:none;">
+                    <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;">Гул станков. Работа для суровых мужчин.</p>
+                    <button class="btn-action" style="background:#7f8c8d; color:#fff;" onclick="actionWorkFactory()">🔧 КРУТИТЬ ВАЛ СТАНКА РУКАМИ</button>
                 </div>
 
                 <!-- колледж -->
                 <div id="loc-content-uni" class="loc-content" style="display:none;">
-                    <p style="font-size:12px; color:#aaa; margin-top:0;" id="uni-text">пара начнется в 6:30 утра.</p>
-                    <button class="btn-action" style="background:#00cc52; color:#000; display:none;" id="btn-study-click" onclick="actionStudyClick()">✍️ ПИСАТЬ ЛЕКЦИЮ РУКАМИ</button>
-                    <button class="btn-sub" style="width:100%; display:none; background:#8a6d3b;" id="btn-sleep-uni" onclick="actionSleepOnPairs()">💤 Уснуть на паре (риск пиздюлей)</button>
+                    <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;" id="uni-text">пара начнется в 6:30 утра.</p>
+                    <button class="btn-action" style="background:#00cc52; color:#000; display:none;" id="btn-study-click" onclick="actionStudyClick()">✍️ ПИСАТЬ ЛЕКЦИЮ ВРУЧНУЮ</button>
+                    <button class="btn-sub" style="width:100%; display:none; background:#8a6d3b;" id="btn-sleep-uni" onclick="actionSleepOnPairs()">💤 Уснуть на первой парте</button>
                 </div>
             </div>
 
-            <!-- девайсы -->
-            <div class="student-actions" style="margin-bottom:12px;">
-                <button class="btn-sub" style="border-color:#9b59b6; color:#e0b0ff; width:100%; grid-column: span 2;" onclick="openShop()">🛍️ Открыть маркетплейс "ЭдикЛадно"</button>
-            </div>
+            <!-- маркетплейс -->
+            <button class="btn-sub" style="border-color:#9b59b6; color:#e0b0ff; width:100%; margin-bottom:8px;" onclick="openShop()">🛍️ Маркетплейс "ЭдикЛадно"</button>
 
             <div class="phone-spec">
-                <div style="color:#d9a5ff; text-transform:uppercase; margin-bottom:4px;">📱 Мобила: <span id="phone-model-text">НЕТ</span></div>
-                <div id="phone-status" style="color:#fff;">Статус: отсутствуют девайсы</div>
+                <div style="color:#d9a5ff; text-transform:uppercase; margin-bottom:2px;">📱 Мобила: <span id="phone-model-text">НЕТ</span></div>
+                <div id="phone-status">Статус: нет девайсов</div>
             </div>
 
             <div class="sasun-spec">
-                <div style="color:#00ffcf; text-transform:uppercase; margin-bottom:4px;">💻 Ноут "Сасун" [ОС: Windows XP]</div>
-                <button class="btn-sub" style="width:100%; margin-bottom:6px; font-size:10px;" id="btn-code-sasun" onclick="actionCodeOnSasun()">💻 НАПИСАТЬ СКРИПТ НА КОДЬХУЙНЯ (РУКАМИ)</button>
+                <div style="color:#00ffcf; text-transform:uppercase; margin-bottom:2px;">💻 Ноут "Сасун" [ОС: Windows XP]</div>
+                <button class="btn-sub" style="width:100%; margin-bottom:4px; font-size:10px;" onclick="actionCodeOnSasun()">💻 НАПИСАТЬ СКРИПТ ВРУЧНУЮ</button>
                 <div class="stat-bar-container">
-                    <div class="stat-label" id="label-cpu" style="color:#a5b6c9; font-size:10px;">Загрузка ЦП: 0%</div>
-                    <div class="bar-bg" style="height:8px;"><div class="bar-fill fill-cpu" id="bar-cpu" style="width:0%;"></div></div>
+                    <div class="stat-label" id="label-cpu" style="color:#a5b6c9; font-size:9px;">Загрузка ЦП: 0%</div>
+                    <div class="bar-bg" style="height:6px;"><div class="bar-fill fill-cpu" id="bar-cpu" style="width:0%;"></div></div>
                 </div>
             </div>
 
-            <button class="btn-action" style="background:#ff3333; color:#fff; font-size:11px; padding:6px; margin-top:10px;" onclick="triggerWipe()">🔥 устроить жесткий вайп данных 🔥</button>
+            <button class="btn-action" style="background:#ff3333; color:#fff; font-size:10px; padding:4px;" onclick="triggerWipe()">🔥 ВАЙПНУТЬ ВСЁ СИСТЕМНО 🔥</button>
         </div>
     </div>
 </div>
@@ -431,8 +479,7 @@
 <script>
     const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
     const SECRET_MULTIPLY_BY = 2n;
-
-    const shortNames = ["", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", "секстил.", "септили.", "октил.", "нонил.", "децил."];
+    const shortNames = ["", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт."];
 
     let stats = { hunger: 100, health: 100, anger: 0, poop: 0 };
     let playerRole = "bandit";
@@ -441,23 +488,77 @@
     
     let qteActive = false;
     let qtePos = 0;
-    let qteDirection = 3;
+    let qteDirection = 4;
     let isBsod = false;
     let cpuLoad = 0;
 
     let hasPhone = false; 
     let phoneModel = "нет телефона"; 
-    let deliveryTimeLeft = 0; // в секундах/минутах
+    let deliveryTimeLeft = 0;
 
     let gameHour = 12;
     let gameMinute = 0;
     
     let currentLoc = "home"; 
-    let stepsToUni = 10; 
+    let stepsToUni = 15; 
     let isPairActive = false;
+    let inHospital = false;
 
-    // инициализация ретро канваса
+    // Инвентарь еды
+    let inventory = [];
+
+    // НАСТРОЙКИ 3D РЭЙКАСТИНГА (WOLFENSTEIN-STYLE)
     let canvas, ctx;
+    let playerX = 2.5, playerY = 2.5; 
+    let playerAngle = 0; 
+    const FOV = Math.PI / 3;
+
+    // Сетки карт локаций (1 - обычная стена, 2 - дверь/декор, 3 - окно/вывеска)
+    const maps = {
+        home: [
+            [1,1,1,1,1],
+            [1,0,0,0,1],
+            [1,0,2,0,1],
+            [1,0,0,0,1],
+            [1,1,1,1,1]
+        ],
+        street: [
+            [1,1,1,1,1,1],
+            [1,0,0,0,0,1],
+            [1,0,1,3,0,1],
+            [1,0,0,0,0,1],
+            [1,0,0,0,0,1],
+            [1,1,1,1,1,1]
+        ],
+        mac: [
+            [1,1,1,1,1],
+            [1,0,3,0,1],
+            [1,0,0,0,1],
+            [1,2,0,0,1],
+            [1,1,1,1,1]
+        ],
+        shop: [
+            [1,1,1,1,1],
+            [1,0,0,0,1],
+            [1,0,3,0,1],
+            [1,0,0,0,1],
+            [1,1,1,1,1]
+        ],
+        factory: [
+            [1,1,1,1,1],
+            [1,0,0,0,1],
+            [1,3,2,0,1],
+            [1,0,0,0,1],
+            [1,1,1,1,1]
+        ],
+        uni: [
+            [1,1,1,1,1],
+            [1,0,0,0,1],
+            [1,0,1,0,1],
+            [1,0,0,0,1],
+            [1,1,1,1,1]
+        ]
+    };
 
     function selectFace(element, face) {
         document.querySelectorAll('.face-option').forEach(el => el.classList.remove('selected'));
@@ -467,25 +568,33 @@
 
     function initGame() {
         playerRole = document.getElementById("role-select").value;
-        localStorage.setItem('ghetto_role_v5', playerRole);
-        localStorage.setItem('ghetto_face_v5', playerFace);
+        localStorage.setItem('ghetto_role_v6', playerRole);
+        localStorage.setItem('ghetto_face_v6', playerFace);
         resetToDefaults();
         showMainUI();
     }
 
-    if (localStorage.getItem('ghetto_role_v5')) {
-        playerRole = localStorage.getItem('ghetto_role_v5');
-        playerFace = localStorage.getItem('ghetto_face_v5') || "😎";
-        balance = BigInt(localStorage.getItem('ghetto_bal_v5') || "500");
-        stats = JSON.parse(localStorage.getItem('ghetto_stats_v5') || '{"hunger":100,"health":100,"anger":0,"poop":0}');
-        hasPhone = localStorage.getItem('ghetto_has_phone_v5') === "true";
-        phoneModel = localStorage.getItem('ghetto_phone_model_v5') || "нет телефона";
-        deliveryTimeLeft = parseInt(localStorage.getItem('ghetto_delivery_v5') || "0");
-        gameHour = parseInt(localStorage.getItem('ghetto_ghour_v5') || "12");
-        gameMinute = parseInt(localStorage.getItem('ghetto_gmin_v5') || "0");
-        stepsToUni = parseInt(localStorage.getItem('ghetto_steps_v5') || "10");
-        currentLoc = localStorage.getItem('ghetto_loc_v5') || "home";
-        showMainUI();
+    // Проверка тач-скрина мобилы
+    function detectMobile() {
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+            document.getElementById("pad-container").style.display = "grid";
+        }
+    }
+
+    if (localStorage.getItem('ghetto_role_v6')) {
+        playerRole = localStorage.getItem('ghetto_role_v6');
+        playerFace = localStorage.getItem('ghetto_face_v6') || "😎";
+        balance = BigInt(localStorage.getItem('ghetto_bal_v6') || "500");
+        stats = JSON.parse(localStorage.getItem('ghetto_stats_v6') || '{"hunger":100,"health":100,"anger":0,"poop":0}');
+        hasPhone = localStorage.getItem('ghetto_has_phone_v6') === "true";
+        phoneModel = localStorage.getItem('ghetto_phone_model_v6') || "нет телефона";
+        deliveryTimeLeft = parseInt(localStorage.getItem('ghetto_delivery_v6') || "0");
+        gameHour = parseInt(localStorage.getItem('ghetto_ghour_v6') || "12");
+        gameMinute = parseInt(localStorage.getItem('ghetto_gmin_v6') || "0");
+        stepsToUni = parseInt(localStorage.getItem('ghetto_steps_v6') || "15");
+        currentLoc = localStorage.getItem('ghetto_loc_v6') || "home";
+        inventory = JSON.parse(localStorage.getItem('ghetto_inv_v6') || "[]");
+        setTimeout(showMainUI, 100);
     }
 
     function showMainUI() {
@@ -494,16 +603,21 @@
         document.getElementById("hud-face-display").innerText = playerFace;
         
         let roleText = "Бандит 🕶️";
-        if (playerRole === "mac") roleText = "Работник Мака 🍟";
+        if (playerRole === "mac") roleText = "Повар Мака 🍟";
         if (playerRole === "coder") roleText = "Кодер 💻";
+        if (playerRole === "courier") roleText = "Курьер 🚴";
+        if (playerRole === "factory") roleText = "Заводчанин 🔧";
         document.getElementById("role-badge").innerText = `Роль: ${roleText}`;
         
         canvas = document.getElementById("retroCanvas");
         ctx = canvas.getContext("2d");
         
+        detectMobile();
         changeLocation(currentLoc);
         updateUI();
-        drawRetroView();
+        
+        // Цикл отрисовки 3D
+        setInterval(draw3DView, 50);
     }
 
     function resetToDefaults() {
@@ -516,27 +630,30 @@
         gameHour = 12;
         gameMinute = 0;
         currentLoc = "home";
-        stepsToUni = 10;
+        stepsToUni = 15;
         isPairActive = false;
+        inHospital = false;
+        inventory = [];
         saveGame();
     }
 
     function saveGame() {
         if (!playerRole) return;
-        localStorage.setItem('ghetto_bal_v5', balance.toString());
-        localStorage.setItem('ghetto_stats_v5', JSON.stringify(stats));
-        localStorage.setItem('ghetto_has_phone_v5', hasPhone.toString());
-        localStorage.setItem('ghetto_phone_model_v5', phoneModel);
-        localStorage.setItem('ghetto_delivery_v5', deliveryTimeLeft.toString());
-        localStorage.setItem('ghetto_ghour_v5', gameHour.toString());
-        localStorage.setItem('ghetto_gmin_v5', gameMinute.toString());
-        localStorage.setItem('ghetto_steps_v5', stepsToUni.toString());
-        localStorage.setItem('ghetto_loc_v5', currentLoc);
+        localStorage.setItem('ghetto_bal_v6', balance.toString());
+        localStorage.setItem('ghetto_stats_v6', JSON.stringify(stats));
+        localStorage.setItem('ghetto_has_phone_v6', hasPhone.toString());
+        localStorage.setItem('ghetto_phone_model_v6', phoneModel);
+        localStorage.setItem('ghetto_delivery_v6', deliveryTimeLeft.toString());
+        localStorage.setItem('ghetto_ghour_v6', gameHour.toString());
+        localStorage.setItem('ghetto_gmin_v6', gameMinute.toString());
+        localStorage.setItem('ghetto_steps_v6', stepsToUni.toString());
+        localStorage.setItem('ghetto_loc_v6', currentLoc);
+        localStorage.setItem('ghetto_inv_v6', JSON.stringify(inventory));
     }
 
-    // глобальный тикер времени и параметров
+    // ТИКЕР ЖИЗНИ
     setInterval(() => {
-        if (!playerRole || qteActive) return;
+        if (!playerRole || qteActive || inHospital) return;
 
         gameMinute++;
         if (gameMinute >= 60) {
@@ -545,134 +662,187 @@
             if (gameHour >= 24) gameHour = 0;
         }
 
-        // логика пар в унике
+        // Время пар
         if (gameHour === 6 && gameMinute === 30 && currentLoc === "uni") {
             isPairActive = true;
-            alert("🔔 Звонок на пару! Препод зашел в аудиторию, пиши лекцию руками!");
+            alert("🔔 Звонок! Препод вошел в аудиторию, пиши руками!");
         }
         if (gameHour >= 10 && isPairActive) {
             isPairActive = false;
-            alert("🔔 Пары закончились! Всех выгнали на мороз.");
+            alert("🔔 Пары кончились! Тебя выставили на мороз.");
         }
 
-        // тиканье доставки Эдика
+        // Эдик маркетплейс тиканье курьера
         if (deliveryTimeLeft > 0) {
             deliveryTimeLeft--;
             if (deliveryTimeLeft <= 0) {
                 hasPhone = true;
-                alert(`📦 КУРЬЕР С "ЭДИКЛАДНО" ПРИПЛЫЛ! Твой ${phoneModel.toUpperCase()} доставлен!`);
+                alert(`📦 Мобила ${phoneModel.toUpperCase()} успешно доставлена курьером Эдика!`);
             }
         }
 
-        // деградация характеристик
         stats.hunger = Math.max(0, stats.hunger - 1);
-        if (currentLoc === "street") {
-            stats.poop = Math.min(100, stats.poop + 2); // на морозе прижимает сильнее
-        } else {
-            stats.poop = Math.min(100, stats.poop + 1);
-        }
+        stats.poop = Math.min(100, stats.poop + (currentLoc === "street" ? 2 : 1));
 
         if (stats.hunger <= 0) stats.health = Math.max(0, stats.health - 2);
         
-        if (stats.health <= 0) {
-            alert("🚑 ТЫ СВАЛИЛСЯ В СУГРОБ БЕЗ СИЛ! Штраф на лечение 300 р. Тебя вернули домой.");
-            balance = balance > 300n ? balance - 300n : 0n;
-            stats.health = 60; stats.hunger = 60; stats.anger = 30;
-            changeLocation("home");
+        // ШАНС УЛЕТЕТЬ В БОЛЬНИЧКУ ПРИ СЛАБОМ ЗДОРОВЬЕ
+        if (stats.health < 30 && Math.random() < 0.15) {
+            triggerHospital("Ты упал от истощения прямо посреди улицы Белого Яра.");
         }
 
-        // если клапан на пределе — включается QTE
         if (stats.poop >= 100) {
             triggerPoopMinigame();
         }
 
-        // охлаждение процессора сасуна
-        if (cpuLoad > 0 && Math.random() < 0.3) cpuLoad = Math.max(0, cpuLoad - 5);
+        if (cpuLoad > 0 && Math.random() < 0.4) cpuLoad = Math.max(0, cpuLoad - 7);
 
         saveGame();
         updateUI();
-    }, 1200);
+    }, 1300);
 
-    // изменение локаций
+    // Больница
+    function triggerHospital(reason) {
+        inHospital = true;
+        document.getElementById("hospital-reason").innerText = reason;
+        document.getElementById("hospital-overlay").style.display = "flex";
+        balance = balance > 400n ? balance - 400n : 0n;
+        stats.health = 70;
+        stats.hunger = 70;
+        stats.poop = 10;
+    }
+
+    function exitHospital() {
+        inHospital = false;
+        document.getElementById("hospital-overlay").style.display = "none";
+        changeLocation("home");
+    }
+
     function changeLocation(loc) {
-        // если клапан поджимает (больше 85%), ноги сводит, ходить нельзя!
         if (stats.poop >= 85 && loc !== currentLoc && loc !== "home") {
-            alert("💀 ЖМЕТ КЛАПАН! Ноги свело, ты не можешь идти! Беги домой в толчок, пока не сорвало!");
+            alert("💀 ШКАЛА ГОВНИЩА ЗАКЛИНИЛА! Ноги свело, беги домой в туалет!");
             return;
         }
 
         currentLoc = loc;
+        playerX = 2.5; playerY = 2.5; playerAngle = 0; // Сброс позиции в 3D
+
         document.querySelectorAll('.loc-content').forEach(el => el.style.display = "none");
-        document.querySelectorAll('.menu-btn').forEach(el => el.classList.remove('active'));
         
-        document.getElementById("nav-home").style.borderColor = "#31373e";
-        document.getElementById("nav-street").style.borderColor = "#31373e";
-        document.getElementById("nav-mac").style.borderColor = "#31373e";
-        document.getElementById("nav-uni").style.borderColor = "#31373e";
+        let bHome = document.getElementById("nav-home");
+        let bStreet = document.getElementById("nav-street");
+        let bMac = document.getElementById("nav-mac");
+        let bShop = document.getElementById("nav-shop");
+        let bFactory = document.getElementById("nav-factory");
+        let bUni = document.getElementById("nav-uni");
 
-        if (loc === 'home') {
-            document.getElementById("loc-content-home").style.display = "block";
-            document.getElementById("loc-badge").innerText = "комната в хрущевке";
-            document.getElementById("nav-home").style.borderColor = "#00cc52";
-        } else if (loc === 'street') {
-            document.getElementById("loc-content-street").style.display = "block";
-            document.getElementById("loc-badge").innerText = "зимняя улица Белый Яр";
-            document.getElementById("nav-street").style.borderColor = "#00cc52";
-        } else if (loc === 'mac') {
-            document.getElementById("loc-content-mac").style.display = "block";
-            document.getElementById("loc-badge").innerText = "кухня ПатНодальса";
-            document.getElementById("nav-mac").style.borderColor = "#00cc52";
-        } else if (loc === 'uni') {
-            document.getElementById("loc-content-uni").style.display = "block";
-            document.getElementById("loc-badge").innerText = "кабинет 302 (колледж)";
-            document.getElementById("nav-uni").style.borderColor = "#00cc52";
-        }
+        [bHome, bStreet, bMac, bShop, bFactory, bUni].forEach(b => b.style.borderColor = "#31373e");
 
-        drawRetroView();
+        if (loc === 'home') { document.getElementById("loc-content-home").style.display = "block"; document.getElementById("loc-badge").innerText = "Твой хрущ"; bHome.style.borderColor = "#00cc52"; }
+        if (loc === 'street') { document.getElementById("loc-content-street").style.display = "block"; document.getElementById("loc-badge").innerText = "Улица Белый Яр"; bStreet.style.borderColor = "#00cc52"; }
+        if (loc === 'mac') { document.getElementById("loc-content-mac").style.display = "block"; document.getElementById("loc-badge").innerText = "Кухня Мака"; bMac.style.borderColor = "#00cc52"; }
+        if (loc === 'shop') { document.getElementById("loc-content-shop").style.display = "block"; document.getElementById("loc-badge").innerText = "Пятерка"; bShop.style.borderColor = "#00cc52"; }
+        if (loc === 'factory') { document.getElementById("loc-content-factory").style.display = "block"; document.getElementById("loc-badge").innerText = "Завод ПромЗон"; bFactory.style.borderColor = "#00cc52"; }
+        if (loc === 'uni') { document.getElementById("loc-content-uni").style.display = "block"; document.getElementById("loc-badge").innerText = "Колледж (кабинет)"; bUni.style.borderColor = "#00cc52"; }
+
         updateUI();
     }
 
-    // 8-битный рендеринг от первого лица
-    function drawRetroView() {
-        if (!ctx) return;
-        ctx.fillStyle = "#111";
-        ctx.fillRect(0, 0, 120, 60);
+    // ДВИЖОК 3D РЭЙКАСТИНГА (ОТ ПЕРВОГО ЛИЦА)
+    function draw3DView() {
+        if (!ctx || !playerRole) return;
+        
+        let map = maps[currentLoc] || maps.home;
+        let mapW = map[0].length;
+        let mapH = map.length;
 
-        if (currentLoc === "home") {
-            // ковер на стене и телик
-            ctx.fillStyle = "#551111"; ctx.fillRect(10, 10, 40, 30); // ковер
-            ctx.fillStyle = "#ffaa00"; ctx.fillRect(15, 15, 30, 20); 
-            ctx.fillStyle = "#222"; ctx.fillRect(75, 25, 30, 25); // старый ноут
-            ctx.fillStyle = "#00ffcc"; ctx.fillRect(80, 28, 20, 15);
-        } else if (currentLoc === "street") {
-            // сугробы и хрущевка на горизонте
-            ctx.fillStyle = "#eee"; ctx.fillRect(0, 40, 120, 20); // снег
-            ctx.fillStyle = "#333"; ctx.fillRect(40, 10, 40, 30); // серая хрущевка
-            ctx.fillStyle = "#ffffaa"; ctx.fillRect(45, 15, 5, 5); ctx.fillRect(65, 25, 5, 5); // окна
-            // метель (точки)
-            ctx.fillStyle = "#fff";
-            for(let i=0; i<15; i++) ctx.fillRect(Math.random()*120, Math.random()*40, 1, 1);
-        } else if (currentLoc === "mac") {
-            // фритюрница и касса
-            ctx.fillStyle = "#ffcc00"; ctx.fillRect(0, 0, 120, 10); // вывеска
-            ctx.fillStyle = "#555"; ctx.fillRect(20, 30, 30, 20); // плита
-            ctx.fillStyle = "#ff5555"; ctx.fillRect(25, 22, 20, 8); // котлеты
-            ctx.fillStyle = "#888"; ctx.fillRect(80, 25, 25, 25); // касса
-        } else if (currentLoc === "uni") {
-            // доска и парта
-            ctx.fillStyle = "#114422"; ctx.fillRect(20, 10, 80, 25); // доска
-            ctx.fillStyle = "#fff"; ctx.fillRect(30, 15, 5, 2); // мел
-            ctx.fillStyle = "#774411"; ctx.fillRect(10, 45, 100, 15); // парта
+        ctx.fillStyle = "#222226"; // Потолок
+        ctx.fillRect(0, 0, 160, 60);
+        ctx.fillStyle = "#3c3c3c"; // Пол
+        ctx.fillRect(0, 60, 160, 60);
+
+        // Рэйкастинг по вертикальным полосам экрана
+        for (let x = 0; x < 160; x++) {
+            let rayAngle = (playerAngle - FOV / 2) + (x / 160) * FOV;
+            let distance = 0;
+            let hitWall = false;
+            let wallType = 0;
+
+            let eyeX = Math.cos(rayAngle);
+            let eyeY = Math.sin(rayAngle);
+
+            while (!hitWall && distance < 12) {
+                distance += 0.05;
+                let testX = Math.floor(playerX + eyeX * distance);
+                let testY = Math.floor(playerY + eyeY * distance);
+
+                if (testX < 0 || testX >= mapW || testY < 0 || testY >= mapH) {
+                    hitWall = true; distance = 12;
+                } else {
+                    if (map[testY][testX] > 0) {
+                        hitWall = true;
+                        wallType = map[testY][testX];
+                    }
+                }
+            }
+
+            let wallHeight = Math.min(120, Math.floor(120 / (distance * Math.cos(rayAngle - playerAngle))));
+            let wallTop = (120 - wallHeight) / 2;
+
+            // Цвета стен в 8-битном стиле в зависимости от типа
+            if (wallType === 1) ctx.fillStyle = `rgb(${80 - distance*5}, ${85 - distance*5}, ${90 - distance*5})`; // Бетон
+            else if (wallType === 2) ctx.fillStyle = `rgb(${130 - distance*8}, ${60 - distance*5}, ${40 - distance*5})`; // Дверь
+            else if (wallType === 3) ctx.fillStyle = `rgb(${40 - distance*3}, ${140 - distance*10}, ${90 - distance*5})`; // Окно/Вывеска
+            else ctx.fillStyle = "#000";
+
+            ctx.fillRect(x, wallTop, 1, wallHeight);
+        }
+
+        // Прицел по центру для иммерсивности
+        ctx.fillStyle = "rgba(0,255,85,0.4)";
+        ctx.fillRect(79, 59, 2, 2);
+    }
+
+    // ФИЗИЧЕСКОЕ ПЕРЕМЕЩЕНИЕ И ПОВОРОТЫ
+    function movePlayer(dir) {
+        if (qteActive || inHospital) return;
+        let map = maps[currentLoc] || maps.home;
+        let newX = playerX + Math.cos(playerAngle) * dir * 0.3;
+        let newY = playerY + Math.sin(playerAngle) * dir * 0.3;
+        
+        if (map[Math.floor(newY)][Math.floor(newX)] === 0) {
+            playerX = newX;
+            playerY = newY;
+        }
+
+        // Если ходит по улице — засчитываем шаги до уника
+        if (currentLoc === "street" && stepsToUni > 0) {
+            stepsToUni--;
+            if(stepsToUni === 0) alert("🏁 Ты дотопал ногами до Колледжа сквозь метель!");
+            updateUI();
         }
     }
 
-    // РУЧНАЯ РАБОТА: МАКДАК
+    function rotatePlayer(dir) {
+        playerAngle += dir * 0.15;
+    }
+
+    function actionInteract3D() {
+        // Кнопка действия по центру тачпада
+        if(currentLoc === "mac") actionWorkMac();
+        else if(currentLoc === "factory") actionWorkFactory();
+        else if(currentLoc === "street") actionStreetWork();
+        else if(currentLoc === "uni") actionStudyClick();
+        else if(currentLoc === "home") actionCodeOnSasun();
+    }
+
+    // МАКДАК РАБОТА
     function actionWorkMac() {
         if (currentLoc !== "mac") return;
         stats.hunger = Math.max(0, stats.hunger - 2);
         stats.anger = Math.min(100, stats.anger + 1);
         
-        let basePay = playerRole === "mac" ? 40n : 25n;
+        let basePay = playerRole === "mac" ? 45n : 25n;
         if (hasPhone && phoneModel === "сифон 6s") basePay = (basePay * 15n) / 10n;
         if (hasPhone && phoneModel === "сифон 15 промагнат") basePay = basePay * 3n;
 
@@ -681,152 +851,183 @@
     }
 
     function actionStealFood() {
-        if (playerRole !== "mac") return;
         if (Math.random() < 0.25) {
-            alert("🚨 Менеджер ПатНодальса поймал тебя за поеданием наггетсов под столом! Минус 30 ХП плетью.");
-            stats.health = Math.max(10, stats.health - 30);
+            triggerHospital("Тебя поймал злой менеджер Мака за поеданием продуктов из фритюра. Избили ногами.");
         } else {
-            alert("🍟 Красава! Быстро закинул в себя партию картохи и наггетсов. Сытость восстановлена.");
-            stats.hunger = 100;
+            alert("🍟 Успешно сожрал пачку наггетсов втихую!");
+            stats.hunger = Math.min(100, stats.hunger + 35);
         }
         updateUI();
     }
 
-    // РУЧНАЯ ХОДЬБА ПО СУГРОБАМ ДО УНИКА
-    function actionMakeStep() {
-        if (currentLoc !== "street") return;
-        if (stepsToUni <= 0) {
-            alert("Ты уже у дверей колледжа! Входи внутрь через меню перемещения.");
+    // ЗАВОД РАБОТА
+    function actionWorkFactory() {
+        if (currentLoc !== "factory") return;
+        stats.hunger = Math.max(0, stats.hunger - 4);
+        stats.anger = Math.min(100, stats.anger + 3);
+
+        if (playerRole === "factory" && Math.random() < 0.03) {
+            triggerHospital("Тебе затянуло рукав куртки в токарный вал станка. Травма!");
             return;
         }
 
-        stepsToUni--;
-        stats.hunger = Math.max(0, stats.hunger - 3);
-        stats.anger = Math.min(100, stats.anger + 2);
-
-        if (stepsToUni === 0) {
-            alert("🏁 Ты преодолел сугробы Сургута и дошел до Колледжа! Вкладка 'Колледж' теперь разблокирована.");
-        }
-        drawRetroView();
+        let pay = playerRole === "factory" ? 110n : 50n;
+        if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
+        balance += pay;
         updateUI();
     }
 
-    // РУЧНАЯ РАБОТА: КОДИНГ НА САСУНЕ
-    function actionCodeOnSasun() {
-        if (currentLoc !== "home") return alert("Ноут дома, ты не можешь кодить на ходу!");
-        if (isBsod) return alert("Сасун мертв! Сначала перезагрузи его!");
+    // УЛИЦА: ГРАБЕЖ ИЛИ ДОСТАВКА
+    function actionStreetWork() {
+        if (currentLoc !== "street") return;
+        stats.hunger = Math.max(0, stats.hunger - 3);
 
-        cpuLoad += playerRole === "coder" ? 4 : 8;
+        if (playerRole === "courier") {
+            // курьер разносит заказы
+            let pay = 80n;
+            if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
+            balance += pay;
+            alert(`🚴 Ты доставил пакет клиенту в сугроб. Заработано: ${pay}р.`);
+        } else {
+            // бандитский грабеж
+            if (Math.random() < 0.3) {
+                triggerHospital("Прохожий оказался мастером спорта по самбо и прописал тебе двоечку.");
+            } else {
+                let loot = playerRole === "bandit" ? 150n : 60n;
+                balance += loot;
+                alert(`👊 Отжал мобилу у школьника в подворотне хруща! Наварено: ${loot}р.`);
+            }
+        }
+        updateUI();
+    }
+
+    // СУПЕРМАРКЕТ СИСТЕМА ЕДЫ
+    function buyFoodItem(name, cost, fillValue) {
+        let bigCost = BigInt(cost);
+        if (balance < bigCost) return alert("Нет денег!");
+        balance -= bigCost;
+        inventory.push({ name: name, fill: fillValue });
+        alert(`🛒 Куплено: ${name}. Еда убрана в рюкзак.`);
+        updateInventoryUI();
+        updateUI();
+    }
+
+    function useFoodFromInventory(index) {
+        if (inventory[index]) {
+            stats.hunger = Math.min(100, stats.hunger + inventory[index].fill);
+            stats.poop = Math.min(100, stats.poop + Math.floor(inventory[index].fill / 2));
+            alert(`😋 Ты съел: ${inventory[index].name}`);
+            inventory.splice(index, 1);
+            updateInventoryUI();
+            updateUI();
+        }
+    }
+
+    function updateInventoryUI() {
+        let invDiv = document.getElementById("inventory-display");
+        if (inventory.length === 0) {
+            invDiv.innerHTML = "Рюкзак еды: пуст";
+            return;
+        }
+        let html = "<b>Рюкзак еды (нажми съесть):</b><br>";
+        inventory.forEach((item, idx) => {
+            html += `<button class="btn-sub" style="margin:2px;" onclick="useFoodFromInventory(${idx})">${item.name}</button> `;
+        });
+        invDiv.innerHTML = html;
+    }
+
+    // КОДИНГ НА САСУНЕ
+    function actionCodeOnSasun() {
+        if (currentLoc !== "home") return alert("Ноут дома!");
+        if (isBsod) return alert("Сасун выдал синий экран!");
+
+        cpuLoad += playerRole === "coder" ? 4 : 9;
         stats.hunger = Math.max(0, stats.hunger - 1);
 
-        let pay = playerRole === "coder" ? 120n : 60n;
+        let pay = playerRole === "coder" ? 130n : 55n;
         if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
         balance += pay;
 
-        if (cpuLoad >= 100) {
-            triggerBsod();
-        }
+        if (cpuLoad >= 100) triggerBsod();
         updateUI();
     }
 
-    // РУЧНАЯ УЧЕБА В КОЛЛЕДЖЕ
+    // КОЛЛЕДЖ РАБОТА
     function actionStudyClick() {
         if (currentLoc !== "uni" || !isPairActive) return;
         stats.anger = Math.min(100, stats.anger + 1);
-        
-        let pay = 10n; // копейки за лекцию
-        if (playerRole === "coder") pay = 20n;
-        balance += pay;
+        balance += playerRole === "coder" ? 25n : 12n;
         updateUI();
     }
 
     function actionSleepOnPairs() {
         if (currentLoc !== "uni" || !isPairActive) return;
-        alert("💤 Ты заснул прямо перед рожей препода...");
-        if (Math.random() < 0.45) {
-            stats.health = Math.max(10, stats.health - 25);
-            stats.anger = Math.min(100, stats.anger + 30);
-            alert("💥 Препод кинул в тебя тяжелую тряпку для доски! Минус 25 ХП.");
+        if (Math.random() < 0.4) {
+            triggerHospital("Препод кинул советский чугунный циркуль прямо тебе в лоб. Потеря сознания.");
         } else {
-            stats.health = Math.min(100, stats.health + 15);
-            stats.anger = Math.max(0, stats.anger - 15);
-            alert("🍀 Успех! Ты продремал 20 минут, тебя никто не тронул.");
+            stats.health = Math.min(100, stats.health + 20);
+            alert("🍀 Пронесло, чуток вздремнул на лекции.");
         }
-        gameMinute += 20;
+        gameMinute += 30;
         updateUI();
     }
 
-    // МЕХАНИКА ТУАЛЕТА (СБРОС КЛАПАНА)
     function actionGoToToilet() {
-        if (currentLoc !== "home") return alert("Ты не дома! Срать в сугроб при людях гордость не позволяет.");
+        if (currentLoc !== "home") return;
         stats.poop = 0;
-        stats.anger = Math.max(0, stats.anger - 10);
-        alert("💩 О да-а-а... Клапан успешно сброшен. Кайф.");
+        alert("💩 Клапан успешно прочищен в родной толчок!");
         updateUI();
     }
 
-    // ФИКС ПОКУПКИ В ЭДИКЛАДНО
     function buyPhoneFromShop(model, cost) {
-        if (hasPhone || deliveryTimeLeft > 0) {
-            alert("У тебя уже есть рабочая мобила или она едет в кузове курьера!");
-            return;
-        }
+        if (hasPhone || deliveryTimeLeft > 0) return alert("У тебя уже есть телефон или он едет!");
         let bigCost = BigInt(cost);
-        if (balance < bigCost) {
-            alert("Эдик посмотрел на твой баланс и сказал: 'Ладно, накопи сначала'.");
-            return;
-        }
+        if (balance < bigCost) return alert("Эдик отказал в рассрочке!");
+        
         balance -= bigCost;
         phoneModel = model;
-        deliveryTimeLeft = 180; // 3 игровых часа (180 секунд)
+        deliveryTimeLeft = 140; 
         closeShop();
-        alert(`🛒 Бабло списано! Эдик взял заказ. Мобила приедет через 3 часа. Иди поспи дома, чтобы ускорить время.`);
-        saveGame();
+        alert(`🛒 Эдик взял рубли. Доставка курьером в хрущевку пошла! Спи дома на кровати, чтобы ускорить.`);
         updateUI();
     }
 
     function actionSleepHome() {
-        if (currentLoc !== "home") return alert("Ты не дома!");
-        alert("💤 Ты лег на продавленный диван и уснул...");
+        if (currentLoc !== "home") return;
+        alert("💤 Сон на диване...");
         gameHour = 6; gameMinute = 0;
-        stepsToUni = 10; // сугробы за ночь снова намело!
+        stepsToUni = 15; // сугробы намело снова
 
         if (deliveryTimeLeft > 0) {
             deliveryTimeLeft = 0;
             hasPhone = true;
-            alert("📦 Курьер успел кинуть коробку с телефоном под дверь, пока ты спал!");
+            alert("📦 Курьер бросил телефон под дверь хрущевки пока ты спал!");
         }
 
-        stats.hunger = Math.max(10, stats.hunger - 40);
-        stats.poop = Math.min(100, stats.poop + 25);
-        saveGame();
+        stats.hunger = Math.max(10, stats.hunger - 45);
+        stats.poop = Math.min(100, stats.poop + 30);
         changeLocation("home");
     }
 
     function actionEatShawarma() {
-        if (balance < 250n) return alert("Не хватает на шавуху!");
+        if (balance < 250n) return alert("Нет денег на шавуху!");
         balance -= 250n;
-        stats.hunger = Math.min(100, stats.hunger + 65);
-        stats.poop = Math.min(100, stats.poop + 20);
+        stats.hunger = Math.min(100, stats.hunger + 70);
+        stats.poop = Math.min(100, stats.poop + 25);
         updateUI();
     }
 
     function openShop() { document.getElementById("shop-overlay").style.display = "flex"; }
     function closeShop() { document.getElementById("shop-overlay").style.display = "none"; }
-
-    function triggerBsod() {
-        isBsod = true;
-        document.getElementById("bsod-overlay").style.display = "block";
-    }
+    function triggerBsod() { isBsod = true; document.getElementById("bsod-overlay").style.display = "block"; }
 
     function rebootSasun() {
-        document.getElementById("bsod-overlay").innerHTML = "<h1>ПЕРЕЗАГРУЗКА... КУЛЕР СВИСТИТ... ПРОВЕРКА ДИСКА...</h1>";
+        document.getElementById("bsod-overlay").innerHTML = "<p>ПЕРЕЗАГРУЗКА ОС WINDOWS XP...</p>";
         setTimeout(() => {
-            isBsod = false;
-            cpuLoad = 0;
+            isBsod = false; cpuLoad = 0;
             document.getElementById("bsod-overlay").style.display = "none";
-            changeLocation("home");
-        }, 3000);
+            document.getElementById("bsod-overlay").innerHTML = `<p>A problem has been detected...</p><button class="btn-action" onclick="rebootSasun()">УДАРЯТЬ ПО КОРПУСУ</button>`;
+        }, 2000);
     }
 
     function triggerPoopMinigame() {
@@ -835,25 +1036,33 @@
         let qteInterval = setInterval(() => {
             if (!qteActive) { clearInterval(qteInterval); return; }
             qtePos += qteDirection;
-            if (qtePos >= 290 || qtePos <= 0) qteDirection = -qteDirection;
+            if (qtePos >= 250 || qtePos <= 0) qteDirection = -qteDirection;
             document.getElementById("qte-slider").style.left = qtePos + "px";
-        }, 8);
+        }, 10);
     }
 
-    window.addEventListener("keydown", function(e) {
-        if (e.code === "Space" && qteActive) {
-            e.preventDefault(); qteActive = false;
-            document.getElementById("poop-game-overlay").style.display = "none";
-            if (qtePos >= 120 && qtePos <= 160) {
-                alert("💩 ХАРДКОРНЫЙ КОНТРОЛЬ! Ты удержал всё в себе и дополз до ведра! Срочно очистись дома.");
-                stats.poop = 60;
-            } else {
-                alert("💀 КЛАПАН СОРВАН! Прямо посреди локации штаны наполнились горячим супом. Минус 40 здоровья, все злятся.");
-                stats.poop = 20; stats.health = Math.max(10, stats.health - 40); stats.anger = 100;
-                changeLocation("home");
-            }
-            saveGame(); updateUI();
+    function triggerQtePress() {
+        if (!qteActive) return;
+        qteActive = false;
+        document.getElementById("poop-game-overlay").style.display = "none";
+        if (qtePos >= 100 && qtePos <= 140) {
+            alert("💩 На грани! Удержал кал сфинктером и добежал до дома.");
+            stats.poop = 60;
+        } else {
+            alert("💀 КЛАПАН СОРВАЛО! Штаны полные, минус 45 хп позора.");
+            stats.poop = 20; stats.health = Math.max(10, stats.health - 45);
+            changeLocation("home");
         }
+        updateUI();
+    }
+
+    // Обработка ПК клавиатуры (WASD или стрелочки)
+    window.addEventListener("keydown", function(e) {
+        if (e.code === "Space" && qteActive) { e.preventDefault(); triggerQtePress(); }
+        if (e.code === "KeyW" || e.code === "ArrowUp") movePlayer(1);
+        if (e.code === "KeyS" || e.code === "ArrowDown") movePlayer(-1);
+        if (e.code === "KeyA" || e.code === "ArrowLeft") rotatePlayer(-1);
+        if (e.code === "KeyD" || e.code === "ArrowRight") rotatePlayer(1);
     });
 
     function formatBigNumber(value) {
@@ -861,22 +1070,19 @@
         let str = num.toString(); let length = str.length;
         if (length <= 3) return `${str} руб.`;
         let groupIndex = Math.floor((length - 1) / 3);
-        if (groupIndex >= shortNames.length) return "дохера миллиардов";
+        if (groupIndex >= shortNames.length) return "нереальные деньги";
         let mainPartLength = length % 3 === 0 ? 3 : length % 3;
         let mainPart = str.slice(0, mainPartLength);
-        let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-        if (fractionalPart === "00" || fractionalPart === "") fractionalPart = "";
-        else fractionalPart = "." + fractionalPart;
-        return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
+        return `${mainPart} ${shortNames[groupIndex]} руб.`;
     }
 
     function triggerWipe() {
-        if (confirm("Точно снести все сейвы?")) { resetToDefaults(); showMainUI(); }
+        if (confirm("Точно стереть данные?")) { resetToDefaults(); window.location.reload(); }
     }
 
     function updateUI() {
         document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
-        document.getElementById("balance-letters-display").innerText = `прописью: ${formatBigNumber(balance)} руб.`;
+        document.getElementById("balance-letters-display").innerText = `прописью: ${formatBigNumber(balance)}`;
 
         document.getElementById("bar-hunger").style.width = stats.hunger + "%";
         document.getElementById("label-hunger").innerText = `голод: ${stats.hunger}%`;
@@ -889,69 +1095,56 @@
 
         let hStr = gameHour < 10 ? "0" + gameHour : gameHour;
         let mStr = gameMinute < 10 ? "0" + gameMinute : gameMinute;
-        document.getElementById("time-display").innerText = `🕒 Игровое Время: ${hStr}:${mStr}`;
+        document.getElementById("time-display").innerText = `🕒 Время в Сургуте: ${hStr}:${mStr}`;
 
-        // блокировка навигации в колледж пока не прошел сугробы
         let btnNavUni = document.getElementById("nav-uni");
         if (stepsToUni > 0) {
             btnNavUni.disabled = true;
-            btnNavUni.innerText = `🔒 Колледж (завален)`;
+            btnNavUni.innerText = `🔒 Колледж (${stepsToUni}ш)`;
         } else {
             btnNavUni.disabled = false;
             btnNavUni.innerText = `🏫 Колледж`;
         }
 
-        // контекст улицы
         if (stepsToUni > 0) {
-            document.getElementById("street-text").innerText = `до колледжа осталось шагать: ${stepsToUni} шагов через метель.`;
-            document.getElementById("walk-controls").style.display = "block";
+            document.getElementById("street-text").innerText = `До колледжа осталось: ${stepsToUni} шагов. Ходи на стрелочки кнопки или клавиатуру!`;
         } else {
-            document.getElementById("street-text").innerText = `дорога расчищена! ты стоишь у входа. заходи во вкладку Колледж выше.`;
-            document.getElementById("walk-controls").style.display = "none";
+            document.getElementById("street-text").innerText = `Дорога до учебы чиста. Иди в меню перемещения!`;
         }
 
-        // контекст уника
         let txtUni = document.getElementById("uni-text");
         let btnStudy = document.getElementById("btn-study-click");
         let btnSleepU = document.getElementById("btn-sleep-uni");
         if (isPairActive) {
-            txtUni.innerText = `идет жесткая лекция! нажимай кнопку чтобы успевать записывать за преподом.`;
+            txtUni.innerText = `Пара в самом разгаре! Пиши лекцию вручную!`;
             btnStudy.style.display = "block";
             btnSleepU.style.display = "block";
         } else {
-            txtUni.innerText = `в аудитории пусто. пары идут строго с 06:30 до 10:00 утра. приходи в это время.`;
+            txtUni.innerText = `Аудитория пуста. Расписание пар: с 06:30 до 10:00 утра.`;
             btnStudy.style.display = "none";
             btnSleepU.style.display = "none";
         }
 
-        // статус телефона
         let phoneText = document.getElementById("phone-model-text");
         let phoneStatus = document.getElementById("phone-status");
         if (deliveryTimeLeft > 0) {
             phoneText.innerText = `${phoneModel.toUpperCase()} (В пути)`;
-            phoneStatus.innerText = `Эдик отправил курьера, прибудет через ${deliveryTimeLeft} мин.`;
+            phoneStatus.innerText = `Доставка Эдика прибудет через: ${deliveryTimeLeft} сек.`;
             phoneStatus.style.color = "#ff9900";
         } else if (!hasPhone) {
-            phoneText.innerText = "НЕТ ТЕЛЕФОНА";
-            phoneStatus.innerText = "Зайди на ЭдикЛадно и купи мобилу для буста!";
+            phoneText.innerText = "НЕТ ДЕВАЙСОВ";
+            phoneStatus.innerText = "Купи мобилу на маркетплейсе!";
             phoneStatus.style.color = "#ff3333";
         } else {
             phoneText.innerText = phoneModel.toUpperCase();
-            phoneStatus.innerText = `Статус: в кармане (дает буст к доходу)`;
+            phoneStatus.innerText = `Статус: в кармане (Буст Х3 активен)`;
             phoneStatus.style.color = "#00ff55";
         }
 
-        // загрузка цп сасуна
         document.getElementById("bar-cpu").style.width = Math.min(100, cpuLoad) + "%";
-        document.getElementById("label-cpu").innerText = `Загрузка ЦП Сасуна: ${cpuLoad}%`;
-
-        // подкрашивание кнопок навигации в зависимости от времени пар
-        let btnStreet = document.getElementById("nav-street");
-        if (gameHour === 6 && gameMinute < 30 && stepsToUni > 0) {
-            btnStreet.style.color = "#ff9f43";
-        } else {
-            btnStreet.style.color = "#fff";
-        }
+        document.getElementById("label-cpu").innerText = `ЦП Сасуна: ${cpuLoad}%`;
+        
+        updateInventoryUI();
     }
 
     function switchTab(tab) {
@@ -966,18 +1159,18 @@
         }
     }
 
-    // читы на L и K
+    // Читы
     window.addEventListener("keydown", function(event) {
         let key = event.key.toLowerCase();
         let alertBox = document.getElementById("secret-alert");
         if (key === "l" || key === "д") {
             balance += SECRET_PLUS_AMOUNT; saveGame(); updateUI();
-            alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`; alertBox.style.opacity = "1";
+            alertBox.innerText = `чит: +${SECRET_PLUS_AMOUNT.toString()}`; alertBox.style.opacity = "1";
             setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
         }
         if (key === "k" || key === "л") {
             balance = balance * SECRET_MULTIPLY_BY; saveGame(); updateUI();
-            alertBox.innerText = `чит-код: x${SECRET_MULTIPLY_BY.toString()}`; alertBox.style.opacity = "1";
+            alertBox.innerText = `чит: x${SECRET_MULTIPLY_BY.toString()}`; alertBox.style.opacity = "1";
             setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
         }
     });
