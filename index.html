@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>гетто казик 2.0</title>
+    <title>гетто симулятор 4.5: пары и преподы</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
@@ -14,11 +14,36 @@
             font-family: 'Inter', sans-serif;
             font-weight: 700;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .main-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .menu-btn {
+            background-color: #202428;
+            color: #8c969e;
+            border: 1px solid #31373e;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .menu-btn.active {
+            background-color: #00cc52;
+            color: #000000;
+            border-color: #00cc52;
         }
         .casino-card {
             background-color: #141619;
@@ -26,7 +51,7 @@
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
             text-align: center;
-            width: 450px;
+            width: 480px;
             border: 1px solid #1f2326;
         }
         .balance-main {
@@ -37,17 +62,80 @@
         .balance-letters {
             color: #7a828a;
             font-size: 13px;
-            margin-bottom: 25px;
             line-height: 1.4;
+            margin-bottom: 15px;
         }
-        .label-text {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #0b0c0d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .stat-bar-container {
+            text-align: left;
+        }
+        .stat-label {
+            font-size: 11px;
             color: #8c969e;
-            font-size: 12px;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            display: block;
         }
+        .bar-bg {
+            background: #202428;
+            height: 12px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #31373e;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s;
+        }
+        .fill-hunger { background: #e67e22; }
+        .fill-health { background: #e74c3c; }
+        .fill-anger { background: #9b59b6; }
+        .fill-poop { background: #8a6d3b; }
+        .fill-cpu { background: #00cc52; }
+
+        .sasun-spec {
+            background: #1c2e4a;
+            border: 2px dashed #0051ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .phone-spec {
+            background: #221c2e;
+            border: 2px dashed #9b59b6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        /* плашка времени */
+        .time-spec {
+            background: #2e281c;
+            border: 2px dashed #e67e22;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+            color: #ff9f43;
+        }
+
+        .game-screen { display: none; }
+        .game-screen.active { display: block; }
+        
         select, input {
             background-color: #202428;
             color: #ffffff;
@@ -60,15 +148,11 @@
             font-weight: 700;
             font-size: 14px;
             outline: none;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        .row {
-            display: flex;
-            gap: 15px;
-        }
-        .col {
-            flex: 1;
-        }
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+        
         .slots-container {
             background-color: #0b0c0d;
             border-radius: 8px;
@@ -76,9 +160,7 @@
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 25px;
-            min-height: 46px;
-            align-items: center;
+            margin-bottom: 20px;
         }
         .slot-box {
             background-color: #202428;
@@ -93,39 +175,102 @@
             color: #4ef060;
             text-transform: uppercase;
         }
-        .btn-spin {
+        .btn-action {
             background-color: #00cc52;
             color: #000000;
             border: none;
-            padding: 15px;
+            padding: 14px;
             border-radius: 30px;
             width: 100%;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            letter-spacing: 2px;
             text-transform: uppercase;
-            transition: background 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 204, 82, 0.2);
+            margin-bottom: 10px;
         }
-        .btn-spin:hover {
-            background-color: #00ff66;
+        .btn-action:hover { background-color: #00ff66; }
+        
+        .student-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .result-message {
+        .btn-sub {
+            background: #202428;
+            color: #fff;
+            border: 1px solid #31373e;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-sub:hover { background: #31373e; }
+        
+        #poop-game-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #bsod-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0000aa;
+            color: #ffffff;
+            font-family: monospace;
+            font-weight: normal;
+            z-index: 1000;
+            padding: 40px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .qte-container {
+            width: 300px;
+            height: 30px;
+            background: #222;
+            border: 3px solid #fff;
+            position: relative;
+            border-radius: 6px;
             margin-top: 20px;
-            font-size: 13px;
-            color: #e6b800;
-            min-height: 36px;
+        }
+        .qte-target {
+            position: absolute;
+            top: 0; left: 120px; width: 40px; height: 100%;
+            background: #00cc52;
+        }
+        .qte-slider {
+            position: absolute;
+            top: 0; left: 0; width: 8px; height: 100%;
+            background: #ff3333;
         }
         .secret-alert {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: #ff3333;
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.5s;
+            position: absolute; top: 10px; left: 10px; color: #ff3333; font-size: 11px; opacity: 0;
+        }
+        .shop-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 998;
+            justify-content: center;
+            align-items: center;
+        }
+        .shop-content {
+            background: #141619;
+            border: 2px solid #9b59b6;
+            padding: 25px;
+            border-radius: 12px;
+            width: 400px;
+            text-align: center;
         }
     </style>
 </head>
@@ -133,248 +278,721 @@
 
 <div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
-<div class="casino-card">
-    <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
-    <div class="balance-letters" id="balance-letters-display">
-        прописью: 0 руб.<br>
-        до бесконечности: расчет...
-    </div>
+<div id="bsod-overlay">
+    <p>A problem has been detected and Windows has been shut down to prevent damage to your computer.</p>
+    <p>DRIVER_IRQL_NOT_LESS_OR_EQUAL (SASUN_XP_LAPTOP_EXPLODE)</p>
+    <p>Technical Information:</p>
+    <p>*** STOP: 0x000000D1 (0x0000000C, 0x00000002, 0x00000000, 0xF7312AE4)</p>
+    <p>*** sasun_cooler.sys - Address F7312AE4 base at F7312000, DateStamp 36b072a3</p>
+    <br>
+    <button class="btn-action" style="background:#ff3333; color:#fff; width:auto; border-radius:6px; font-family:monospace;" onclick="rebootSasun()">ПИЗДАНУТЬ ПО КОРПУСУ (ПЕРЕЗАГРУЗКА)</button>
+</div>
 
-    <span class="label-text">твоя главная цель в жизни</span>
-    <select id="target-select" onchange="handleTargetChange()">
-        <option value="ХУЙ">собрать ХУЙ</option>
-        <option value="ЕБЛАН">собрать ЕБЛАН</option>
-        <option value="ПИДОР">собрать ПИДОР</option>
+<div id="poop-game-overlay">
+    <h2 style="color: #8a6d3b; text-transform: uppercase;">ГОВНИЩЕ ПОДСТУПИЛО! ЖМИ ПРОБЕЛ!</h2>
+    <p style="font-size: 14px; color: #aaa;">попади ползунком в зеленый сектор, чтобы добежать до толчка!</p>
+    <div class="qte-container">
+        <div class="qte-target"></div>
+        <div class="qte-slider" id="qte-slider"></div>
+    </div>
+    <h1 style="margin-top: 25px; font-size: 28px; color: #fff;">ТАП!</h1>
+</div>
+
+<div id="shop-overlay" class="shop-modal">
+    <div class="shop-content">
+        <h3 style="color:#9b59b6; text-transform:uppercase; margin-bottom:20px;">📦 Маркетплейс "ЭдикЛадно"</h3>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Доставка на дом занимает пол-дня (24 мин). Можно лечь поспать дома до 6 утра.</p>
+        
+        <div style="background:#202428; padding:10px; border-radius:6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;"><b style="font-size:13px;">Сифон 6s (Б/У)</b><br><span style="font-size:11px; color:#8c969e;">Обычный мобильник</span></div>
+            <button class="btn-sub" style="color:#00cc52; border-color:#00cc52;" onclick="buyPhoneFromShop('сифон 6s', 4000n)">4 000 р.</button>
+        </div>
+        <div style="background:#202428; padding:10px; border-radius:6px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;"><b style="font-size:13px;">Сифон 15 ПроМагнат</b><br><span style="font-size:11px; color:#4ef060;">Х3 к доходу ТыДок!</span></div>
+            <button class="btn-sub" style="color:#00cc52; border-color:#00cc52;" onclick="buyPhoneFromShop('сифон 15 промагнат', 85000n)">85 000 р.</button>
+        </div>
+        <button class="btn-sub" style="width:100%;" onclick="closeShop()">Закрыть сайт</button>
+    </div>
+</div>
+
+<div class="casino-card" id="screen-start-choice">
+    <h2 style="color: #4ef060; margin-bottom: 25px; text-transform: uppercase;">выбери свой путь в гетто</h2>
+    <span class="label-text">кто ты по жизни?</span>
+    <select id="role-select">
+        <option value="bandit">бандит (+10% к кушу в казике)</option>
+        <option value="mac">работник ПатНодальса (может пиздить еду)</option>
+        <option value="coder">кодер (буст в КодьХуйня)</option>
+        <option value="modeler">моделист (буст 3D-моделей)</option>
+        <option value="streamer">стример (прокачка Птич.тв)</option>
+        <option value="tiktok">тиктокер (вирус в ТыДок)</option>
+        <option value="photoshop">фотошопер (заказы в ФотоЖоп)</option>
     </select>
+    <button class="btn-action" style="margin-top: 15px;" onclick="selectRole()">начать учебу в колледже</button>
+</div>
 
-    <div class="row">
-        <div class="col">
-            <span class="label-text">кол-во слотов</span>
-            <select id="slots-select">
-                <option value="3">3</option>
-                <option value="5">5</option>
+<div id="main-ui" style="display: none; flex-direction: column; align-items: center;">
+    <div class="main-menu">
+        <button class="menu-btn active" id="tab-casino" onclick="switchTab('casino')">казино</button>
+        <button class="menu-btn" id="tab-student" onclick="switchTab('student')">симулятор</button>
+    </div>
+
+    <div class="casino-card">
+        <div class="balance-container">
+            <div id="role-badge" style="font-size: 11px; color: #8c969e; text-transform: uppercase; margin-bottom: 5px;"></div>
+            <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
+            <div class="balance-letters" id="balance-letters-display">прописью: 0 руб.</div>
+        </div>
+
+        <!-- Часики из GTA 5 -->
+        <div class="time-spec" id="time-display">🕒 Время: 12:00</div>
+
+        <div class="stats-grid">
+            <div class="stat-bar-container">
+                <div class="stat-label" id="label-hunger">голод: 100%</div>
+                <div class="bar-bg"><div class="bar-fill fill-hunger" id="bar-hunger"></div></div>
+            </div>
+            <div class="stat-bar-container">
+                <div class="stat-label" id="label-health">здоровье: 100%</div>
+                <div class="bar-bg"><div class="bar-fill fill-health" id="bar-health"></div></div>
+            </div>
+            <div class="stat-bar-container">
+                <div class="stat-label" id="label-anger">злость: 0%</div>
+                <div class="bar-bg"><div class="bar-fill fill-anger" id="bar-anger"></div></div>
+            </div>
+            <div class="stat-bar-container">
+                <div class="stat-label" id="label-poop">говнище: 0%</div>
+                <div class="bar-bg"><div class="bar-fill fill-poop" id="bar-poop"></div></div>
+            </div>
+        </div>
+
+        <!-- КАЗИНО -->
+        <div id="screen-casino" class="game-screen active">
+            <span class="label-text">цель прокрута</span>
+            <select id="target-select" onchange="handleTargetChange()">
+                <option value="ХУЙ">собрать ХУЙ</option>
+                <option value="ЕБЛАН">собрать ЕБЛАН</option>
+                <option value="ПИДОР">собрать ПИДОР</option>
             </select>
+            <div class="row">
+                <div class="col">
+                    <span class="label-text">slots</span>
+                    <select id="slots-select"><option value="3">3</option><option value="5">5</option></select>
+                </div>
+                <div class="col">
+                    <span class="label-text">ставка</span>
+                    <input type="text" id="bet-input" value="100">
+                </div>
+            </div>
+            <div class="slots-container" id="slots-container"></div>
+            <button class="btn-action" id="spin-btn" onclick="spin()">крутить</button>
+            <div class="result-message" id="result-display"></div>
         </div>
-        <div class="col">
-            <span class="label-text">ставка</span>
-            <input type="text" id="bet-input" value="100">
+
+        <!-- СИМУЛЯТОР СТУДЕНТА -->
+        <div id="screen-student" class="game-screen">
+            <div class="student-actions" id="normal-actions">
+                <button class="btn-sub" id="btn-pairs" onclick="actionGoToPairs()">📚 пойти на пары (в 6:30)</button>
+                <button class="btn-sub" onclick="actionCallMom()">📞 позвонить маме</button>
+                <button class="btn-sub" id="btn-steal-food" onclick="actionStealFood()">🍔 пиздить еду</button>
+                <button class="btn-sub" onclick="actionEatShawarma()">🌯 купить шаверму (250р)</button>
+            </div>
+
+            <!-- Режим присутствия на парах -->
+            <div id="pairs-active-zone" style="display:none; background:#29201c; border:2px solid #e67e22; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <p style="color:#ff9f43; margin-top:0; font-size:13px;">ЗАВЕДУЮЩИЙ ПАШЕТ, ПРЕПОДЫ ЧИТАЮТ ЛЕКЦИЮ...</p>
+                <button class="btn-sub" style="background:#8a6d3b; width:100%; border-color:#5c4828;" onclick="actionSleepOnPairs()">💤 Поспать на паре (риск пиздюлей)</button>
+            </div>
+
+            <div class="student-actions" style="margin-bottom:15px;">
+                <button class="btn-sub" style="border-color:#9b59b6; color:#e0b0ff;" onclick="openShop()">🛍️ зайти в ЭдикЛадно</button>
+                <button class="btn-sub" id="btn-sleep-home" style="border-color:#00bcff; color:#00bcff;" onclick="actionSleepHome()">💤 Лечь спать дома (до 6:00)</button>
+            </div>
+
+            <div class="phone-spec">
+                <div style="color:#d9a5ff; text-transform:uppercase; margin-bottom:4px;">📱 Мобила: <span id="phone-model-text">Сифон 6s</span></div>
+                <div id="phone-status" style="color:#fff;">Статус: В наличии</div>
+            </div>
+
+            <div class="sasun-spec">
+                <div style="color:#00ffcf; text-transform:uppercase; margin-bottom:4px;">💻 Ноут "Сасун" [ОС: Windows XP]</div>
+                <div id="sasun-status" style="color:#fff;">Статус: Работает еле как</div>
+                <div class="stat-bar-container" style="margin-top:6px;">
+                    <div class="stat-label" id="label-cpu" style="color:#a5b6c9; font-size:10px;">Загрузка ЦП: 0%</div>
+                    <div class="bar-bg" style="height:8px;"><div class="bar-fill fill-cpu" id="bar-cpu" style="width:0%;"></div></div>
+                </div>
+            </div>
+
+            <span class="label-text" style="margin-top: 10px; display: block;">доступный софт и халтура</span>
+            <div id="upgrades-list"></div>
+            <button class="btn-action" style="background:#ff3333; color:#fff; font-size:11px; padding:8px; margin-top:15px;" onclick="triggerWipe()">🔥 устроить жесткий вайп 🔥</button>
         </div>
     </div>
-
-    <div class="slots-container" id="slots-container">
-        <div class="slot-box">—</div>
-        <div class="slot-box">—</div>
-        <div class="slot-box">—</div>
-    </div>
-
-    <button class="btn-spin" onclick="spin()">крутить</button>
-
-    <div class="result-message" id="result-display"></div>
 </div>
 
 <script>
-    // ================= НАСТРОЙКА СЕКРЕТНЫХ КНОПОК =================
-    // укажи здесь число для прибавления при нажатии на L (сейчас 10 септиллионов)
     const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
-    
-    // укажи здесь число, на которое умножать баланс при нажатии на K
     const SECRET_MULTIPLY_BY = 2n;
-    // ==============================================================
 
     const maxJsNumber = 17976931348623157081452742373170435679807056752584499659891747680315726078002853876602841604862869853802707627511090146938459102431627447370420556114170685640321300057399439616010061329241517409249704289895240292376971510344482083512411547734028420155225345791771954714163901115161099238314115132219904229344n;
-
-    const shortNames = [
-        "", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", 
-        "секстил.", "септили.", "октил.", "нонил.", "децил.", 
-        "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
-        "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."
-    ];
-
+    const shortNames = ["", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", "секстил.", "септили.", "октил.", "нонил.", "децил.", "ундецил.", "дуодецил."];
     const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 
-    let balance = 10000n;
-    if (localStorage.getItem('ghetto_balance_big')) {
-        try {
-            balance = BigInt(localStorage.getItem('ghetto_balance_big'));
-        } catch(e) {
-            balance = 10000n;
-        }
+    let stats = { hunger: 100, health: 100, anger: 0, poop: 0 };
+    let playerRole = "";
+    let balance = 500n;
+    let isSpinning = false;
+    let qteActive = false;
+    let qtePos = 0;
+    let qteDirection = 2;
+
+    let isBsod = false;
+    let cpuLoad = 0;
+
+    let hasPhone = true; 
+    let phoneModel = "сифон 6s"; 
+    let deliveryTimeLeft = 0; 
+
+    // Время как в GTA 5 (пол игрового дня = 24 минуты реального времени)
+    // 1 игровой день = 1440 игровых минут = 1440 реальных секунд.
+    // Значит, 1 секунда реального времени = 1 игровая минута.
+    let gameHour = 12;
+    let gameMinute = 0;
+    let isAtPairs = false; // Находимся ли на парах сейчас
+
+    const softwareList = [
+        { name: "сдача бутылок у колледжа", baseCost: 100n, cps: 1n, count: 0n, roles: [], cpu: 0, swType: 'other' },
+        { name: "смены в ПатНодальс", baseCost: 800n, cps: 8n, count: 0n, roles: ["mac"], cpu: 0, swType: 'other' },
+        { name: "софт на КодьХуйня", baseCost: 5000n, cps: 70n, count: 0n, roles: ["coder"], cpu: 8, swType: 'pc' },
+        { name: "заказы в ФотоЖоп", baseCost: 20000n, cps: 400n, count: 0n, roles: ["photoshop"], cpu: 15, swType: 'pc' },
+        { name: "рендеринг Моделей", baseCost: 60000n, cps: 1500n, count: 0n, roles: ["modeler"], cpu: 22, swType: 'pc' },
+        { name: "стримы на Птич.тв", baseCost: 150000n, cps: 4500n, count: 0n, roles: ["streamer"], cpu: 30, swType: 'pc' },
+        { name: "вирусы в ТыДок (на телефоне)", baseCost: 600000n, cps: 20000n, count: 0n, roles: ["tiktok"], cpu: 0, swType: 'phone' }
+    ];
+
+    const roleNamesMap = {
+        bandit: "Бандит 🕶️", mac: "Сотрудник ПатНодальса 🍟", coder: "Разработчик в КодьХуйня 💻",
+        modeler: "3D Моделист 📐", streamer: "Стример на Птич.тв 🎮", tiktok: "Звезда ТыДок 📱", photoshop: "Мастер ФотоЖоп 🎨"
+    };
+
+    if (localStorage.getItem('ghetto_role')) {
+        playerRole = localStorage.getItem('ghetto_role');
+        balance = BigInt(localStorage.getItem('ghetto_bal_v4') || "500");
+        stats = JSON.parse(localStorage.getItem('ghetto_stats_v4') || '{"hunger":100,"health":100,"anger":0,"poop":0}');
+        hasPhone = localStorage.getItem('ghetto_has_phone') !== "false";
+        phoneModel = localStorage.getItem('ghetto_phone_model') || "сифон 6s";
+        deliveryTimeLeft = parseInt(localStorage.getItem('ghetto_delivery') || "0");
+        gameHour = parseInt(localStorage.getItem('ghetto_ghour') || "12");
+        gameMinute = parseInt(localStorage.getItem('ghetto_gmin') || "0");
+        isAtPairs = localStorage.getItem('ghetto_atpairs') === "true";
+        softwareList.forEach((sw, i) => {
+            sw.count = BigInt(localStorage.getItem(`ghetto_sw_${i}`) || "0");
+        });
+        showMainUI();
     }
 
-    handleTargetChange();
-    updateUI();
+    function selectRole() {
+        playerRole = document.getElementById("role-select").value;
+        localStorage.setItem('ghetto_role', playerRole);
+        resetToDefaults();
+        showMainUI();
+    }
 
-    setInterval(() => {
-        balance += 10000n;
-        saveBalance();
+    function showMainUI() {
+        document.getElementById("screen-start-choice").style.display = "none";
+        document.getElementById("main-ui").style.display = "flex";
+        document.getElementById("role-badge").innerText = `Роль: ${roleNamesMap[playerRole]}`;
+        document.getElementById("btn-steal-food").style.display = (playerRole === "mac") ? "block" : "none";
+        handleTargetChange();
+        renderUpgrades();
         updateUI();
-    }, 10000);
+    }
 
-    // обработка чит-кодов L и K
-    window.addEventListener("keydown", function(event) {
-        let key = event.key.toLowerCase();
-        let alertBox = document.getElementById("secret-alert");
-        
-        if (key === "l" || key === "д") {
-            balance += SECRET_PLUS_AMOUNT;
-            saveBalance();
-            updateUI();
-            
-            alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
-            alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+    function resetToDefaults() {
+        balance = 500n;
+        stats = { hunger: 100, health: 100, anger: 0, poop: 0 };
+        isBsod = false;
+        hasPhone = true;
+        phoneModel = "сифон 6s";
+        deliveryTimeLeft = 0;
+        gameHour = 12;
+        gameMinute = 0;
+        isAtPairs = false;
+        softwareList.forEach(sw => sw.count = 0n);
+        saveGame();
+    }
+
+    function saveGame() {
+        if (!playerRole) return;
+        localStorage.setItem('ghetto_bal_v4', balance.toString());
+        localStorage.setItem('ghetto_stats_v4', JSON.stringify(stats));
+        localStorage.setItem('ghetto_has_phone', hasPhone.toString());
+        localStorage.setItem('ghetto_phone_model', phoneModel);
+        localStorage.setItem('ghetto_delivery', deliveryTimeLeft.toString());
+        localStorage.setItem('ghetto_ghour', gameHour.toString());
+        localStorage.setItem('ghetto_gmin', gameMinute.toString());
+        localStorage.setItem('ghetto_atpairs', isAtPairs.toString());
+        softwareList.forEach((sw, i) => {
+            localStorage.setItem(`ghetto_sw_${i}`, sw.count.toString());
+        });
+    }
+
+    function calculateCpuLoad() {
+        let load = 0;
+        softwareList.forEach(sw => {
+            if (sw.swType === 'pc') load += sw.cpu * Number(sw.count);
+        });
+        return load;
+    }
+
+    // пассивный игровой тик (1 сек реального времени = 1 минута в игре)
+    setInterval(() => {
+        if (!playerRole || qteActive) return;
+
+        // Идем по времени вперед
+        gameMinute++;
+        if (gameMinute >= 60) {
+            gameMinute = 0;
+            gameHour++;
+            if (gameHour >= 24) gameHour = 0;
+        }
+
+        // Автоматический выход с пар через 3 игровых часа (180 секунд)
+        if (isAtPairs && gameHour >= 10) {
+            isAtPairs = false;
+            alert("🔔 Пары закончились! Пора топать домой или в казик.");
+        }
+
+        if (deliveryTimeLeft > 0) {
+            deliveryTimeLeft--;
+            if (deliveryTimeLeft <= 0) {
+                hasPhone = true;
+                alert("📦 КУРЬЕР ИЗ 'ЭДИКЛАДНО' ДОЕХАЛ! Телефон у тебя дома!");
+            }
+        }
+
+        // Нападение гопарей на улице (только если не на парах и есть трубка)
+        if (!isAtPairs && hasPhone && Math.random() < 0.015) {
+            triggerGopariAttack();
+        }
+
+        let income = 0n;
+        cpuLoad = calculateCpuLoad();
+
+        softwareList.forEach(sw => {
+            if (isBsod && sw.swType === 'pc') return;
+            if (!hasPhone && sw.swType === 'phone') return;
+            let boost = sw.roles.includes(playerRole) ? 2n : 1n;
+            if (sw.swType === 'phone' && phoneModel === "сифон 15 промагнат") boost = boost * 3n;
+            income += sw.cps * sw.count * boost;
+        });
+        balance += income;
+
+        if (cpuLoad > 90 && !isBsod && Math.random() < 0.25) {
+            triggerBsod();
+        }
+
+        stats.hunger = Math.max(0, stats.hunger - 1);
+        stats.poop = Math.min(100, stats.poop + 1);
+
+        if (stats.hunger <= 0) stats.health = Math.max(0, stats.health - 2);
+        if (stats.health <= 0) {
+            alert("🏥 ТЫ СЛЕГ В БОЛЬНИЦУ ОТ ИСТОЩЕНИЯ! Штраф 300 руб.");
+            balance = balance > 300n ? balance - 300n : 0n;
+            stats.health = 50; stats.hunger = 50; stats.anger = 20;
+            isAtPairs = false;
+        }
+
+        if (stats.poop >= 98 && !qteActive) triggerPoopMinigame();
+
+        saveGame();
+        updateUI();
+    }, 1000);
+
+    function triggerGopariAttack() {
+        hasPhone = false;
+        let stolenCash = balance > 5000n ? 5000n : balance;
+        balance -= stolenCash;
+        stats.anger = Math.min(100, stats.anger + 40);
+        stats.health = Math.max(20, stats.health - 25);
+        alert(`🚨 НА ТЕБЯ НАПАЛИ ГОПАРИ НА УЛИЦЕ!\nОтжали мобилу (${phoneModel.toUpperCase()}) и вытрясли ${stolenCash.toString()} рублей! Придется работать руками или идти на ЭдикЛадно.`);
+        saveGame();
+        updateUI();
+    }
+
+    function openShop() { document.getElementById("shop-overlay").style.display = "flex"; }
+    function closeShop() { document.getElementById("shop-overlay").style.display = "none"; }
+    
+    function buyPhoneFromShop(model, cost) {
+        if (hasPhone || deliveryTimeLeft > 0) {
+            alert("У тебя уже есть мобила или она едет!");
+            return;
+        }
+        if (balance < cost) {
+            alert("Эдик сказал: нет денег — гуляй!");
+            return;
+        }
+        balance -= cost;
+        phoneModel = model;
+        deliveryTimeLeft = 720; // Ждать пол-дня (12 игровых часов = 720 реальных секунд)
+        closeShop();
+        alert(`🛒 Заказ оформлен на ЭдикЛадно! Жди курьера пол-дня. Можно поспать дома до утра, чтобы промотать время.`);
+        saveGame();
+        updateUI();
+    }
+
+    // ХАРДКОРНЫЙ СОН ДОМА (До 6:00 утра)
+    function actionSleepHome() {
+        if (isAtPairs) return alert("Ты не дома, ты на парах!");
+        if (gameHour === 6 && gameMinute === 0) {
+            return alert("Уже 6:00 утра! Пора просыпаться, скоро выходить!");
         }
         
-        if (key === "k" || key === "л") {
-            balance = balance * SECRET_MULTIPLY_BY;
-            saveBalance();
-            updateUI();
-            
-            alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
-            alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+        alert("💤 Ты завалился спать на кровать дома...");
+        
+        // Перематываем время ровно на 6:00 утра текущего или следующего дня
+        gameHour = 6;
+        gameMinute = 0;
+        
+        // Скидываем курьера, если он ехал (так как прошло достаточно времени)
+        if (deliveryTimeLeft > 0) {
+            deliveryTimeLeft = 0;
+            hasPhone = true;
+            alert("📦 Пока ты спал, курьер из ЭдикЛадно кинул коробку под дверь!");
+        }
+
+        stats.hunger = Math.max(10, stats.hunger - 35);
+        stats.anger = Math.max(0, stats.anger - 40);
+        stats.poop = Math.min(100, stats.poop + 30);
+        
+        saveGame();
+        updateUI();
+    }
+
+    // ПОХОД НА ПАРЫ САМОМУ В 6:30
+    function actionGoToPairs() {
+        if (isAtPairs) return alert("Ты уже сидишь в кабинете!");
+        if (gameHour !== 6 || gameMinute < 30) {
+            return alert("Пары начинаются строго в 6:30 утра! Приходи вовремя, а не топай посреди ночи.");
+        }
+
+        isAtPairs = true;
+        stats.anger = Math.min(100, stats.anger + 15);
+        stats.poop = Math.min(100, stats.poop + 10);
+        let grant = playerRole === "modeler" ? 300n : 150n;
+        balance += grant;
+        
+        alert(`📚 Ты дотопал до колледжа сам! Сел за парту. Начислен грант +${grant} руб!`);
+        saveGame();
+        updateUI();
+    }
+
+    // СОН НА ПАРАХ С РИСКОМ ПОЛУЧИТЬ ПИЗДЮЛЕЙ
+    function actionSleepOnPairs() {
+        if (!isAtPairs) return;
+        
+        alert("💤 Ты положил голову на тетрадь и заснул под монотонный бред препода...");
+        
+        // Шанс 40% получить пиздюлей от препода
+        if (Math.random() < 0.4) {
+            stats.health = Math.max(10, stats.health - 30);
+            stats.anger = Math.min(100, stats.anger + 35);
+            alert("💥 ПРЕПОД ЗАМЕТИЛ ТЕБЯ! Ты получил жесткой пизды учебником по голове! Минус 30 здоровья, злость зашкаливает.");
+        } else {
+            stats.anger = Math.max(0, stats.anger - 20);
+            stats.health = Math.min(100, stats.health + 10);
+            alert("🍀 Пронесло! Ты отлично вздремнул полчасика, препод писал что-то на доске.");
+        }
+        
+        // Время летит вперед на 30 игровых минут
+        gameMinute += 30;
+        if (gameMinute >= 60) { gameMinute -= 60; gameHour++; }
+        
+        saveGame();
+        updateUI();
+    }
+
+    function triggerBsod() {
+        isBsod = true;
+        document.getElementById("bsod-overlay").style.display = "block";
+    }
+
+    function rebootSasun() {
+        document.getElementById("bsod-overlay").innerHTML = "<h1>ЗАГРУЗКА WINDOWS XP... КУЛЕР ОРЕТ...</h1>";
+        setTimeout(() => {
+            isBsod = false;
+            document.getElementById("bsod-overlay").style.display = "none";
+            location.reload(); 
+        }, 4000);
+    }
+
+    function triggerPoopMinigame() {
+        qteActive = true; qtePos = 0;
+        document.getElementById("poop-game-overlay").style.display = "flex";
+        let qteInterval = setInterval(() => {
+            if (!qteActive) { clearInterval(qteInterval); return; }
+            qtePos += qteDirection;
+            if (qtePos >= 292 || qtePos <= 0) qteDirection = -qteDirection;
+            document.getElementById("qte-slider").style.left = qtePos + "px";
+        }, 10);
+    }
+
+    window.addEventListener("keydown", function(e) {
+        if (e.code === "Space" && qteActive) {
+            e.preventDefault(); qteActive = false;
+            document.getElementById("poop-game-overlay").style.display = "none";
+            if (qtePos >= 120 && qtePos <= 160) {
+                alert("💩 ПОБЕДА! Коридор колледжа спасен, ты успел в толчок!");
+                stats.poop = 0; stats.anger = Math.max(0, stats.anger - 20);
+            } else {
+                alert("💀 МИМО... Подливка пошла по джинсам прямо на паре. Минус 30 ХП.");
+                stats.poop = 40; stats.health = Math.max(10, stats.health - 30); stats.anger = Math.min(100, stats.anger + 40);
+            }
+            saveGame(); updateUI();
         }
     });
 
+    function actionCallMom() {
+        stats.health = Math.min(100, stats.health + 20);
+        stats.anger = Math.max(0, stats.anger - 25);
+        balance += 100n;
+        alert("📞 Мама сказала учиться хорошо и скинула 100р.");
+        saveGame(); updateUI();
+    }
+
+    function actionStealFood() {
+        if (playerRole !== "mac") return;
+        if (Math.random() < 0.2) {
+            alert("🚨 Менеджер пропалил наггетсы в кармане! Минус 20 хп.");
+            stats.health = Math.max(10, stats.health - 20);
+        } else {
+            alert("🍔 Успешно! Заточил три бигмака бесплатно.");
+            stats.hunger = 100;
+        }
+        saveGame(); updateUI();
+    }
+
+    function actionEatShawarma() {
+        if (balance < 250n) return alert("Нет денег!");
+        balance -= 250n;
+        stats.hunger = Math.min(100, stats.hunger + 60);
+        stats.poop = Math.min(100, stats.poop + 15);
+        saveGame(); updateUI();
+    }
+
+    function renderUpgrades() {
+        const container = document.getElementById("upgrades-list");
+        container.innerHTML = "";
+        softwareList.forEach((sw, i) => {
+            let item = document.createElement("div");
+            item.style = "background:#202428; border:1px solid #31373e; border-radius:8px; padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; text-align:left;";
+            let isProf = sw.roles.includes(playerRole);
+            let displayCps = isProf ? sw.cps * 2n : sw.cps;
+            let platformLabel = sw.swType === 'pc' ? ' <span style="color:#00ff55; font-size:10px;">[НОУТ САСУН]</span>' : (sw.swType === 'phone' ? ' <span style="color:#ba55d3; font-size:10px;">[МОБИЛА]</span>' : '');
+
+            item.innerHTML = `
+                <div>
+                    <div style="color:#fff; font-size:13px;">${sw.name}${platformLabel} ${isProf ? '<span style="color:#4ef060;">[Х2 ПРОФ]</span>':''}</div>
+                    <div style="color:#7a828a; font-size:11px;" id="sw-desc-${i}">добыча: +${displayCps.toString()} р/сек (куплено: ${sw.count})</div>
+                </div>
+                <button class="btn-sub" style="color:#4ef060; border-color:#4ef060;" id="sw-btn-${i}" onclick="buyUpgrade(${i})">купить</button>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function buyUpgrade(index) {
+        let sw = softwareList[index];
+        let cost = sw.baseCost;
+        for (let i = 0n; i < sw.count; i++) cost = (cost * 12n) / 10n;
+        if (balance < cost) return alert("Не хватает рублей!");
+        balance -= cost; sw.count++;
+        saveGame(); updateUI();
+    }
+
+    function triggerWipe() {
+        if (confirm("Устроить вайп?")) { resetToDefaults(); updateUI(); switchTab('casino'); }
+    }
+
     function handleTargetChange() {
         const target = document.getElementById("target-select").value;
-        const slotsSelect = document.getElementById("slots-select");
-        
-        if (target === "ХУЙ") {
-            slotsSelect.value = "3";
-        } else {
-            slotsSelect.value = "5";
-        }
-        buildSlots(parseInt(slotsSelect.value));
+        document.getElementById("slots-select").value = (target === "ХУЙ") ? "3" : "5";
+        buildSlots(parseInt(document.getElementById("slots-select").value));
     }
 
     function buildSlots(count) {
         const container = document.getElementById("slots-container");
         container.innerHTML = "";
         for (let i = 0; i < count; i++) {
-            const box = document.createElement("div");
-            box.className = "slot-box";
-            box.innerText = "—";
-            container.appendChild(box);
+            let box = document.createElement("div"); box.className = "slot-box"; box.innerText = "—"; container.appendChild(box);
         }
     }
 
     function formatBigNumber(value) {
-        let num = BigInt(value);
-        if (num === 0n) return "0 руб.";
-        
-        let str = num.toString();
-        let length = str.length;
-        
+        let num = BigInt(value); if (num === 0n) return "0 руб.";
+        let str = num.toString(); let length = str.length;
         if (length <= 3) return `${str} руб.`;
-        
         let groupIndex = Math.floor((length - 1) / 3);
-        
-        if (groupIndex >= shortNames.length) {
-            return "дохерархи миллиардов";
-        }
-        
+        if (groupIndex >= shortNames.length) return "дохерархи миллиардов";
         let mainPartLength = length % 3 === 0 ? 3 : length % 3;
         let mainPart = str.slice(0, mainPartLength);
         let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-        
-        if (fractionalPart === "00" || fractionalPart === "") {
-            fractionalPart = "";
-        } else if (fractionalPart[1] === "0") {
-            fractionalPart = "." + fractionalPart[0];
-        } else {
-            fractionalPart = "." + fractionalPart;
-        }
-        
+        if (fractionalPart === "00" || fractionalPart === "") fractionalPart = "";
+        else fractionalPart = "." + (fractionalPart[1] === "0" ? fractionalPart[0] : fractionalPart);
         return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
     }
 
     function updateUI() {
         document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
-        
-        let textForm = formatBigNumber(balance);
-        let distanceText = "";
-        
-        if (balance >= maxJsNumber) {
-            distanceText = "ты превзошел лимиты вселенной";
+        document.getElementById("balance-letters-display").innerText = `прописью: ${formatBigNumber(balance)} руб.`;
+
+        document.getElementById("bar-hunger").style.width = stats.hunger + "%";
+        document.getElementById("label-hunger").innerText = `голод: ${stats.hunger}%`;
+        document.getElementById("bar-health").style.width = stats.health + "%";
+        document.getElementById("label-health").innerText = `здоровье: ${stats.health}%`;
+        document.getElementById("bar-anger").style.width = stats.anger + "%";
+        document.getElementById("label-anger").innerText = `злость: ${stats.anger}%`;
+        document.getElementById("bar-poop").style.width = stats.poop + "%";
+        document.getElementById("label-poop").innerText = `говнище: ${stats.poop}%`;
+
+        // Отрисовка часиков
+        let hStr = gameHour < 10 ? "0" + gameHour : gameHour;
+        let mStr = gameMinute < 10 ? "0" + gameMinute : gameMinute;
+        document.getElementById("time-display").innerText = `🕒 Время в игре: ${hStr}:${mStr}`;
+
+        // Переключение режимов Пар / Улицы
+        if (isAtPairs) {
+            document.getElementById("normal-actions").style.display = "none";
+            document.getElementById("pairs-active-zone").style.display = "block";
         } else {
-            let remaining = maxJsNumber - balance;
-            distanceText = formatBigNumber(remaining);
+            document.getElementById("normal-actions").style.display = "grid";
+            document.getElementById("pairs-active-zone").style.display = "none";
+            
+            // Подсветка кнопки пар, если время 6:30
+            let btnPairs = document.getElementById("btn-pairs");
+            if (gameHour === 6 && gameMinute >= 30) {
+                btnPairs.style.borderColor = "#ff9f43"; btnPairs.style.color = "#ff9f43";
+            } else {
+                btnPairs.style.borderColor = "#31373e"; btnPairs.style.color = "#fff";
+            }
         }
-        
-        document.getElementById("balance-letters-display").innerHTML = `
-            прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
-            до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
-        `;
+
+        let phoneText = document.getElementById("phone-model-text");
+        let phoneStatus = document.getElementById("phone-status");
+
+        if (deliveryTimeLeft > 0) {
+            phoneText.innerText = `${phoneModel.toUpperCase()} (В пути)`;
+            phoneStatus.innerText = `Статус: Курьер мчит...`;
+            phoneStatus.style.color = "#ff9900";
+        } else if (!hasPhone) {
+            phoneText.innerText = "НЕТ ТЕЛЕФОНА";
+            phoneStatus.innerText = "Статус: ОТЖАЛИ ГОПАРИ!";
+            phoneStatus.style.color = "#ff3333";
+        } else {
+            phoneText.innerText = phoneModel.toUpperCase();
+            phoneStatus.innerText = "Статус: В наличии";
+            phoneStatus.style.color = "#00ff55";
+        }
+
+        cpuLoad = calculateCpuLoad();
+        document.getElementById("bar-cpu").style.width = Math.min(100, cpuLoad) + "%";
+        document.getElementById("label-cpu").innerText = `Загрузка ЦП: ${cpuLoad}%`;
+
+        let statusBox = document.getElementById("sasun-status");
+        if (isBsod) {
+            statusBox.innerText = "Статус: СДОХ (СИНИЙ ЭКРАН)"; statusBox.style.color = "#ff3333";
+        } else if (cpuLoad > 80) {
+            statusBox.innerText = "Статус: СЕЙЧАС ВЗОРВЕТСЯ"; statusBox.style.color = "#ff9900";
+        } else {
+            statusBox.innerText = "Статус: Скрипит"; statusBox.style.color = "#00ffcf";
+        }
+
+        softwareList.forEach((sw, i) => {
+            let cost = sw.baseCost;
+            for (let j = 0n; j < sw.count; j++) cost = (cost * 12n) / 10n;
+            let btn = document.getElementById(`sw-btn-${i}`);
+            let desc = document.getElementById(`sw-desc-${i}`);
+            if (btn) btn.innerText = `купить (${formatBigNumber(cost)})`;
+            if (desc) {
+                let isProf = sw.roles.includes(playerRole);
+                let displayCps = isProf ? sw.cps * 2n : sw.cps;
+                if (sw.swType === 'phone' && phoneModel === "сифон 15 промагнат") displayCps = displayCps * 3n;
+                let extraText = sw.swType === 'pc' ? ` [ЦП: +${sw.cpu}%]` : '';
+                if (sw.swType === 'phone' && !hasPhone) desc.innerText = `❌ БЛОКИРОВАНО — НЕТ ТЕЛЕФОНА!`;
+                else desc.innerText = `добыча: +${displayCps.toString()} р/сек${extraText} (куплено: ${sw.count})`;
+            }
+        });
     }
 
-    function saveBalance() {
-        localStorage.setItem('ghetto_balance_big', balance.toString());
+    function switchTab(tab) {
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+        if (tab === 'casino') {
+            document.getElementById('tab-casino').classList.add('active');
+            document.getElementById('screen-casino').classList.add('active');
+        } else {
+            document.getElementById('tab-student').classList.add('active');
+            document.getElementById('screen-student').classList.add('active');
+        }
     }
+
+    window.addEventListener("keydown", function(event) {
+        let key = event.key.toLowerCase();
+        let alertBox = document.getElementById("secret-alert");
+        if (key === "l" || key === "д") {
+            balance += SECRET_PLUS_AMOUNT; saveGame(); updateUI();
+            alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`; alertBox.style.opacity = "1";
+            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+        }
+        if (key === "k" || key === "л") {
+            balance = balance * SECRET_MULTIPLY_BY; saveGame(); updateUI();
+            alertBox.innerText = `чит-код: x${SECRET_MULTIPLY_BY.toString()}`; alertBox.style.opacity = "1";
+            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+        }
+    });
 
     function spin() {
-        let betInput = document.getElementById("bet-input").value;
-        let bet = 100n;
-        
-        try {
-            betInput = betInput.replace(/[^0-9]/g, '');
-            if (!betInput) betInput = "100";
-            bet = BigInt(betInput);
-        } catch(e) {
-            bet = 100n;
-        }
+        if (isSpinning) return;
+        let betInput = document.getElementById("bet-input").value.replace(/[^0-9]/g, '');
+        if (!betInput) betInput = "100";
+        let bet = BigInt(betInput);
+        if (balance < bet) return alert("Бомж, денег нет!");
+        if (stats.anger >= 95) return alert("Ты слишком злой!");
 
-        if (bet <= 0n) {
-            alert("нормальную ставку поставь");
-            return;
-        }
+        balance -= bet; isSpinning = true;
+        stats.anger = Math.min(100, stats.anger + 2);
 
-        if (balance < bet) {
-            alert("не хватает бабок на такую ставку, жди пособия");
-            return;
-        }
-
-        balance -= bet;
-        
         const target = document.getElementById("target-select").value;
         const slotsCount = parseInt(document.getElementById("slots-select").value);
         const boxes = document.querySelectorAll(".slot-box");
-        
-        let resultArr = [];
-        let isLucky = Math.random() < 0.25;
-        
-        if (isLucky) {
-            let targetArr = target.split("");
-            while (targetArr.length < slotsCount) {
-                targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+
+        let ticks = 0;
+        let interval = setInterval(() => {
+            for (let i = 0; i < slotsCount; i++) boxes[i].innerText = alphabet[Math.floor(Math.random() * alphabet.length)];
+            ticks++;
+            if (ticks >= 12) {
+                clearInterval(interval);
+                let resultArr = [];
+                let winChance = playerRole === "bandit" ? 0.32 : 0.25;
+                if (Math.random() < winChance) {
+                    let targetArr = target.split("");
+                    while (targetArr.length < slotsCount) targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+                    resultArr = targetArr;
+                } else {
+                    for (let i = 0; i < slotsCount; i++) resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+                }
+                for (let i = 0; i < slotsCount; i++) boxes[i].innerText = resultArr[i];
+                let currentWord = resultArr.join("");
+                if (currentWord.includes(target)) {
+                    let winAmount = bet * 50n; balance += winAmount;
+                    document.getElementById("result-display").innerHTML = `🎉 ЦЕЛЬ ДОСТИГНУТА! Собрано ${target}! (+${winAmount.toString()} руб.)`;
+                    stats.anger = Math.max(0, stats.anger - 15);
+                } else {
+                    document.getElementById("result-display").innerText = "мимо!";
+                }
+                isSpinning = false; saveGame(); updateUI();
             }
-            resultArr = targetArr;
-        } else {
-            for (let i = 0; i < slotsCount; i++) {
-                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-                resultArr.push(randomLetter);
-            }
-        }
-        
-        for (let i = 0; i < slotsCount; i++) {
-            boxes[i].innerText = resultArr[i];
-        }
-        
-        let currentWord = resultArr.join("");
-        let resultDisplay = document.getElementById("result-display");
-        
-        if (currentWord.includes(target)) {
-            let winAmount = bet * 50n;
-            balance += winAmount;
-            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
-        } else {
-            resultDisplay.innerText = "мимо! крути еще!";
-        }
-        
-        saveBalance();
-        updateUI();
+        }, 70);
     }
 </script>
-
 </body>
 </html>
