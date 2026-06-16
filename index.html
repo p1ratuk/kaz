@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>гетто симулятор 6.0: 3d хрущевка</title>
+    <title>гетто симулятор 7.0: некстген белый яр</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
@@ -29,14 +29,14 @@
             gap: 5px;
             margin-bottom: 10px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
         }
         .menu-btn {
             flex: 1;
             background-color: #202428;
             color: #8c969e;
             border: 1px solid #31373e;
-            padding: 10px 5px;
+            padding: 12px 5px;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
@@ -57,19 +57,19 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             text-align: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             border: 1px solid #1f2326;
             box-sizing: border-box;
         }
         .balance-main {
             color: #4ef060;
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 3px;
         }
         .balance-letters {
             color: #7a828a;
             font-size: 11px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .stats-grid {
             display: grid;
@@ -107,13 +107,13 @@
         .fill-poop { background: #8a6d3b; }
         .fill-cpu { background: #00cc52; }
 
-        /* НАСТОЯЩЕЕ 3D ОКНО РЭЙКАСТИНГА */
+        /* УВЕЛИЧЕННОЕ ОКНО 1 ЛИЦА */
         .view-3d-container {
             width: 100%;
-            height: 200px;
+            height: 300px; /* Увеличили размер вьюпорта */
             background-color: #000;
             border: 3px solid #31373e;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 10px;
             position: relative;
             overflow: hidden;
@@ -126,34 +126,85 @@
         }
         .location-badge {
             position: absolute;
-            top: 6px;
-            left: 6px;
-            background: rgba(0,0,0,0.8);
-            padding: 3px 6px;
+            top: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.85);
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
             color: #00ff55;
             border: 1px solid #31373e;
             z-index: 10;
         }
+        .dialogue-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 2px solid #31373e;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 11px;
+            text-align: left;
+            color: #fff;
+            display: none;
+            z-index: 12;
+        }
 
-        /* Мобильный геймпад управления */
+        /* ИНТЕРФЕЙС РЕМОНТА ТЕХНИКИ ОТ 1 ЛИЦА */
+        .repair-table-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #181c24;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 20;
+        }
+        .repair-device-visual {
+            width: 120px;
+            height: 200px;
+            background: #2a2f3d;
+            border: 3px solid #4a5368;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .repair-part {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        /* Мобильный геймпад */
         .mobile-gamepad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 5px;
             width: 100%;
-            max-width: 180px;
+            max-width: 200px;
             margin: 10px auto 0 auto;
         }
         .pad-btn {
             background: #2a2f35;
             border: 2px solid #3d454e;
             color: #fff;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 20px;
             text-align: center;
             cursor: pointer;
             user-select: none;
@@ -207,7 +258,6 @@
             text-transform: uppercase;
             margin-bottom: 6px;
         }
-        .btn-action:disabled { background-color: #444 !important; color: #888 !important; cursor: not-allowed; }
         
         .student-actions {
             display: grid;
@@ -263,7 +313,6 @@
 
 <div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
-<!-- экран больницы -->
 <div id="hospital-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#201414; z-index:1000; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:20px; box-sizing:border-box;">
     <h1 style="color:#ff3333; text-transform:uppercase; margin:0;">🚑 ТЫ ПОПАЛ В БОЛЬНИЦУ!</h1>
     <p id="hospital-reason" style="font-size:13px; margin:15px 0; color:#ccc;"></p>
@@ -271,7 +320,6 @@
     <button class="btn-action" style="max-width:250px;" onclick="exitHospital()">Выйти из палаты</button>
 </div>
 
-<!-- синий экран сасуна -->
 <div id="bsod-overlay">
     <p>A problem has been detected and Windows has been shut down...</p>
     <p>DRIVER_IRQL_NOT_LESS_OR_EQUAL (SASUN_XP_LAPTOP_EXPLODE)</p>
@@ -279,7 +327,6 @@
     <button class="btn-action" style="background:#ff3333; color:#fff; width:auto; border-radius:6px; font-family:monospace;" onclick="rebootSasun()">УДАРЯТЬ ПО КОРПУСУ</button>
 </div>
 
-<!-- кте мини игра если клапан сорвало -->
 <div id="poop-game-overlay">
     <h2 style="color: #8a6d3b; text-transform: uppercase; margin:0 0 5px 0; font-size:16px;">КЛАПАН НЕ ДЕРЖИТ!</h2>
     <p style="font-size: 10px; color: #aaa; margin:0 0 10px 0;">Жми кнопку на экране или Пробел внутри зеленой зоны!</p>
@@ -290,7 +337,6 @@
     <button class="btn-action" style="margin-top:15px; background:#fff; color:#000;" onclick="triggerQtePress()">ЖМЯК КЛАПАН!</button>
 </div>
 
-<!-- эдикладно маркетплейс -->
 <div id="shop-overlay" class="shop-modal">
     <div class="shop-content">
         <h3 style="color:#9b59b6; text-transform:uppercase; margin-top:0; margin-bottom:10px; font-size:14px;">📦 Маркетплейс "ЭдикЛадно"</h3>
@@ -307,7 +353,6 @@
     </div>
 </div>
 
-<!-- старт -->
 <div class="casino-card" id="screen-start-choice">
     <h2 style="color: #4ef060; margin-top:0; margin-bottom: 15px; text-transform: uppercase; font-size:16px;">создание гетто-паспорта</h2>
     
@@ -334,11 +379,10 @@
     <button class="btn-action" style="margin-top: 10px;" onclick="initGame()">войти в хрущевку</button>
 </div>
 
-<!-- основной интерфейс -->
 <div id="main-ui" style="display: none; flex-direction: column; align-items: center; width:100%;">
     <div class="main-menu">
         <button class="menu-btn active" id="tab-casino" onclick="switchTab('casino')">казино</button>
-        <button class="menu-btn" id="tab-student" onclick="switchTab('student')">3d мир</button>
+        <button class="menu-btn" id="tab-student" onclick="switchTab('student')">3d мир некстген</button>
     </div>
 
     <div class="casino-card">
@@ -351,14 +395,26 @@
             <div class="balance-letters" id="balance-letters-display">прописью: 0 руб.</div>
         </div>
 
-        <!-- 3D ЭКРАН ОТ ПЕРВОГО ЛИЦА -->
         <div class="view-3d-container">
             <div class="location-badge" id="loc-badge">Загрузка...</div>
-            <canvas id="retroCanvas" class="retro-canvas" width="160" height="120"></canvas>
+            <div class="dialogue-overlay" id="dialogue-box">Бла бла</div>
+            
+            <div class="repair-table-overlay" id="repair-ui">
+                <div style="font-size:12px; color:#ffcc00; text-transform:uppercase;" id="repair-title">Ремонт устройства</div>
+                <div class="repair-device-visual">
+                    <div class="repair-part" id="part-screen" style="background:rgba(0,0,0,0.8); border:1px solid #fff;"></div>
+                    <div class="repair-part" id="part-battery" style="background:#ff3333; width:60%; height:50%; display:none;"></div>
+                </div>
+                <div style="width:100%;">
+                    <div style="font-size:10px; color:#aaa; margin-bottom:5px;" id="repair-status-text">Шаг 1: Сними экран</div>
+                    <button class="btn-action" style="font-size:11px; padding:6px;" id="repair-action-btn" onclick="advanceRepairStep()">Выкрутить болты</button>
+                </div>
+            </div>
+
+            <canvas id="retroCanvas" class="retro-canvas" width="320" height="240"></canvas>
         </div>
 
-        <!-- Мобильные кнопки навигации в 3D пространстве -->
-        <div class="mobile-gamepad" id="pad-container" style="display:none;">
+        <div class="mobile-gamepad" id="pad-container" style="display:grid;">
             <div></div><div class="pad-btn" onclick="movePlayer(1)">↑</div><div></div>
             <div class="pad-btn" onclick="rotatePlayer(-1)">←</div><div class="pad-btn" onclick="actionInteract3D()">🎯</div><div class="pad-btn" onclick="rotatePlayer(1)">→</div>
             <div></div><div class="pad-btn" onclick="movePlayer(-1)">↓</div><div></div>
@@ -377,7 +433,7 @@
             </div>
             <div class="stat-bar-container">
                 <div class="stat-label" id="label-anger">злость: 0%</div>
-                <div class="bar-bg"><div class="bar-fill fill-anger" id="bar-anger"></div></div>
+                <div class="bar-bg"><div class="bar-fill fill-anger" id="bar-hunger"></div></div>
             </div>
             <div class="stat-bar-container">
                 <div class="stat-label" id="label-poop">говнище: 0%</div>
@@ -385,30 +441,24 @@
             </div>
         </div>
 
-        <!-- КАЗИНО (ЗАКРЫТО ИЗ-ЗА БАНКРОТСТВА МИШИ) -->
         <div id="screen-casino" class="game-screen active">
             <div class="bankrupt-zone">
                 🛑 Казино закрыто.<br>Создатель казино БАНКРОТ.
             </div>
         </div>
 
-        <!-- СИМУЛЯТОР: ЗИМНЯЯ ХРУЩЕВКА И ЖИЗНЬ -->
         <div id="screen-student" class="game-screen">
-            
             <span class="stat-label" style="display:block; text-align:left; margin-bottom:3px;">перемещение по локациям (ногами):</span>
             <div class="student-actions">
                 <button class="btn-sub" id="nav-home" onclick="changeLocation('home')">🏠 Хрущ</button>
                 <button class="btn-sub" id="nav-street" onclick="changeLocation('street')">❄️ Улица</button>
                 <button class="btn-sub" id="nav-mac" onclick="changeLocation('mac')">🍟 Мак</button>
                 <button class="btn-sub" id="nav-shop" onclick="changeLocation('shop')">🛒 Магаз</button>
-                <button class="btn-sub" id="nav-factory" onclick="changeLocation('factory')">🏭 Завод</button>
+                <button class="btn-sub" id="nav-factory" onclick="changeLocation('factory')">🏭 Завод / Ремонт</button>
                 <button class="btn-sub" id="nav-uni" onclick="changeLocation('uni')">🏫 Колледж</button>
             </div>
 
-            <!-- интерактивный контекст локаций -->
             <div style="background:#0b0c0d; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #202428;">
-                
-                <!-- дома -->
                 <div id="loc-content-home" class="loc-content">
                     <div class="student-actions">
                         <button class="btn-sub" style="border-color:#00bcff; color:#00bcff;" onclick="actionSleepHome()">💤 Спать до утра</button>
@@ -417,19 +467,16 @@
                     <div class="inv-display" id="inventory-display">Рюкзак еды: пуст</div>
                 </div>
 
-                <!-- улица -->
                 <div id="loc-content-street" class="loc-content" style="display:none;">
                     <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;" id="street-text">до колледжа топать далеко сквозь сугробы.</p>
                     <button class="btn-action" style="background:#e67e22; color:#000;" onclick="actionStreetWork()">👊 ГРАБИТЬ ПРОХОЖЕГО РУКАМИ</button>
                 </div>
 
-                <!-- макдак -->
                 <div id="loc-content-mac" class="loc-content" style="display:none;">
                     <button class="btn-action" style="background:#ffcc00; color:#000;" onclick="actionWorkMac()">🍔 ЖАРИТЬ КОТЛЕТУ ВРУЧНУЮ</button>
                     <button class="btn-sub" style="width:100%;" onclick="actionStealFood()">🍟 Спиздить наггетсы под столом</button>
                 </div>
 
-                <!-- супермаркет -->
                 <div id="loc-content-shop" class="loc-content" style="display:none;">
                     <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;">Полки Пятерочки Белого Яра. Набери еды.</p>
                     <div class="student-actions">
@@ -440,13 +487,13 @@
                     </div>
                 </div>
 
-                <!-- завод -->
                 <div id="loc-content-factory" class="loc-content" style="display:none;">
-                    <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;">Гул станков. Работа для суровых мужчин.</p>
-                    <button class="btn-action" style="background:#7f8c8d; color:#fff;" onclick="actionWorkFactory()">🔧 КРУТИТЬ ВАЛ СТАНКА РУКАМИ</button>
+                    <div class="student-actions">
+                        <button class="btn-sub" style="background:#7f8c8d; color:#fff;" onclick="actionWorkFactory()">🔧 Крутить вал станка</button>
+                        <button class="btn-sub" style="background:#9b59b6; color:#fff;" onclick="startRepairMiniGame()">🛠️ Взять ремонт техники от 1 лица</button>
+                    </div>
                 </div>
 
-                <!-- колледж -->
                 <div id="loc-content-uni" class="loc-content" style="display:none;">
                     <p style="font-size:11px; color:#aaa; margin:0 0 5px 0;" id="uni-text">пара начнется в 6:30 утра.</p>
                     <button class="btn-action" style="background:#00cc52; color:#000; display:none;" id="btn-study-click" onclick="actionStudyClick()">✍️ ПИСАТЬ ЛЕКЦИЮ ВРУЧНУЮ</button>
@@ -454,7 +501,6 @@
                 </div>
             </div>
 
-            <!-- маркетплейс -->
             <button class="btn-sub" style="border-color:#9b59b6; color:#e0b0ff; width:100%; margin-bottom:8px;" onclick="openShop()">🛍️ Маркетплейс "ЭдикЛадно"</button>
 
             <div class="phone-spec">
@@ -504,60 +550,37 @@
     let isPairActive = false;
     let inHospital = false;
 
+    // Ремонт девайсов
+    let repairActive = false;
+    let repairStep = 0;
+    let repairType = "телефон poco x3 pro";
+
     // Инвентарь еды
     let inventory = [];
 
-    // НАСТРОЙКИ 3D РЭЙКАСТИНГА (WOLFENSTEIN-STYLE)
+    // НАСТРОЙКИ РЭЙКАСТИНГА (3D)
     let canvas, ctx;
     let playerX = 2.5, playerY = 2.5; 
     let playerAngle = 0; 
     const FOV = Math.PI / 3;
 
-    // Сетки карт локаций (1 - обычная стена, 2 - дверь/декор, 3 - окно/вывеска)
+    // Карта и NPC
     const maps = {
-        home: [
-            [1,1,1,1,1],
-            [1,0,0,0,1],
-            [1,0,2,0,1],
-            [1,0,0,0,1],
-            [1,1,1,1,1]
-        ],
+        home: [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]],
+        street: [[1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1]],
+        mac: [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]],
+        shop: [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]],
+        factory: [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]],
+        uni: [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]]
+    };
+
+    // Спрайты NPC (координаты на карте)
+    const npcs = {
         street: [
-            [1,1,1,1,1,1],
-            [1,0,0,0,0,1],
-            [1,0,1,3,0,1],
-            [1,0,0,0,0,1],
-            [1,0,0,0,0,1],
-            [1,1,1,1,1,1]
+            { x: 4.5, y: 2.5, char: "🧍", name: "Слава", msg: "Зорова, Пузик! До колледжа сугробов намело жестко." },
+            { x: 6.0, y: 2.0, char: "👤", name: "Местный тип", msg: "Слышь, подкинь на шавуху мелочи." }
         ],
-        mac: [
-            [1,1,1,1,1],
-            [1,0,3,0,1],
-            [1,0,0,0,1],
-            [1,2,0,0,1],
-            [1,1,1,1,1]
-        ],
-        shop: [
-            [1,1,1,1,1],
-            [1,0,0,0,1],
-            [1,0,3,0,1],
-            [1,0,0,0,1],
-            [1,1,1,1,1]
-        ],
-        factory: [
-            [1,1,1,1,1],
-            [1,0,0,0,1],
-            [1,3,2,0,1],
-            [1,0,0,0,1],
-            [1,1,1,1,1]
-        ],
-        uni: [
-            [1,1,1,1,1],
-            [1,0,0,0,1],
-            [1,0,1,0,1],
-            [1,0,0,0,1],
-            [1,1,1,1,1]
-        ]
+        home: [], mac: [], shop: [], factory: [], uni: []
     };
 
     function selectFace(element, face) {
@@ -568,32 +591,25 @@
 
     function initGame() {
         playerRole = document.getElementById("role-select").value;
-        localStorage.setItem('ghetto_role_v6', playerRole);
-        localStorage.setItem('ghetto_face_v6', playerFace);
+        localStorage.setItem('ghetto_role_v7', playerRole);
+        localStorage.setItem('ghetto_face_v7', playerFace);
         resetToDefaults();
         showMainUI();
     }
 
-    // Проверка тач-скрина мобилы
-    function detectMobile() {
-        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-            document.getElementById("pad-container").style.display = "grid";
-        }
-    }
-
-    if (localStorage.getItem('ghetto_role_v6')) {
-        playerRole = localStorage.getItem('ghetto_role_v6');
-        playerFace = localStorage.getItem('ghetto_face_v6') || "😎";
-        balance = BigInt(localStorage.getItem('ghetto_bal_v6') || "500");
-        stats = JSON.parse(localStorage.getItem('ghetto_stats_v6') || '{"hunger":100,"health":100,"anger":0,"poop":0}');
-        hasPhone = localStorage.getItem('ghetto_has_phone_v6') === "true";
-        phoneModel = localStorage.getItem('ghetto_phone_model_v6') || "нет телефона";
-        deliveryTimeLeft = parseInt(localStorage.getItem('ghetto_delivery_v6') || "0");
-        gameHour = parseInt(localStorage.getItem('ghetto_ghour_v6') || "12");
-        gameMinute = parseInt(localStorage.getItem('ghetto_gmin_v6') || "0");
-        stepsToUni = parseInt(localStorage.getItem('ghetto_steps_v6') || "15");
-        currentLoc = localStorage.getItem('ghetto_loc_v6') || "home";
-        inventory = JSON.parse(localStorage.getItem('ghetto_inv_v6') || "[]");
+    if (localStorage.getItem('ghetto_role_v7')) {
+        playerRole = localStorage.getItem('ghetto_role_v7');
+        playerFace = localStorage.getItem('ghetto_face_v7') || "😎";
+        balance = BigInt(localStorage.getItem('ghetto_bal_v7') || "500");
+        stats = JSON.parse(localStorage.getItem('ghetto_stats_v7') || '{"hunger":100,"health":100,"anger":0,"poop":0}');
+        hasPhone = localStorage.getItem('ghetto_has_phone_v7') === "true";
+        phoneModel = localStorage.getItem('ghetto_phone_model_v7') || "нет телефона";
+        deliveryTimeLeft = parseInt(localStorage.getItem('ghetto_delivery_v7') || "0");
+        gameHour = parseInt(localStorage.getItem('ghetto_ghour_v7') || "12");
+        gameMinute = parseInt(localStorage.getItem('ghetto_gmin_v7') || "0");
+        stepsToUni = parseInt(localStorage.getItem('ghetto_steps_v7') || "15");
+        currentLoc = localStorage.getItem('ghetto_loc_v7') || "home";
+        inventory = JSON.parse(localStorage.getItem('ghetto_inv_v7') || "[]");
         setTimeout(showMainUI, 100);
     }
 
@@ -612,12 +628,9 @@
         canvas = document.getElementById("retroCanvas");
         ctx = canvas.getContext("2d");
         
-        detectMobile();
         changeLocation(currentLoc);
         updateUI();
-        
-        // Цикл отрисовки 3D
-        setInterval(draw3DView, 50);
+        setInterval(draw3DView, 40);
     }
 
     function resetToDefaults() {
@@ -639,77 +652,55 @@
 
     function saveGame() {
         if (!playerRole) return;
-        localStorage.setItem('ghetto_bal_v6', balance.toString());
-        localStorage.setItem('ghetto_stats_v6', JSON.stringify(stats));
-        localStorage.setItem('ghetto_has_phone_v6', hasPhone.toString());
-        localStorage.setItem('ghetto_phone_model_v6', phoneModel);
-        localStorage.setItem('ghetto_delivery_v6', deliveryTimeLeft.toString());
-        localStorage.setItem('ghetto_ghour_v6', gameHour.toString());
-        localStorage.setItem('ghetto_gmin_v6', gameMinute.toString());
-        localStorage.setItem('ghetto_steps_v6', stepsToUni.toString());
-        localStorage.setItem('ghetto_loc_v6', currentLoc);
-        localStorage.setItem('ghetto_inv_v6', JSON.stringify(inventory));
+        localStorage.setItem('ghetto_bal_v7', balance.toString());
+        localStorage.setItem('ghetto_stats_v7', JSON.stringify(stats));
+        localStorage.setItem('ghetto_has_phone_v7', hasPhone.toString());
+        localStorage.setItem('ghetto_phone_model_v7', phoneModel);
+        localStorage.setItem('ghetto_delivery_v7', deliveryTimeLeft.toString());
+        localStorage.setItem('ghetto_ghour_v7', gameHour.toString());
+        localStorage.setItem('ghetto_gmin_v7', gameMinute.toString());
+        localStorage.setItem('ghetto_steps_v7', stepsToUni.toString());
+        localStorage.setItem('ghetto_loc_v7', currentLoc);
+        localStorage.setItem('ghetto_inv_v7', JSON.stringify(inventory));
     }
 
-    // ТИКЕР ЖИЗНИ
+    // ТИКЕР ВРЕМЕНИ И СТАТИСТИКИ
     setInterval(() => {
         if (!playerRole || qteActive || inHospital) return;
 
         gameMinute++;
-        if (gameMinute >= 60) {
-            gameMinute = 0;
-            gameHour++;
-            if (gameHour >= 24) gameHour = 0;
-        }
+        if (gameMinute >= 60) { gameMinute = 0; gameHour++; if (gameHour >= 24) gameHour = 0; }
 
-        // Время пар
         if (gameHour === 6 && gameMinute === 30 && currentLoc === "uni") {
             isPairActive = true;
-            alert("🔔 Звонок! Препод вошел в аудиторию, пиши руками!");
+            alert("🔔 Звонок на пару! Быстро пиши лекцию!");
         }
-        if (gameHour >= 10 && isPairActive) {
-            isPairActive = false;
-            alert("🔔 Пары кончились! Тебя выставили на мороз.");
-        }
+        if (gameHour >= 10 && isPairActive) { isPairActive = false; }
 
-        // Эдик маркетплейс тиканье курьера
         if (deliveryTimeLeft > 0) {
             deliveryTimeLeft--;
-            if (deliveryTimeLeft <= 0) {
-                hasPhone = true;
-                alert(`📦 Мобила ${phoneModel.toUpperCase()} успешно доставлена курьером Эдика!`);
-            }
+            if (deliveryTimeLeft <= 0) { hasPhone = true; alert(`📦 Мобила доставлена курьером Эдика!`); }
         }
 
         stats.hunger = Math.max(0, stats.hunger - 1);
-        stats.poop = Math.min(100, stats.poop + (currentLoc === "street" ? 2 : 1));
+        stats.poop = Math.min(100, stats.poop + 1);
 
         if (stats.hunger <= 0) stats.health = Math.max(0, stats.health - 2);
-        
-        // ШАНС УЛЕТЕТЬ В БОЛЬНИЧКУ ПРИ СЛАБОМ ЗДОРОВЬЕ
-        if (stats.health < 30 && Math.random() < 0.15) {
-            triggerHospital("Ты упал от истощения прямо посреди улицы Белого Яра.");
-        }
+        if (stats.health < 30 && Math.random() < 0.12) triggerHospital("Ты грохнулся в обморок от истощения.");
+        if (stats.poop >= 100) triggerPoopMinigame();
 
-        if (stats.poop >= 100) {
-            triggerPoopMinigame();
-        }
-
-        if (cpuLoad > 0 && Math.random() < 0.4) cpuLoad = Math.max(0, cpuLoad - 7);
+        if (cpuLoad > 0) cpuLoad = Math.max(0, cpuLoad - 5);
 
         saveGame();
         updateUI();
-    }, 1300);
+    }, 1500);
 
-    // Больница
     function triggerHospital(reason) {
         inHospital = true;
         document.getElementById("hospital-reason").innerText = reason;
         document.getElementById("hospital-overlay").style.display = "flex";
-        balance = balance > 400n ? balance - 400n : 0n;
-        stats.health = 70;
-        stats.hunger = 70;
-        stats.poop = 10;
+        balance = balance > 300n ? balance - 300n : 0n;
+        stats.health = 80; stats.hunger = 80;
     }
 
     function exitHospital() {
@@ -720,431 +711,300 @@
 
     function changeLocation(loc) {
         if (stats.poop >= 85 && loc !== currentLoc && loc !== "home") {
-            alert("💀 ШКАЛА ГОВНИЩА ЗАКЛИНИЛА! Ноги свело, беги домой в туалет!");
+            alert("💩 Терпи! Живот крутит, беги домой!");
             return;
         }
-
         currentLoc = loc;
-        playerX = 2.5; playerY = 2.5; playerAngle = 0; // Сброс позиции в 3D
+        playerX = 2.2; playerY = 2.2; playerAngle = 0;
+        document.getElementById("dialogue-box").style.display = "none";
 
         document.querySelectorAll('.loc-content').forEach(el => el.style.display = "none");
-        
         let bHome = document.getElementById("nav-home");
         let bStreet = document.getElementById("nav-street");
         let bMac = document.getElementById("nav-mac");
         let bShop = document.getElementById("nav-shop");
         let bFactory = document.getElementById("nav-factory");
         let bUni = document.getElementById("nav-uni");
-
         [bHome, bStreet, bMac, bShop, bFactory, bUni].forEach(b => b.style.borderColor = "#31373e");
 
-        if (loc === 'home') { document.getElementById("loc-content-home").style.display = "block"; document.getElementById("loc-badge").innerText = "Твой хрущ"; bHome.style.borderColor = "#00cc52"; }
-        if (loc === 'street') { document.getElementById("loc-content-street").style.display = "block"; document.getElementById("loc-badge").innerText = "Улица Белый Яр"; bStreet.style.borderColor = "#00cc52"; }
-        if (loc === 'mac') { document.getElementById("loc-content-mac").style.display = "block"; document.getElementById("loc-badge").innerText = "Кухня Мака"; bMac.style.borderColor = "#00cc52"; }
-        if (loc === 'shop') { document.getElementById("loc-content-shop").style.display = "block"; document.getElementById("loc-badge").innerText = "Пятерка"; bShop.style.borderColor = "#00cc52"; }
-        if (loc === 'factory') { document.getElementById("loc-content-factory").style.display = "block"; document.getElementById("loc-badge").innerText = "Завод ПромЗон"; bFactory.style.borderColor = "#00cc52"; }
-        if (loc === 'uni') { document.getElementById("loc-content-uni").style.display = "block"; document.getElementById("loc-badge").innerText = "Колледж (кабинет)"; bUni.style.borderColor = "#00cc52"; }
+        if (loc === 'home') { document.getElementById("loc-content-home").style.display = "block"; document.getElementById("loc-badge").innerText = "Твой хрущ (1 лицо)"; bHome.style.borderColor = "#00cc52"; }
+        if (loc === 'street') { document.getElementById("loc-content-street").style.display = "block"; document.getElementById("loc-badge").innerText = "Белый Яр 3D"; bStreet.style.borderColor = "#00cc52"; }
+        if (loc === 'mac') { document.getElementById("loc-content-mac").style.display = "block"; document.getElementById("loc-badge").innerText = "Макдак Плита"; bMac.style.borderColor = "#00cc52"; }
+        if (loc === 'shop') { document.getElementById("loc-content-shop").style.display = "block"; document.getElementById("loc-badge").innerText = "Пятерочка"; bShop.style.borderColor = "#00cc52"; }
+        if (loc === 'factory') { document.getElementById("loc-content-factory").style.display = "block"; document.getElementById("loc-badge").innerText = "Заводской Цех"; bFactory.style.borderColor = "#00cc52"; }
+        if (loc === 'uni') { document.getElementById("loc-content-uni").style.display = "block"; document.getElementById("loc-badge").innerText = "Колледж Пара"; bUni.style.borderColor = "#00cc52"; }
 
         updateUI();
     }
 
-    // ДВИЖОК 3D РЭЙКАСТИНГА (ОТ ПЕРВОГО ЛИЦА)
+    // РЕНДЕР КРУПНОГО ОКНА ПЕРВОГО ЛИЦА
     function draw3DView() {
         if (!ctx || !playerRole) return;
-        
+
         let map = maps[currentLoc] || maps.home;
         let mapW = map[0].length;
         let mapH = map.length;
 
-        ctx.fillStyle = "#222226"; // Потолок
-        ctx.fillRect(0, 0, 160, 60);
-        ctx.fillStyle = "#3c3c3c"; // Пол
-        ctx.fillRect(0, 60, 160, 60);
+        // Потолок и Пол
+        ctx.fillStyle = "#16181c"; ctx.fillRect(0, 0, 320, 120);
+        ctx.fillStyle = "#2c3038"; ctx.fillRect(0, 120, 320, 120);
 
-        // Рэйкастинг по вертикальным полосам экрана
-        for (let x = 0; x < 160; x++) {
-            let rayAngle = (playerAngle - FOV / 2) + (x / 160) * FOV;
-            let distance = 0;
-            let hitWall = false;
-            let wallType = 0;
+        // Стены
+        for (let x = 0; x < 320; x++) {
+            let rayAngle = (playerAngle - FOV / 2) + (x / 320) * FOV;
+            let distance = 0; let hitWall = false;
 
-            let eyeX = Math.cos(rayAngle);
-            let eyeY = Math.sin(rayAngle);
+            let eyeX = Math.cos(rayAngle); let eyeY = Math.sin(rayAngle);
 
             while (!hitWall && distance < 12) {
-                distance += 0.05;
+                distance += 0.04;
                 let testX = Math.floor(playerX + eyeX * distance);
                 let testY = Math.floor(playerY + eyeY * distance);
 
                 if (testX < 0 || testX >= mapW || testY < 0 || testY >= mapH) {
                     hitWall = true; distance = 12;
-                } else {
-                    if (map[testY][testX] > 0) {
-                        hitWall = true;
-                        wallType = map[testY][testX];
-                    }
+                } else if (map[testY][testX] > 0) {
+                    hitWall = true;
                 }
             }
 
-            let wallHeight = Math.min(120, Math.floor(120 / (distance * Math.cos(rayAngle - playerAngle))));
-            let wallTop = (120 - wallHeight) / 2;
+            let correctedDist = distance * Math.cos(rayAngle - playerAngle);
+            let wallHeight = Math.min(240, Math.floor(240 / correctedDist));
+            let wallTop = (240 - wallHeight) / 2;
 
-            // Цвета стен в 8-битном стиле в зависимости от типа
-            if (wallType === 1) ctx.fillStyle = `rgb(${80 - distance*5}, ${85 - distance*5}, ${90 - distance*5})`; // Бетон
-            else if (wallType === 2) ctx.fillStyle = `rgb(${130 - distance*8}, ${60 - distance*5}, ${40 - distance*5})`; // Дверь
-            else if (wallType === 3) ctx.fillStyle = `rgb(${40 - distance*3}, ${140 - distance*10}, ${90 - distance*5})`; // Окно/Вывеска
-            else ctx.fillStyle = "#000";
-
+            let col = Math.max(30, Math.floor(130 - correctedDist * 10));
+            ctx.fillStyle = `rgb(${col}, ${col+5}, ${col+12})`;
             ctx.fillRect(x, wallTop, 1, wallHeight);
         }
 
-        // Прицел по центру для иммерсивности
-        ctx.fillStyle = "rgba(0,255,85,0.4)";
-        ctx.fillRect(79, 59, 2, 2);
+        // Рендер людей (NPC) в виде простых 3D маркеров на экране
+        let currentNpcs = npcs[currentLoc] || [];
+        currentNpcs.forEach(npc => {
+            let ex = npc.x - playerX; let ey = npc.y - playerY;
+            let pCos = Math.cos(playerAngle); let pSin = Math.sin(playerAngle);
+            let spriteX = ex * pSin - ey * pCos;
+            let spriteY = ex * pCos + ey * pSin;
+
+            if (spriteY > 0.2) {
+                let screenX = Math.floor((320 / 2) * (1 + spriteX / spriteY));
+                let spriteSize = Math.min(200, Math.floor(240 / spriteY));
+                if (screenX > 0 && screenX < 320) {
+                    ctx.font = `${spriteSize / 2}px Inter`;
+                    ctx.fillText(npc.char, screenX - spriteSize/4, 120 + spriteSize/4);
+                }
+            }
+        });
     }
 
-    // ФИЗИЧЕСКОЕ ПЕРЕМЕЩЕНИЕ И ПОВОРОТЫ
-    function movePlayer(dir) {
-        if (qteActive || inHospital) return;
-        let map = maps[currentLoc] || maps.home;
-        let newX = playerX + Math.cos(playerAngle) * dir * 0.3;
-        let newY = playerY + Math.sin(playerAngle) * dir * 0.3;
+    // МЕХАНИКА РЕМОНТА ОТ 1 ЛИЦА
+    function startRepairMiniGame() {
+        repairActive = true;
+        repairStep = 0;
+        let devices = ["телефон poco x3 pro", "ноутбук макбук б/у", "айпад мини планшет"];
+        repairType = devices[Math.floor(Math.random() * devices.length)];
         
-        if (map[Math.floor(newY)][Math.floor(newX)] === 0) {
-            playerX = newX;
-            playerY = newY;
+        document.getElementById("repair-title").innerText = `Ремонт: ${repairType.toUpperCase()}`;
+        document.getElementById("repair-ui").style.display = "flex";
+        updateRepairUI();
+    }
+
+    function updateRepairUI() {
+        let pScreen = document.getElementById("part-screen");
+        let pBattery = document.getElementById("part-battery");
+        let btn = document.getElementById("repair-action-btn");
+        let txt = document.getElementById("repair-status-text");
+
+        if (repairStep === 0) {
+            pScreen.style.background = "rgba(0,0,0,0.9)"; pScreen.style.display = "block";
+            pBattery.style.display = "none";
+            txt.innerText = "Шаг 1: Прогрей феном экран и сними его струной.";
+            btn.innerText = "Срезать дисплейный модуль";
+        } else if (repairStep === 1) {
+            pScreen.style.display = "none";
+            pBattery.style.display = "block"; pBattery.style.background = "#e74c3c";
+            txt.innerText = "Шаг 2: Аккумулятор вздут! Отключи шлейф питания.";
+            btn.innerText = "Вытащить вздутую батарею";
+        } else if (repairStep === 2) {
+            pBattery.style.background = "#2ecc71";
+            txt.innerText = "Шаг 3: Новый аккум установлен. Накати новый тачскрин.";
+            btn.innerText = "Приклеить новый модуль и закрутить";
+        }
+    }
+
+    function advanceRepairStep() {
+        if (!repairActive) return;
+        repairStep++;
+        if (repairStep > 2) {
+            repairActive = false;
+            document.getElementById("repair-ui").style.display = "none";
+            let reward = playerRole === "factory" ? 3500n : 1500n;
+            if (hasPhone && phoneModel === "сифон 15 промагнат") reward *= 3n;
+            balance += reward;
+            alert(`💵 Успешный ремонт от первого лица! Заработано рублей: ${reward}`);
+            updateUI();
+        } else {
+            updateRepairUI();
+        }
+    }
+
+    // Перемещение
+    function movePlayer(dir) {
+        if (qteActive || inHospital || repairActive) return;
+        let map = maps[currentLoc];
+        let nX = playerX + Math.cos(playerAngle) * dir * 0.25;
+        let nY = playerY + Math.sin(playerAngle) * dir * 0.25;
+        
+        if (map[Math.floor(nY)] && map[Math.floor(nY)][Math.floor(nX)] === 0) {
+            playerX = nX; playerY = nY;
         }
 
-        // Если ходит по улице — засчитываем шаги до уника
         if (currentLoc === "street" && stepsToUni > 0) {
             stepsToUni--;
-            if(stepsToUni === 0) alert("🏁 Ты дотопал ногами до Колледжа сквозь метель!");
+            if (stepsToUni === 0) alert("🏁 Дошел до крыльца колледжа!");
             updateUI();
         }
     }
 
     function rotatePlayer(dir) {
+        if (repairActive) return;
         playerAngle += dir * 0.15;
     }
 
     function actionInteract3D() {
-        // Кнопка действия по центру тачпада
-        if(currentLoc === "mac") actionWorkMac();
-        else if(currentLoc === "factory") actionWorkFactory();
-        else if(currentLoc === "street") actionStreetWork();
-        else if(currentLoc === "uni") actionStudyClick();
-        else if(currentLoc === "home") actionCodeOnSasun();
-    }
-
-    // МАКДАК РАБОТА
-    function actionWorkMac() {
-        if (currentLoc !== "mac") return;
-        stats.hunger = Math.max(0, stats.hunger - 2);
-        stats.anger = Math.min(100, stats.anger + 1);
-        
-        let basePay = playerRole === "mac" ? 45n : 25n;
-        if (hasPhone && phoneModel === "сифон 6s") basePay = (basePay * 15n) / 10n;
-        if (hasPhone && phoneModel === "сифон 15 промагнат") basePay = basePay * 3n;
-
-        balance += basePay;
-        updateUI();
-    }
-
-    function actionStealFood() {
-        if (Math.random() < 0.25) {
-            triggerHospital("Тебя поймал злой менеджер Мака за поеданием продуктов из фритюра. Избили ногами.");
-        } else {
-            alert("🍟 Успешно сожрал пачку наггетсов втихую!");
-            stats.hunger = Math.min(100, stats.hunger + 35);
-        }
-        updateUI();
-    }
-
-    // ЗАВОД РАБОТА
-    function actionWorkFactory() {
-        if (currentLoc !== "factory") return;
-        stats.hunger = Math.max(0, stats.hunger - 4);
-        stats.anger = Math.min(100, stats.anger + 3);
-
-        if (playerRole === "factory" && Math.random() < 0.03) {
-            triggerHospital("Тебе затянуло рукав куртки в токарный вал станка. Травма!");
-            return;
-        }
-
-        let pay = playerRole === "factory" ? 110n : 50n;
-        if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
-        balance += pay;
-        updateUI();
-    }
-
-    // УЛИЦА: ГРАБЕЖ ИЛИ ДОСТАВКА
-    function actionStreetWork() {
-        if (currentLoc !== "street") return;
-        stats.hunger = Math.max(0, stats.hunger - 3);
-
-        if (playerRole === "courier") {
-            // курьер разносит заказы
-            let pay = 80n;
-            if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
-            balance += pay;
-            alert(`🚴 Ты доставил пакет клиенту в сугроб. Заработано: ${pay}р.`);
-        } else {
-            // бандитский грабеж
-            if (Math.random() < 0.3) {
-                triggerHospital("Прохожий оказался мастером спорта по самбо и прописал тебе двоечку.");
-            } else {
-                let loot = playerRole === "bandit" ? 150n : 60n;
-                balance += loot;
-                alert(`👊 Отжал мобилу у школьника в подворотне хруща! Наварено: ${loot}р.`);
+        let currentNpcs = npcs[currentLoc] || [];
+        for (let npc of currentNpcs) {
+            let dist = Math.sqrt((npc.x - playerX)**2 + (npc.y - playerY)**2);
+            if (dist < 1.2) {
+                let box = document.getElementById("dialogue-box");
+                box.style.display = "block";
+                box.innerText = `[${npc.name}]: ${npc.msg}`;
+                return;
             }
         }
+    }
+
+    // РАБОТЫ И ПРОЧЕЕ
+    function actionWorkMac() {
+        stats.hunger = Math.max(0, stats.hunger - 3);
+        let base = playerRole === "mac" ? 50n : 25n;
+        if (hasPhone && phoneModel === "сифон 15 промагнат") base *= 3n;
+        balance += base; updateUI();
+    }
+
+    void function actionStealFood() {
+        if (Math.random() < 0.2) triggerHospital("Менеджер мака поймал тебя у фритюрницы.");
+        else { stats.hunger = Math.min(100, stats.hunger + 30); alert("Слямзил еду!"); }
         updateUI();
     }
 
-    // СУПЕРМАРКЕТ СИСТЕМА ЕДЫ
-    function buyFoodItem(name, cost, fillValue) {
-        let bigCost = BigInt(cost);
-        if (balance < bigCost) return alert("Нет денег!");
-        balance -= bigCost;
-        inventory.push({ name: name, fill: fillValue });
-        alert(`🛒 Куплено: ${name}. Еда убрана в рюкзак.`);
-        updateInventoryUI();
+    function actionWorkFactory() {
+        stats.hunger = Math.max(0, stats.hunger - 4);
+        if (playerRole === "factory" && Math.random() < 0.02) { triggerHospital("Затянуло куртку в станок."); return; }
+        let pay = playerRole === "factory" ? 120n : 60n;
+        if (hasPhone && phoneModel === "сифон 15 промагнат") pay *= 3n;
+        balance += pay; updateUI();
+    }
+
+    function actionStreetWork() {
+        if (playerRole === "courier") {
+            let pay = 90n; if (hasPhone && phoneModel === "сифон 15 промагнат") pay *= 3n;
+            balance += pay; alert("Заказ доставлен в сугроб!");
+        } else {
+            if (Math.random() < 0.25) triggerHospital("Прохожий дал сдачи.");
+            else { let loot = 120n; balance += loot; alert("Телефон отжат!"); }
+        }
         updateUI();
     }
 
-    function useFoodFromInventory(index) {
-        if (inventory[index]) {
-            stats.hunger = Math.min(100, stats.hunger + inventory[index].fill);
-            stats.poop = Math.min(100, stats.poop + Math.floor(inventory[index].fill / 2));
-            alert(`😋 Ты съел: ${inventory[index].name}`);
-            inventory.splice(index, 1);
-            updateInventoryUI();
-            updateUI();
+    function buyFoodItem(name, cost, fill) {
+        if (balance < BigInt(cost)) return alert("Мало кэша!");
+        balance -= BigInt(cost); inventory.push({ name: name, fill: fill });
+        updateInventoryUI(); updateUI();
+    }
+
+    function useFoodFromInventory(idx) {
+        if (inventory[idx]) {
+            stats.hunger = Math.min(100, stats.hunger + inventory[idx].fill);
+            inventory.splice(idx, 1); updateInventoryUI(); updateUI();
         }
     }
 
     function updateInventoryUI() {
-        let invDiv = document.getElementById("inventory-display");
-        if (inventory.length === 0) {
-            invDiv.innerHTML = "Рюкзак еды: пуст";
-            return;
-        }
-        let html = "<b>Рюкзак еды (нажми съесть):</b><br>";
-        inventory.forEach((item, idx) => {
-            html += `<button class="btn-sub" style="margin:2px;" onclick="useFoodFromInventory(${idx})">${item.name}</button> `;
-        });
-        invDiv.innerHTML = html;
+        let inv = document.getElementById("inventory-display");
+        if (inventory.length === 0) { inv.innerHTML = "Рюкзак еды: пуст"; return; }
+        let h = "<b>Еда в рюкзаке (нажми съесть):</b><br>";
+        inventory.forEach((item, i) => { h += `<button class="btn-sub" style="margin:2px;" onclick="useFoodFromInventory(${i})">${item.name}</button> `; });
+        inv.innerHTML = h;
     }
 
-    // КОДИНГ НА САСУНЕ
     function actionCodeOnSasun() {
-        if (currentLoc !== "home") return alert("Ноут дома!");
-        if (isBsod) return alert("Сасун выдал синий экран!");
-
-        cpuLoad += playerRole === "coder" ? 4 : 9;
-        stats.hunger = Math.max(0, stats.hunger - 1);
-
-        let pay = playerRole === "coder" ? 130n : 55n;
-        if (hasPhone && phoneModel === "сифон 15 промагнат") pay = pay * 3n;
-        balance += pay;
-
+        if (currentLoc !== "home") return alert("Сасун остался дома!");
+        if (isBsod) return;
+        cpuLoad += 10; balance += playerRole === "coder" ? 140n : 60n;
         if (cpuLoad >= 100) triggerBsod();
         updateUI();
     }
 
-    // КОЛЛЕДЖ РАБОТА
-    function actionStudyClick() {
-        if (currentLoc !== "uni" || !isPairActive) return;
-        stats.anger = Math.min(100, stats.anger + 1);
-        balance += playerRole === "coder" ? 25n : 12n;
-        updateUI();
-    }
-
-    function actionSleepOnPairs() {
-        if (currentLoc !== "uni" || !isPairActive) return;
-        if (Math.random() < 0.4) {
-            triggerHospital("Препод кинул советский чугунный циркуль прямо тебе в лоб. Потеря сознания.");
-        } else {
-            stats.health = Math.min(100, stats.health + 20);
-            alert("🍀 Пронесло, чуток вздремнул на лекции.");
-        }
-        gameMinute += 30;
-        updateUI();
-    }
-
-    function actionGoToToilet() {
-        if (currentLoc !== "home") return;
-        stats.poop = 0;
-        alert("💩 Клапан успешно прочищен в родной толчок!");
-        updateUI();
-    }
-
     function buyPhoneFromShop(model, cost) {
-        if (hasPhone || deliveryTimeLeft > 0) return alert("У тебя уже есть телефон или он едет!");
-        let bigCost = BigInt(cost);
-        if (balance < bigCost) return alert("Эдик отказал в рассрочке!");
-        
-        balance -= bigCost;
-        phoneModel = model;
-        deliveryTimeLeft = 140; 
-        closeShop();
-        alert(`🛒 Эдик взял рубли. Доставка курьером в хрущевку пошла! Спи дома на кровати, чтобы ускорить.`);
-        updateUI();
+        if (balance < BigInt(cost)) return alert("Эдик не дает в долг!");
+        balance -= BigInt(cost); phoneModel = model; deliveryTimeLeft = 60; closeShop(); updateUI();
     }
 
     function actionSleepHome() {
-        if (currentLoc !== "home") return;
-        alert("💤 Сон на диване...");
-        gameHour = 6; gameMinute = 0;
-        stepsToUni = 15; // сугробы намело снова
-
-        if (deliveryTimeLeft > 0) {
-            deliveryTimeLeft = 0;
-            hasPhone = true;
-            alert("📦 Курьер бросил телефон под дверь хрущевки пока ты спал!");
-        }
-
-        stats.hunger = Math.max(10, stats.hunger - 45);
-        stats.poop = Math.min(100, stats.poop + 30);
-        changeLocation("home");
+        gameHour = 6; gameMinute = 0; stepsToUni = 15;
+        if (deliveryTimeLeft > 0) { deliveryTimeLeft = 0; hasPhone = true; }
+        stats.hunger = Math.max(10, stats.hunger - 40); changeLocation("home");
     }
 
     function actionEatShawarma() {
-        if (balance < 250n) return alert("Нет денег на шавуху!");
-        balance -= 250n;
-        stats.hunger = Math.min(100, stats.hunger + 70);
-        stats.poop = Math.min(100, stats.poop + 25);
-        updateUI();
+        if (balance < 250n) return; balance -= 250n; stats.hunger = 100; updateUI();
     }
 
     function openShop() { document.getElementById("shop-overlay").style.display = "flex"; }
     function closeShop() { document.getElementById("shop-overlay").style.display = "none"; }
     function triggerBsod() { isBsod = true; document.getElementById("bsod-overlay").style.display = "block"; }
-
-    function rebootSasun() {
-        document.getElementById("bsod-overlay").innerHTML = "<p>ПЕРЕЗАГРУЗКА ОС WINDOWS XP...</p>";
-        setTimeout(() => {
-            isBsod = false; cpuLoad = 0;
-            document.getElementById("bsod-overlay").style.display = "none";
-            document.getElementById("bsod-overlay").innerHTML = `<p>A problem has been detected...</p><button class="btn-action" onclick="rebootSasun()">УДАРЯТЬ ПО КОРПУСУ</button>`;
-        }, 2000);
-    }
+    function rebootSasun() { isBsod = false; cpuLoad = 0; document.getElementById("bsod-overlay").style.display = "none"; }
 
     function triggerPoopMinigame() {
-        qteActive = true; qtePos = 0;
-        document.getElementById("poop-game-overlay").style.display = "flex";
-        let qteInterval = setInterval(() => {
-            if (!qteActive) { clearInterval(qteInterval); return; }
-            qtePos += qteDirection;
-            if (qtePos >= 250 || qtePos <= 0) qteDirection = -qteDirection;
-            document.getElementById("qte-slider").style.left = qtePos + "px";
-        }, 10);
+        qteActive = true; qtePos = 0; document.getElementById("poop-game-overlay").style.display = "flex";
     }
-
     function triggerQtePress() {
-        if (!qteActive) return;
-        qteActive = false;
-        document.getElementById("poop-game-overlay").style.display = "none";
-        if (qtePos >= 100 && qtePos <= 140) {
-            alert("💩 На грани! Удержал кал сфинктером и добежал до дома.");
-            stats.poop = 60;
-        } else {
-            alert("💀 КЛАПАН СОРВАЛО! Штаны полные, минус 45 хп позора.");
-            stats.poop = 20; stats.health = Math.max(10, stats.health - 45);
-            changeLocation("home");
-        }
-        updateUI();
+        qteActive = false; document.getElementById("poop-game-overlay").style.display = "none";
+        stats.poop = 20; updateUI();
     }
-
-    // Обработка ПК клавиатуры (WASD или стрелочки)
-    window.addEventListener("keydown", function(e) {
-        if (e.code === "Space" && qteActive) { e.preventDefault(); triggerQtePress(); }
-        if (e.code === "KeyW" || e.code === "ArrowUp") movePlayer(1);
-        if (e.code === "KeyS" || e.code === "ArrowDown") movePlayer(-1);
-        if (e.code === "KeyA" || e.code === "ArrowLeft") rotatePlayer(-1);
-        if (e.code === "KeyD" || e.code === "ArrowRight") rotatePlayer(1);
-    });
 
     function formatBigNumber(value) {
-        let num = BigInt(value); if (num === 0n) return "0 руб.";
-        let str = num.toString(); let length = str.length;
+        let num = BigInt(value); let str = num.toString(); let length = str.length;
         if (length <= 3) return `${str} руб.`;
         let groupIndex = Math.floor((length - 1) / 3);
-        if (groupIndex >= shortNames.length) return "нереальные деньги";
         let mainPartLength = length % 3 === 0 ? 3 : length % 3;
-        let mainPart = str.slice(0, mainPartLength);
-        return `${mainPart} ${shortNames[groupIndex]} руб.`;
+        return `${str.slice(0, mainPartLength)} ${shortNames[groupIndex]} руб.`;
     }
 
-    function triggerWipe() {
-        if (confirm("Точно стереть данные?")) { resetToDefaults(); window.location.reload(); }
-    }
+    function triggerWipe() { if(confirm("Вайп?")) { resetToDefaults(); window.location.reload(); } }
 
     function updateUI() {
         document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
         document.getElementById("balance-letters-display").innerText = `прописью: ${formatBigNumber(balance)}`;
-
         document.getElementById("bar-hunger").style.width = stats.hunger + "%";
         document.getElementById("label-hunger").innerText = `голод: ${stats.hunger}%`;
         document.getElementById("bar-health").style.width = stats.health + "%";
         document.getElementById("label-health").innerText = `здоровье: ${stats.health}%`;
-        document.getElementById("bar-anger").style.width = stats.anger + "%";
-        document.getElementById("label-anger").innerText = `злость: ${stats.anger}%`;
-        document.getElementById("bar-poop").style.width = stats.poop + "%";
-        document.getElementById("label-poop").innerText = `говнище: ${stats.poop}%`;
-
+        
         let hStr = gameHour < 10 ? "0" + gameHour : gameHour;
         let mStr = gameMinute < 10 ? "0" + gameMinute : gameMinute;
         document.getElementById("time-display").innerText = `🕒 Время в Сургуте: ${hStr}:${mStr}`;
 
         let btnNavUni = document.getElementById("nav-uni");
-        if (stepsToUni > 0) {
-            btnNavUni.disabled = true;
-            btnNavUni.innerText = `🔒 Колледж (${stepsToUni}ш)`;
-        } else {
-            btnNavUni.disabled = false;
-            btnNavUni.innerText = `🏫 Колледж`;
-        }
-
-        if (stepsToUni > 0) {
-            document.getElementById("street-text").innerText = `До колледжа осталось: ${stepsToUni} шагов. Ходи на стрелочки кнопки или клавиатуру!`;
-        } else {
-            document.getElementById("street-text").innerText = `Дорога до учебы чиста. Иди в меню перемещения!`;
-        }
-
-        let txtUni = document.getElementById("uni-text");
-        let btnStudy = document.getElementById("btn-study-click");
-        let btnSleepU = document.getElementById("btn-sleep-uni");
-        if (isPairActive) {
-            txtUni.innerText = `Пара в самом разгаре! Пиши лекцию вручную!`;
-            btnStudy.style.display = "block";
-            btnSleepU.style.display = "block";
-        } else {
-            txtUni.innerText = `Аудитория пуста. Расписание пар: с 06:30 до 10:00 утра.`;
-            btnStudy.style.display = "none";
-            btnSleepU.style.display = "none";
-        }
+        if (stepsToUni > 0) { btnNavUni.disabled = true; btnNavUni.innerText = `🔒 Колледж (${stepsToUni}ш)`; }
+        else { btnNavUni.disabled = false; btnNavUni.innerText = `🏫 Колледж`; }
 
         let phoneText = document.getElementById("phone-model-text");
-        let phoneStatus = document.getElementById("phone-status");
-        if (deliveryTimeLeft > 0) {
-            phoneText.innerText = `${phoneModel.toUpperCase()} (В пути)`;
-            phoneStatus.innerText = `Доставка Эдика прибудет через: ${deliveryTimeLeft} сек.`;
-            phoneStatus.style.color = "#ff9900";
-        } else if (!hasPhone) {
-            phoneText.innerText = "НЕТ ДЕВАЙСОВ";
-            phoneStatus.innerText = "Купи мобилу на маркетплейсе!";
-            phoneStatus.style.color = "#ff3333";
-        } else {
-            phoneText.innerText = phoneModel.toUpperCase();
-            phoneStatus.innerText = `Статус: в кармане (Буст Х3 активен)`;
-            phoneStatus.style.color = "#00ff55";
-        }
+        if (hasPhone) phoneText.innerText = phoneModel.toUpperCase() + " (БУСТ Х3)";
+        else if (deliveryTimeLeft > 0) phoneText.innerText = "ЕДЕТ КУРЬЕР...";
+        else phoneText.innerText = "НЕТ";
 
-        document.getElementById("bar-cpu").style.width = Math.min(100, cpuLoad) + "%";
-        document.getElementById("label-cpu").innerText = `ЦП Сасуна: ${cpuLoad}%`;
-        
-        updateInventoryUI();
+        document.getElementById("bar-cpu").style.width = cpuLoad + "%";
     }
 
     function switchTab(tab) {
@@ -1158,22 +1018,6 @@
             document.getElementById('screen-student').classList.add('active');
         }
     }
-
-    // Читы
-    window.addEventListener("keydown", function(event) {
-        let key = event.key.toLowerCase();
-        let alertBox = document.getElementById("secret-alert");
-        if (key === "l" || key === "д") {
-            balance += SECRET_PLUS_AMOUNT; saveGame(); updateUI();
-            alertBox.innerText = `чит: +${SECRET_PLUS_AMOUNT.toString()}`; alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-        }
-        if (key === "k" || key === "л") {
-            balance = balance * SECRET_MULTIPLY_BY; saveGame(); updateUI();
-            alertBox.innerText = `чит: x${SECRET_MULTIPLY_BY.toString()}`; alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-        }
-    });
 </script>
 </body>
 </html>
