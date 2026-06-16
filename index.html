@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>гетто казик 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #0b0c0d;
             color: #ffffff;
-            font-family: monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,7 +32,6 @@
         .balance-main {
             color: #4ef060;
             font-size: 26px;
-            font-weight: bold;
             margin-bottom: 5px;
         }
         .balance-letters {
@@ -53,7 +56,8 @@
             border-radius: 6px;
             width: 100%;
             box-sizing: border-box;
-            font-family: monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             font-size: 14px;
             outline: none;
             margin-bottom: 20px;
@@ -86,7 +90,6 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
-            font-weight: bold;
             color: #4ef060;
             text-transform: uppercase;
         }
@@ -97,9 +100,9 @@
             padding: 15px;
             border-radius: 30px;
             width: 100%;
-            font-family: monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -128,7 +131,7 @@
 </head>
 <body>
 
-<div class="secret-alert" id="secret-alert">чит-код активирован: +10 септиллионов</div>
+<div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
 <div class="casino-card">
     <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
@@ -170,6 +173,14 @@
 </div>
 
 <script>
+    // ================= НАСТРОЙКА СЕКРЕТНЫХ КНОПОК =================
+    // укажи здесь число для прибавления при нажатии на L (сейчас 10 септиллионов)
+    const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
+    
+    // укажи здесь число, на которое умножать баланс при нажатии на K
+    const SECRET_MULTIPLY_BY = 2n;
+    // ==============================================================
+
     const maxJsNumber = 17976931348623157081452742373170435679807056752584499659891747680315726078002853876602841604862869853802707627511090146938459102431627447370420556114170685640321300057399439616010061329241517409249704289895240292376971510344482083512411547734028420155225345791771954714163901115161099238314115132219904229344n;
 
     const shortNames = [
@@ -199,20 +210,29 @@
         updateUI();
     }, 10000);
 
-    // отслеживание секретного нажатия клавиши L
+    // обработка чит-кодов L и K
     window.addEventListener("keydown", function(event) {
-        if (event.key === "l" || event.key === "L" || event.key === "д" || event.key === "Д") {
-            // подкидываем 10 септиллионов (10 с 24 нулями)
-            balance += 10000000000000000000000000n;
+        let key = event.key.toLowerCase();
+        let alertBox = document.getElementById("secret-alert");
+        
+        if (key === "l" || key === "д") {
+            balance += SECRET_PLUS_AMOUNT;
             saveBalance();
             updateUI();
             
-            // микро-уведомление в углу экрана, которое быстро гаснет
-            let alertBox = document.getElementById("secret-alert");
+            alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
             alertBox.style.opacity = "1";
-            setTimeout(() => {
-                alertBox.style.opacity = "0";
-            }, 1000);
+            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+        }
+        
+        if (key === "k" || key === "л") {
+            balance = balance * SECRET_MULTIPLY_BY;
+            saveBalance();
+            updateUI();
+            
+            alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
+            alertBox.style.opacity = "1";
+            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
         }
     });
 
@@ -325,7 +345,6 @@
         
         if (isLucky) {
             let targetArr = target.split("");
-            // если слотов больше чем букв в цели, добиваем случайными буквами
             while (targetArr.length < slotsCount) {
                 targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
             }
