@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>казик 777 - подкрученный</title>
+    <title>казик 777 - выбери цель</title>
     <style>
         * {
             box-sizing: border-box;
@@ -55,6 +55,7 @@
 
         .controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-around;
             margin-bottom: 25px;
             gap: 15px;
@@ -65,6 +66,11 @@
             flex-direction: column;
             align-items: center;
             flex: 1;
+            min-width: 120px;
+        }
+
+        .control-group.full-width {
+            flex: 1 1 100%;
         }
 
         .control-group label {
@@ -83,6 +89,10 @@
             font-size: 16px;
             text-align: center;
             outline: none;
+        }
+
+        .control-group select:focus, .control-group input:focus {
+            border-color: #00ff7b;
         }
 
         .slots-wrapper {
@@ -162,6 +172,7 @@
             font-size: 16px;
             min-height: 24px;
             color: #ffeb3b;
+            padding: 0 10px;
         }
 
         .game-over-overlay {
@@ -197,6 +208,12 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .save-status {
+            font-size: 11px;
+            color: #555;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +221,7 @@
     <div class="casino-container">
         <div class="game-over-overlay" id="gameOverOverlay">
             <div class="game-over-text">Ты проебал все бабки и сдох от голода.</div>
-            <button class="restart-button" onclick="initGame()">Начать заново</button>
+            <button class="restart-button" onclick="resetGame()">Начать заново</button>
         </div>
 
         <div class="header">
@@ -213,9 +230,17 @@
         </div>
 
         <div class="controls">
+            <div class="control-group full-width">
+                <label for="targetWord">твоя главная цель в жизни</label>
+                <select id="targetWord" onchange="changeTarget()">
+                    <option value="ХУЙ" selected>собрать ХУЙ</option>
+                    <option value="ЕБЛАН">собрать ЕБЛАН</option>
+                    <option value="ПИДОР">собрать ПИДОР</option>
+                </select>
+            </div>
             <div class="control-group">
                 <label for="slotsCount">кол-во слотов</label>
-                <select id="slotsCount" onchange="renderReels()">
+                <select id="slotsCount" onchange="changeSlotsCount()">
                     <option value="3" selected>3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
@@ -223,7 +248,7 @@
             </div>
             <div class="control-group">
                 <label for="betValue">ставка</label>
-                <input type="number" id="betValue" value="500" min="100" step="100">
+                <input type="number" id="betValue" value="500" min="100" step="100" onchange="saveConfig()">
             </div>
         </div>
 
@@ -234,6 +259,7 @@
         <button class="spin-button" id="spinBtn" onclick="spin()">Крутить</button>
 
         <div class="message-display" id="messageDisplay"></div>
+        <div class="save-status">автосохранение в браузере активно</div>
     </div>
 
     <script>
@@ -244,6 +270,35 @@
         let salaryInterval;
         let timerInterval;
 
+        function loadSave() {
+            if (localStorage.getItem('casino_balance') !== null) {
+                balance = parseInt(localStorage.getItem('casino_balance'));
+            }
+            if (localStorage.getItem('casino_timeToSalary') !== null) {
+                timeToSalary = parseInt(localStorage.getItem('casino_timeToSalary'));
+            }
+            if (localStorage.getItem('casino_slotsCount') !== null) {
+                document.getElementById('slotsCount').value = localStorage.getItem('casino_slotsCount');
+            }
+            if (localStorage.getItem('casino_betValue') !== null) {
+                document.getElementById('betValue').value = localStorage.getItem('casino_betValue');
+            }
+            if (localStorage.getItem('casino_targetWord') !== null) {
+                document.getElementById('targetWord').value = localStorage.getItem('casino_targetWord');
+            }
+        }
+
+        function saveGame() {
+            localStorage.setItem('casino_balance', balance);
+            localStorage.setItem('casino_timeToSalary', timeToSalary);
+        }
+
+        function saveConfig() {
+            localStorage.setItem('casino_slotsCount', document.getElementById('slotsCount').value);
+            localStorage.setItem('casino_betValue', document.getElementById('betValue').value);
+            localStorage.setItem('casino_targetWord', document.getElementById('targetWord').value);
+        }
+
         function startSalaryTimers() {
             if (salaryInterval) clearInterval(salaryInterval);
             if (timerInterval) clearInterval(timerInterval);
@@ -251,27 +306,43 @@
             timerInterval = setInterval(() => {
                 timeToSalary--;
                 document.getElementById('timerValue').textContent = timeToSalary;
-                if (timeToSalary <= 0) timeToSalary = 60;
-            }, 1000);
+                localStorage.setItem('casino_timeToSalary', timeToSalary);
 
-            salaryInterval = setInterval(() => {
-                balance += 10000;
-                updateBalanceDisplay();
-                if (document.getElementById('gameOverOverlay').style.display === 'flex') {
-                    document.getElementById('gameOverOverlay').style.display = 'none';
+                if (timeToSalary <= 0) {
+                    timeToSalary = 60;
+                    balance += 10000;
+                    updateBalanceDisplay();
+                    saveGame();
+                    
+                    if (document.getElementById('gameOverOverlay').style.display === 'flex') {
+                        document.getElementById('gameOverOverlay').style.display = 'none';
+                    }
+                    document.getElementById('messageDisplay').textContent = 'пришло пособие по безработице! +10000 руб.';
                 }
-                document.getElementById('messageDisplay').textContent = 'пришло пособие по безработице! +10000 руб.';
-            }, 60000);
+            }, 1000);
         }
 
         function initGame() {
-            balance = 10000;
-            timeToSalary = 60;
-            document.getElementById('gameOverOverlay').style.display = 'none';
-            document.getElementById('messageDisplay').textContent = 'аппарат подкручен, крути!';
+            loadSave();
+            
+            // подстраиваем слоты под выбранную цель при первом запуске, если это необходимо
+            adjustSlotsForTarget();
+            
+            document.getElementById('gameOverOverlay').style.display = balance <= 0 ? 'flex' : 'none';
+            document.getElementById('messageDisplay').textContent = 'выбери цель, ставку и крути!';
             updateBalanceDisplay();
             renderReels();
             startSalaryTimers();
+        }
+
+        function resetGame() {
+            balance = 10000;
+            timeToSalary = 60;
+            document.getElementById('gameOverOverlay').style.display = 'none';
+            document.getElementById('messageDisplay').textContent = 'новая попытка, цель прежняя!';
+            saveGame();
+            updateBalanceDisplay();
+            renderReels();
         }
 
         function updateBalanceDisplay() {
@@ -292,16 +363,38 @@
             }
         }
 
-        // новая подкрученная логика проверки
+        // автоматически меняет количество слотов под длину выбранного слова-цели
+        function adjustSlotsForTarget() {
+            const target = document.getElementById('targetWord').value;
+            document.getElementById('slotsCount').value = target.length;
+            saveConfig();
+        }
+
+        function changeTarget() {
+            adjustSlotsForTarget();
+            renderReels();
+            document.getElementById('messageDisplay').textContent = `цель изменена на "${document.getElementById('targetWord').value}". количество слотов подстроено!`;
+        }
+
+        function changeSlotsCount() {
+            renderReels();
+            saveConfig();
+        }
+
         function checkWin(resultArray) {
             const resultStr = resultArray.join('');
+            const target = document.getElementById('targetWord').value;
             
-            // 1. супер-выигрыши за слова (теперь х30 вместо х15)
-            if (resultStr.includes('ХУЙ') || resultStr.includes('ПИЗДА') || resultStr.includes('ЕБЛАН') || resultStr.includes('ПИДОР')) {
-                return { win: true, multiplier: 30, msg: `ОТДУШИНСКИЙ ДЖЕКПОТ! слово: ${resultStr}! x30!` };
+            // 1. ПРОВЕРКА НА ВЫБРАННУЮ ЦЕЛЬ (СУПЕР ДЖЕКПОТ x50)
+            if (resultStr.includes(target)) {
+                return { win: true, multiplier: 50, msg: `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉` };
             }
 
-            // считаем сколько каких букв выпало всего
+            // 2. обычные джекпоты за другие матерные слова (х20)
+            if (resultStr.includes('ХУЙ') || resultStr.includes('ПИЗДА') || resultStr.includes('ЕБЛАН') || resultStr.includes('ПИДОР')) {
+                return { win: true, multiplier: 20, msg: `просто хороший джекпот слов: ${resultStr}! x20` };
+            }
+
             const counts = {};
             resultArray.forEach(char => {
                 counts[char] = (counts[char] || 0) + 1;
@@ -309,22 +402,17 @@
 
             const maxMatches = Math.max(...Object.values(counts));
 
-            // 2. если все буквы одинаковые (для 3, 4 или 5 слотов)
             if (maxMatches === resultArray.length) {
                 return { win: true, multiplier: 15, msg: `все буквы совпали! x15!` };
             }
-
-            // 3. если совпало хотя бы 3 буквы в любых местах (для режима 4 и 5 слотов)
             if (maxMatches >= 3) {
                 return { win: true, multiplier: 5, msg: `три одинаковые буквы! x5!` };
             }
-
-            // 4. если совпало хотя бы 2 любые буквы (очень легкий шанс)
             if (maxMatches >= 2) {
                 return { win: true, multiplier: 2, msg: `собралась пара! x2` };
             }
 
-            return { win: false, multiplier: 0, msg: 'не повезло, давай еще разок' };
+            return { win: false, multiplier: 0, msg: 'мимо цели. крути еще.' };
         }
 
         function spin() {
@@ -332,6 +420,7 @@
             const bet = parseInt(betInput.value);
             const count = parseInt(document.getElementById('slotsCount').value);
             const spinBtn = document.getElementById('spinBtn');
+            const target = document.getElementById('targetWord').value;
 
             if (isNaN(bet) || bet <= 0) {
                 document.getElementById('messageDisplay').textContent = 'поставь нормальную сумму';
@@ -345,24 +434,30 @@
 
             balance -= bet;
             updateBalanceDisplay();
+            saveGame();
+            
             document.getElementById('messageDisplay').textContent = 'барабаны крутятся...';
             spinBtn.disabled = true;
 
             const currentResults = [];
             
-            // подкрутка на уровне генерации: 25% шанс, что вместо рандома выпадет одна и та же буква во все слоты
-            const luckyDrop = Math.random() < 0.25;
+            // подкрутка: 15% шанс, что скрипт выбьет именно выбранную тобой цель!
+            const luckyTargetDrop = Math.random() < 0.15;
+            // 15% шанс на просто одинаковые буквы
+            const luckyEqualDrop = Math.random() < 0.15; 
             const luckyLetter = letters[Math.floor(Math.random() * letters.length)];
 
             for (let i = 0; i < count; i++) {
-                if (luckyDrop) {
+                if (luckyTargetDrop) {
+                    // закидываем по буквам цель
+                    currentResults.push(target[i] || letters[Math.floor(Math.random() * letters.length)]);
+                } else if (luckyEqualDrop) {
                     currentResults.push(luckyLetter);
                 } else {
                     currentResults.push(letters[Math.floor(Math.random() * letters.length)]);
                 }
             }
 
-            // имитация прокрутки
             let ticks = 0;
             const interval = setInterval(() => {
                 for (let i = 0; i < count; i++) {
@@ -373,7 +468,6 @@
                 if (ticks > 8) {
                     clearInterval(interval);
                     
-                    // выводим финальный результат
                     for (let i = 0; i < count; i++) {
                         const reel = document.getElementById(`reel-${i}`);
                         reel.textContent = currentResults[i];
@@ -389,6 +483,7 @@
                     }
 
                     updateBalanceDisplay();
+                    saveGame();
                     spinBtn.disabled = false;
 
                     if (balance <= 0) {
