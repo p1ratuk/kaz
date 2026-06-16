@@ -3,497 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>казик 777 - выбери цель</title>
+    <title>гетто казик 2.0</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
         body {
-            background-color: #121212;
+            background-color: #0b0c0d;
             color: #ffffff;
+            font-family: monospace;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .casino-container {
-            background: #1a1a1a;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 255, 123, 0.2);
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             position: relative;
         }
-
-        .header {
-            margin-bottom: 25px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
+        .casino-card {
+            background-color: #141619;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
+            text-align: center;
+            width: 450px;
+            border: 1px solid #1f2326;
         }
-
-        .balance-display {
-            font-size: 24px;
-            color: #4caf50;
+        .balance-main {
+            color: #4ef060;
+            font-size: 26px;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+            margin-bottom: 5px;
         }
-
-        .salary-timer {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+        .balance-letters {
+            color: #7a828a;
+            font-size: 13px;
             margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .label-text {
+            color: #8c969e;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        select, input {
+            background-color: #202428;
+            color: #ffffff;
+            border: 1px solid #31373e;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
             gap: 15px;
         }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .col {
             flex: 1;
-            min-width: 120px;
         }
-
-        .control-group.full-width {
-            flex: 1 1 100%;
-        }
-
-        .control-group label {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #aaa;
-        }
-
-        .control-group select, .control-group input {
-            width: 100%;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 16px;
-            text-align: center;
-            outline: none;
-        }
-
-        .control-group select:focus, .control-group input:focus {
-            border-color: #00ff7b;
-        }
-
-        .slots-wrapper {
-            background: #0a0a0a;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            min-height: 120px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .slots-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .slot-reel {
-            width: 60px;
-            height: 80px;
-            background: #222;
-            border: 2px solid #444;
+            background-color: #0b0c0d;
             border-radius: 8px;
+            padding: 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
-            color: #00ff7b;
-            text-shadow: 0 0 10px rgba(0, 255, 123, 0.4);
+            gap: 8px;
+            margin-bottom: 25px;
+            min-height: 46px;
+            align-items: center;
         }
-
-        .slot-reel.spinning {
-            animation: spin 0.1s infinite linear;
-        }
-
-        @keyframes spin {
-            0% { transform: translateY(-5px); }
-            50% { transform: translateY(5px); }
-            100% { transform: translateY(-5px); }
-        }
-
-        .spin-button {
-            background: linear-gradient(135deg, #00ff7b 0%, #006633 100%);
-            color: black;
-            border: none;
-            padding: 15px 40px;
+        .slot-box {
+            background-color: #202428;
+            border: 2px solid #31373e;
+            border-radius: 6px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-size: 20px;
             font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 255, 123, 0.3);
-            transition: all 0.2s ease;
-            width: 80%;
+            color: #4ef060;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
-
-        .spin-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(0, 255, 123, 0.5);
-        }
-
-        .spin-button:disabled {
-            background: #444;
-            box-shadow: none;
-            cursor: not-allowed;
-            color: #aaa;
-        }
-
-        .message-display {
-            margin-top: 20px;
-            font-size: 16px;
-            min-height: 24px;
-            color: #ffeb3b;
-            padding: 0 10px;
-        }
-
-        .game-over-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            border-radius: 15px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 10;
-        }
-
-        .game-over-text {
-            color: #ff3333;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .restart-button {
-            background: #4caf50;
-            color: white;
+        .btn-spin {
+            background-color: #00cc52;
+            color: #000000;
             border: none;
-            padding: 12px 30px;
-            font-size: 18px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 30px;
+            width: 100%;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 204, 82, 0.2);
         }
-
-        .save-status {
+        .btn-spin:hover {
+            background-color: #00ff66;
+        }
+        .result-message {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #e6b800;
+            min-height: 36px;
+        }
+        .secret-alert {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ff3333;
             font-size: 11px;
-            color: #555;
-            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <div class="casino-container">
-        <div class="game-over-overlay" id="gameOverOverlay">
-            <div class="game-over-text">Ты проебал все бабки и сдох от голода.</div>
-            <button class="restart-button" onclick="resetGame()">Начать заново</button>
-        </div>
+<div class="secret-alert" id="secret-alert">чит-код активирован: +10 септиллионов</div>
 
-        <div class="header">
-            <div class="balance-display">баланс: <span id="balanceValue">10000</span> руб.</div>
-            <div class="salary-timer">пособие по безработице (+10000 руб.) через: <span id="timerValue">60</span> сек.</div>
-        </div>
-
-        <div class="controls">
-            <div class="control-group full-width">
-                <label for="targetWord">твоя главная цель в жизни</label>
-                <select id="targetWord" onchange="changeTarget()">
-                    <option value="ХУЙ" selected>собрать ХУЙ</option>
-                    <option value="ЕБЛАН">собрать ЕБЛАН</option>
-                    <option value="ПИДОР">собрать ПИДОР</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="slotsCount">кол-во слотов</label>
-                <select id="slotsCount" onchange="changeSlotsCount()">
-                    <option value="3" selected>3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="betValue">ставка</label>
-                <input type="number" id="betValue" value="500" min="100" step="100" onchange="saveConfig()">
-            </div>
-        </div>
-
-        <div class="slots-wrapper">
-            <div class="slots-container" id="slotsContainer"></div>
-        </div>
-
-        <button class="spin-button" id="spinBtn" onclick="spin()">Крутить</button>
-
-        <div class="message-display" id="messageDisplay"></div>
-        <div class="save-status">автосохранение в браузере активно</div>
+<div class="casino-card">
+    <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
+    <div class="balance-letters" id="balance-letters-display">
+        прописью: 0 руб.<br>
+        до бесконечности: расчет...
     </div>
 
-    <script>
-        const letters = ['Х', 'У', 'Й', 'П', 'И', 'З', 'Д', 'А', 'Е', 'Б', 'Л', 'Н', 'О', 'Р'];
-        
-        let balance = 10000;
-        let timeToSalary = 60;
-        let salaryInterval;
-        let timerInterval;
+    <span class="label-text">твоя главная цель в жизни</span>
+    <select id="target-select" onchange="handleTargetChange()">
+        <option value="ХУЙ">собрать ХУЙ</option>
+        <option value="ЕБЛАН">собрать ЕБЛАН</option>
+        <option value="ПИДОР">собрать ПИДОР</option>
+    </select>
 
-        function loadSave() {
-            if (localStorage.getItem('casino_balance') !== null) {
-                balance = parseInt(localStorage.getItem('casino_balance'));
-            }
-            if (localStorage.getItem('casino_timeToSalary') !== null) {
-                timeToSalary = parseInt(localStorage.getItem('casino_timeToSalary'));
-            }
-            if (localStorage.getItem('casino_slotsCount') !== null) {
-                document.getElementById('slotsCount').value = localStorage.getItem('casino_slotsCount');
-            }
-            if (localStorage.getItem('casino_betValue') !== null) {
-                document.getElementById('betValue').value = localStorage.getItem('casino_betValue');
-            }
-            if (localStorage.getItem('casino_targetWord') !== null) {
-                document.getElementById('targetWord').value = localStorage.getItem('casino_targetWord');
-            }
+    <div class="row">
+        <div class="col">
+            <span class="label-text">кол-во слотов</span>
+            <select id="slots-select">
+                <option value="3">3</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class="col">
+            <span class="label-text">ставка</span>
+            <input type="text" id="bet-input" value="100">
+        </div>
+    </div>
+
+    <div class="slots-container" id="slots-container">
+        <div class="slot-box">—</div>
+        <div class="slot-box">—</div>
+        <div class="slot-box">—</div>
+    </div>
+
+    <button class="btn-spin" onclick="spin()">крутить</button>
+
+    <div class="result-message" id="result-display"></div>
+</div>
+
+<script>
+    const maxJsNumber = 17976931348623157081452742373170435679807056752584499659891747680315726078002853876602841604862869853802707627511090146938459102431627447370420556114170685640321300057399439616010061329241517409249704289895240292376971510344482083512411547734028420155225345791771954714163901115161099238314115132219904229344n;
+
+    const shortNames = [
+        "", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", 
+        "секстил.", "септили.", "октил.", "нонил.", "децил.", 
+        "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
+        "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."
+    ];
+
+    const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+
+    let balance = 10000n;
+    if (localStorage.getItem('ghetto_balance_big')) {
+        try {
+            balance = BigInt(localStorage.getItem('ghetto_balance_big'));
+        } catch(e) {
+            balance = 10000n;
         }
+    }
 
-        function saveGame() {
-            localStorage.setItem('casino_balance', balance);
-            localStorage.setItem('casino_timeToSalary', timeToSalary);
-        }
+    handleTargetChange();
+    updateUI();
 
-        function saveConfig() {
-            localStorage.setItem('casino_slotsCount', document.getElementById('slotsCount').value);
-            localStorage.setItem('casino_betValue', document.getElementById('betValue').value);
-            localStorage.setItem('casino_targetWord', document.getElementById('targetWord').value);
-        }
+    setInterval(() => {
+        balance += 10000n;
+        saveBalance();
+        updateUI();
+    }, 10000);
 
-        function startSalaryTimers() {
-            if (salaryInterval) clearInterval(salaryInterval);
-            if (timerInterval) clearInterval(timerInterval);
-
-            timerInterval = setInterval(() => {
-                timeToSalary--;
-                document.getElementById('timerValue').textContent = timeToSalary;
-                localStorage.setItem('casino_timeToSalary', timeToSalary);
-
-                if (timeToSalary <= 0) {
-                    timeToSalary = 60;
-                    balance += 10000;
-                    updateBalanceDisplay();
-                    saveGame();
-                    
-                    if (document.getElementById('gameOverOverlay').style.display === 'flex') {
-                        document.getElementById('gameOverOverlay').style.display = 'none';
-                    }
-                    document.getElementById('messageDisplay').textContent = 'пришло пособие по безработице! +10000 руб.';
-                }
+    // отслеживание секретного нажатия клавиши L
+    window.addEventListener("keydown", function(event) {
+        if (event.key === "l" || event.key === "L" || event.key === "д" || event.key === "Д") {
+            // подкидываем 10 септиллионов (10 с 24 нулями)
+            balance += 10000000000000000000000000n;
+            saveBalance();
+            updateUI();
+            
+            // микро-уведомление в углу экрана, которое быстро гаснет
+            let alertBox = document.getElementById("secret-alert");
+            alertBox.style.opacity = "1";
+            setTimeout(() => {
+                alertBox.style.opacity = "0";
             }, 1000);
         }
+    });
 
-        function initGame() {
-            loadSave();
-            
-            // подстраиваем слоты под выбранную цель при первом запуске, если это необходимо
-            adjustSlotsForTarget();
-            
-            document.getElementById('gameOverOverlay').style.display = balance <= 0 ? 'flex' : 'none';
-            document.getElementById('messageDisplay').textContent = 'выбери цель, ставку и крути!';
-            updateBalanceDisplay();
-            renderReels();
-            startSalaryTimers();
+    function handleTargetChange() {
+        const target = document.getElementById("target-select").value;
+        const slotsSelect = document.getElementById("slots-select");
+        
+        if (target === "ХУЙ") {
+            slotsSelect.value = "3";
+        } else {
+            slotsSelect.value = "5";
+        }
+        buildSlots(parseInt(slotsSelect.value));
+    }
+
+    function buildSlots(count) {
+        const container = document.getElementById("slots-container");
+        container.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+            const box = document.createElement("div");
+            box.className = "slot-box";
+            box.innerText = "—";
+            container.appendChild(box);
+        }
+    }
+
+    function formatBigNumber(value) {
+        let num = BigInt(value);
+        if (num === 0n) return "0 руб.";
+        
+        let str = num.toString();
+        let length = str.length;
+        
+        if (length <= 3) return `${str} руб.`;
+        
+        let groupIndex = Math.floor((length - 1) / 3);
+        
+        if (groupIndex >= shortNames.length) {
+            return "дохерархи миллиардов";
+        }
+        
+        let mainPartLength = length % 3 === 0 ? 3 : length % 3;
+        let mainPart = str.slice(0, mainPartLength);
+        let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
+        
+        if (fractionalPart === "00" || fractionalPart === "") {
+            fractionalPart = "";
+        } else if (fractionalPart[1] === "0") {
+            fractionalPart = "." + fractionalPart[0];
+        } else {
+            fractionalPart = "." + fractionalPart;
+        }
+        
+        return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
+    }
+
+    function updateUI() {
+        document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
+        
+        let textForm = formatBigNumber(balance);
+        let distanceText = "";
+        
+        if (balance >= maxJsNumber) {
+            distanceText = "ты превзошел лимиты вселенной";
+        } else {
+            let remaining = maxJsNumber - balance;
+            distanceText = formatBigNumber(remaining);
+        }
+        
+        document.getElementById("balance-letters-display").innerHTML = `
+            прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
+            до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
+        `;
+    }
+
+    function saveBalance() {
+        localStorage.setItem('ghetto_balance_big', balance.toString());
+    }
+
+    function spin() {
+        let betInput = document.getElementById("bet-input").value;
+        let bet = 100n;
+        
+        try {
+            betInput = betInput.replace(/[^0-9]/g, '');
+            if (!betInput) betInput = "100";
+            bet = BigInt(betInput);
+        } catch(e) {
+            bet = 100n;
         }
 
-        function resetGame() {
-            balance = 10000;
-            timeToSalary = 60;
-            document.getElementById('gameOverOverlay').style.display = 'none';
-            document.getElementById('messageDisplay').textContent = 'новая попытка, цель прежняя!';
-            saveGame();
-            updateBalanceDisplay();
-            renderReels();
+        if (bet <= 0n) {
+            alert("нормальную ставку поставь");
+            return;
         }
 
-        function updateBalanceDisplay() {
-            document.getElementById('balanceValue').textContent = balance;
+        if (balance < bet) {
+            alert("не хватает бабок на такую ставку, жди пособия");
+            return;
         }
 
-        function renderReels() {
-            const count = parseInt(document.getElementById('slotsCount').value);
-            const container = document.getElementById('slotsContainer');
-            container.innerHTML = '';
-            
-            for (let i = 0; i < count; i++) {
-                const reel = document.createElement('div');
-                reel.className = 'slot-reel';
-                reel.id = `reel-${i}`;
-                reel.textContent = '7';
-                container.appendChild(reel);
+        balance -= bet;
+        
+        const target = document.getElementById("target-select").value;
+        const slotsCount = parseInt(document.getElementById("slots-select").value);
+        const boxes = document.querySelectorAll(".slot-box");
+        
+        let resultArr = [];
+        let isLucky = Math.random() < 0.25;
+        
+        if (isLucky) {
+            let targetArr = target.split("");
+            // если слотов больше чем букв в цели, добиваем случайными буквами
+            while (targetArr.length < slotsCount) {
+                targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+            }
+            resultArr = targetArr;
+        } else {
+            for (let i = 0; i < slotsCount; i++) {
+                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                resultArr.push(randomLetter);
             }
         }
-
-        // автоматически меняет количество слотов под длину выбранного слова-цели
-        function adjustSlotsForTarget() {
-            const target = document.getElementById('targetWord').value;
-            document.getElementById('slotsCount').value = target.length;
-            saveConfig();
+        
+        for (let i = 0; i < slotsCount; i++) {
+            boxes[i].innerText = resultArr[i];
         }
-
-        function changeTarget() {
-            adjustSlotsForTarget();
-            renderReels();
-            document.getElementById('messageDisplay').textContent = `цель изменена на "${document.getElementById('targetWord').value}". количество слотов подстроено!`;
+        
+        let currentWord = resultArr.join("");
+        let resultDisplay = document.getElementById("result-display");
+        
+        if (currentWord.includes(target)) {
+            let winAmount = bet * 50n;
+            balance += winAmount;
+            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
+        } else {
+            resultDisplay.innerText = "мимо! крути еще!";
         }
+        
+        saveBalance();
+        updateUI();
+    }
+</script>
 
-        function changeSlotsCount() {
-            renderReels();
-            saveConfig();
-        }
-
-        function checkWin(resultArray) {
-            const resultStr = resultArray.join('');
-            const target = document.getElementById('targetWord').value;
-            
-            // 1. ПРОВЕРКА НА ВЫБРАННУЮ ЦЕЛЬ (СУПЕР ДЖЕКПОТ x50)
-            if (resultStr.includes(target)) {
-                return { win: true, multiplier: 50, msg: `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉` };
-            }
-
-            // 2. обычные джекпоты за другие матерные слова (х20)
-            if (resultStr.includes('ХУЙ') || resultStr.includes('ПИЗДА') || resultStr.includes('ЕБЛАН') || resultStr.includes('ПИДОР')) {
-                return { win: true, multiplier: 20, msg: `просто хороший джекпот слов: ${resultStr}! x20` };
-            }
-
-            const counts = {};
-            resultArray.forEach(char => {
-                counts[char] = (counts[char] || 0) + 1;
-            });
-
-            const maxMatches = Math.max(...Object.values(counts));
-
-            if (maxMatches === resultArray.length) {
-                return { win: true, multiplier: 15, msg: `все буквы совпали! x15!` };
-            }
-            if (maxMatches >= 3) {
-                return { win: true, multiplier: 5, msg: `три одинаковые буквы! x5!` };
-            }
-            if (maxMatches >= 2) {
-                return { win: true, multiplier: 2, msg: `собралась пара! x2` };
-            }
-
-            return { win: false, multiplier: 0, msg: 'мимо цели. крути еще.' };
-        }
-
-        function spin() {
-            const betInput = document.getElementById('betValue');
-            const bet = parseInt(betInput.value);
-            const count = parseInt(document.getElementById('slotsCount').value);
-            const spinBtn = document.getElementById('spinBtn');
-            const target = document.getElementById('targetWord').value;
-
-            if (isNaN(bet) || bet <= 0) {
-                document.getElementById('messageDisplay').textContent = 'поставь нормальную сумму';
-                return;
-            }
-
-            if (bet > balance) {
-                document.getElementById('messageDisplay').textContent = 'не хватает бабок на такую ставку';
-                return;
-            }
-
-            balance -= bet;
-            updateBalanceDisplay();
-            saveGame();
-            
-            document.getElementById('messageDisplay').textContent = 'барабаны крутятся...';
-            spinBtn.disabled = true;
-
-            const currentResults = [];
-            
-            // подкрутка: 15% шанс, что скрипт выбьет именно выбранную тобой цель!
-            const luckyTargetDrop = Math.random() < 0.15;
-            // 15% шанс на просто одинаковые буквы
-            const luckyEqualDrop = Math.random() < 0.15; 
-            const luckyLetter = letters[Math.floor(Math.random() * letters.length)];
-
-            for (let i = 0; i < count; i++) {
-                if (luckyTargetDrop) {
-                    // закидываем по буквам цель
-                    currentResults.push(target[i] || letters[Math.floor(Math.random() * letters.length)]);
-                } else if (luckyEqualDrop) {
-                    currentResults.push(luckyLetter);
-                } else {
-                    currentResults.push(letters[Math.floor(Math.random() * letters.length)]);
-                }
-            }
-
-            let ticks = 0;
-            const interval = setInterval(() => {
-                for (let i = 0; i < count; i++) {
-                    const reel = document.getElementById(`reel-${i}`);
-                    reel.textContent = letters[Math.floor(Math.random() * letters.length)];
-                }
-                ticks++;
-                if (ticks > 8) {
-                    clearInterval(interval);
-                    
-                    for (let i = 0; i < count; i++) {
-                        const reel = document.getElementById(`reel-${i}`);
-                        reel.textContent = currentResults[i];
-                    }
-
-                    const result = checkWin(currentResults);
-                    if (result.win) {
-                        const winAmount = bet * result.multiplier;
-                        balance += winAmount;
-                        document.getElementById('messageDisplay').textContent = `${result.msg} (+${winAmount} руб.)`;
-                    } else {
-                        document.getElementById('messageDisplay').textContent = result.msg;
-                    }
-
-                    updateBalanceDisplay();
-                    saveGame();
-                    spinBtn.disabled = false;
-
-                    if (balance <= 0) {
-                        document.getElementById('gameOverOverlay').style.display = 'flex';
-                    }
-                }
-            }, 60);
-        }
-
-        window.onload = initGame;
-    </script>
 </body>
 </html>
