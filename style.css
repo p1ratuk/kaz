@@ -1,192 +1,101 @@
-body {
-    background-color: #0b0c0d;
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
+/* Рычаг справа как у автомата */
+.lever-container {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    position: relative;
     flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
-}
-.casino-card {
-    background-color: #141619;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
-    text-align: center;
-    width: 450px;
-    border: 1px solid #1f2326;
-    margin-bottom: 15px;
-}
-.balance-main {
-    color: #4ef060;
-    font-size: 26px;
-    margin-bottom: 5px;
-}
-.balance-letters {
-    color: #7a828a;
-    font-size: 13px;
-    margin-bottom: 25px;
-    line-height: 1.4;
-}
-.label-text {
-    color: #8c969e;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    display: block;
-}
-select, input {
-    background-color: #202428;
-    color: #ffffff;
-    border: 1px solid #31373e;
-    padding: 10px;
-    border-radius: 6px;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    outline: none;
-    margin-bottom: 20px;
-}
-.row {
-    display: flex;
-    gap: 15px;
-}
-.col {
-    flex: 1;
-}
-.slots-container {
-    background-color: #0b0c0d;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 25px;
-    min-height: 46px;
     align-items: center;
-}
-.slot-box {
-    background-color: #202428;
-    border: 2px solid #31373e;
-    border-radius: 6px;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    color: #4ef060;
-    text-transform: uppercase;
-    transition: all 0.1s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-.slot-box.spinning {
-    animation: slotSpin 0.1s infinite;
-    background-color: #2a3a2a;
-    border-color: #4ef060;
-}
-@keyframes slotSpin {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    cursor: grab;
+    user-select: none;
+    z-index: 100;
 }
 
-/* Стили рычага как у автомата */
-.lever-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-    cursor: pointer;
-    user-select: none;
+.lever-container:active {
+    cursor: grabbing;
 }
 
 .lever-base {
-    width: 80px;
-    height: 120px;
+    width: 40px;
+    height: 140px;
     background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
-    border-radius: 10px;
+    border-radius: 8px;
     position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    border: 2px solid #333;
-    transition: all 0.3s;
-}
-
-.lever-base:active {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    transform: scale(0.98);
+    border: 2px solid #444;
+    overflow: visible;
 }
 
 .lever-stick {
-    width: 10px;
-    height: 80px;
-    background: linear-gradient(90deg, #ccc, #999, #ccc);
+    width: 8px;
+    height: 70px;
+    background: linear-gradient(90deg, #ddd, #aaa, #ddd);
     position: absolute;
-    bottom: 20px;
+    top: -60px;
     transform-origin: bottom center;
-    transition: transform 0.3s ease;
+    transition: transform 0.15s ease;
     border-radius: 2px;
-    cursor: pointer;
+    cursor: grab;
+    z-index: 101;
+}
+
+.lever-stick:active {
+    cursor: grabbing;
 }
 
 .lever-stick.pulled {
-    transform: rotate(-35deg);
+    transform: rotate(-25deg);
 }
 
 .lever-stick.spinning-active {
-    animation: leverShake 0.1s infinite;
+    animation: leverShake 0.08s infinite;
 }
 
 @keyframes leverShake {
-    0% { transform: rotate(-35deg); }
-    25% { transform: rotate(-32deg); }
-    50% { transform: rotate(-38deg); }
-    75% { transform: rotate(-33deg); }
-    100% { transform: rotate(-35deg); }
+    0% { transform: rotate(-25deg); }
+    25% { transform: rotate(-23deg); }
+    50% { transform: rotate(-27deg); }
+    75% { transform: rotate(-24deg); }
+    100% { transform: rotate(-25deg); }
 }
 
 .lever-ball {
-    width: 25px;
-    height: 25px;
-    background: radial-gradient(circle at 30% 30%, #ff3333, #990000);
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle at 35% 35%, #ff4444, #990000);
     border-radius: 50%;
     position: absolute;
-    top: -12px;
-    left: -7px;
-    box-shadow: 0 4px 10px rgba(255,0,0,0.5);
-    transition: all 0.3s;
+    top: -14px;
+    left: -10px;
+    box-shadow: 0 4px 12px rgba(255,0,0,0.6);
+    transition: all 0.15s;
+    border: 2px solid #cc0000;
 }
 
 .lever-stick.pulled .lever-ball {
-    box-shadow: 0 4px 20px rgba(255,0,0,0.8);
-    background: radial-gradient(circle at 30% 30%, #ff5555, #cc0000);
+    box-shadow: 0 6px 20px rgba(255,0,0,0.9);
+    background: radial-gradient(circle at 35% 35%, #ff6666, #cc0000);
 }
 
 .lever-text {
     color: #ffcc00;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 10px;
+    margin-top: 8px;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    animation: leverPulse 1s infinite;
+    letter-spacing: 2px;
+    animation: leverPulse 1.5s infinite;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
 }
 
 @keyframes leverPulse {
-    0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(255,204,0,0.5); }
-    50% { opacity: 0.7; text-shadow: 0 0 20px rgba(255,204,0,0.8); }
+    0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(255,204,0,0.5); }
+    50% { opacity: 0.6; text-shadow: 0 0 15px rgba(255,204,0,0.8); }
 }
 
 .lever-container.disabled {
@@ -200,81 +109,11 @@ select, input {
     color: #666;
 }
 
-.result-message {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #e6b800;
-    min-height: 36px;
-}
-.secret-alert {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: #ff3333;
-    font-size: 11px;
-    opacity: 0;
-    transition: opacity 0.5s;
-}
-
-.btn-achievements {
-    background-color: #ffd700;
-    color: #000000;
-    border: none;
-    padding: 15px;
-    border-radius: 30px;
-    width: 450px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-    margin-bottom: 15px;
-}
-.btn-achievements:hover {
-    background-color: #ffed4a;
-    box-shadow: 0 8px 25px rgba(255, 235, 59, 0.6);
-    transform: translateY(-2px);
-}
-.btn-achievements:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-.btn-pay-taxes {
-    background-color: #ff6600;
-    color: #000000;
-    border: none;
-    padding: 15px;
-    border-radius: 30px;
-    width: 450px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
-    margin-bottom: 15px;
-}
-.btn-pay-taxes:hover {
-    background-color: #ff8833;
-    box-shadow: 0 8px 25px rgba(255, 136, 51, 0.6);
-    transform: translateY(-2px);
-}
-.btn-pay-taxes:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
-}
-
-/* Кнопка Безналогия */
+/* Исправленная кнопка Безналогия без градиента */
 .btn-belarus {
-    background: linear-gradient(135deg, #ff0000, #00ff00);
+    background-color: #cc0000;
     color: #ffffff;
-    border: 3px solid #fff;
+    border: 3px solid #00cc00;
     padding: 15px;
     border-radius: 30px;
     width: 450px;
@@ -284,22 +123,32 @@ select, input {
     cursor: pointer;
     letter-spacing: 2px;
     text-transform: uppercase;
-    transition: all 0.2s;
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
     margin-bottom: 15px;
-    animation: belarusFlag 2s infinite;
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes belarusFlag {
-    0%, 100% { background: linear-gradient(135deg, #ff0000, #00ff00); }
-    25% { background: linear-gradient(135deg, #ff0000, #00ff00); }
-    50% { background: linear-gradient(135deg, #00ff00, #ff0000); }
-    75% { background: linear-gradient(135deg, #00ff00, #ff0000); }
+.btn-belarus::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 50%;
+    background: rgba(0, 204, 0, 0.3);
+    transition: left 0.5s;
+}
+
+.btn-belarus:hover::before {
+    left: 0;
 }
 
 .btn-belarus:hover {
-    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 30px rgba(255, 0, 0, 0.6);
     transform: translateY(-2px);
+    border-color: #00ff00;
 }
 
 .btn-belarus:active {
@@ -309,411 +158,16 @@ select, input {
 .btn-belarus:disabled {
     opacity: 0.7;
     cursor: not-allowed;
-    animation: none;
-    background: #555;
+    background-color: #555;
+    border-color: #777;
+    box-shadow: none;
 }
 
-.btn-close-popup {
-    background-color: #ff0000;
-    color: #ffffff;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 6px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
-    transition: all 0.2s;
-}
-.btn-close-popup:hover {
-    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.6);
-    transform: translateY(-2px);
-}
-.btn-close-popup:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
-}
-
-.cooldown-indicator {
-    font-size: 10px;
-    color: #ffaa00;
-    margin-top: 5px;
-    min-height: 15px;
-}
-
-.tax-status {
-    font-size: 10px;
-    margin-top: 10px;
-    min-height: 15px;
-}
-.tax-paid {
-    color: #00cc52;
-}
-.tax-unpaid {
-    color: #ff3333;
-}
-
-.winrate-meter {
-    background: #1a1a2e;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #00cc52;
-    width: 450px;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0, 204, 82, 0.2);
-}
-.winrate-label {
-    font-size: 10px;
-    color: #00cc52;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-    display: flex;
-    justify-content: space-between;
-}
-.bar-bg {
-    background: #202428;
-    height: 12px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid #31373e;
-}
-.fill-winrate {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #00cc52, #4ef060);
-    transition: width 0.3s;
-}
-.winrate-stats {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    font-size: 9px;
-    color: #8c969e;
-}
-
-#achievements-overlay, #sukabank-popup, #f12-warning-overlay {
+.btn-belarus:disabled::before {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
-    z-index: 999;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 }
 
-#f12-warning-overlay {
-    background: rgba(139, 0, 0, 0.95);
-    z-index: 10000;
-    cursor: pointer;
-}
-
-.f12-warning-text {
-    color: #ff0000;
-    font-size: 48px;
-    font-weight: 900;
-    text-align: center;
-    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6);
-    animation: warningPulse 0.5s infinite;
-    padding: 20px;
-}
-
-@keyframes warningPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.05); }
-}
-
-.f12-warning-subtext {
-    color: #ffffff;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 20px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.achievement-card {
-    background: #1a1a2e;
-    border: 2px solid #31373e;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.achievement-card.unlocked {
-    border-color: #ffd700;
-    background: #1a2e1a;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-}
-.achievement-card.locked {
-    opacity: 0.5;
-    filter: grayscale(100%);
-}
-.achievement-icon {
-    font-size: 30px;
-    min-width: 40px;
-    text-align: center;
-}
-.achievement-info {
-    flex: 1;
-}
-.achievement-name {
-    font-size: 12px;
-    color: #ffd700;
-    text-transform: uppercase;
-}
-.achievement-desc {
-    font-size: 10px;
-    color: #8c969e;
-}
-.achievement-date {
-    font-size: 8px;
-    color: #666;
-}
-
-.sukabank-content {
-    background: #1a0000;
-    border: 3px solid #ff0000;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-}
-.sukabank-title {
-    color: #ff0000;
-    font-size: 20px;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-}
-.sukabank-text {
-    color: #ff6666;
-    font-size: 12px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.achievement-popup {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 204, 82, 0.95);
-    padding: 15px 30px;
-    border-radius: 10px;
-    font-size: 16px;
-    z-index: 1000;
-    animation: slideUp 3s forwards;
-    border: 2px solid #ffd700;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-}
-
-@keyframes slideUp {
-    0% { bottom: -100px; opacity: 0; }
-    20% { bottom: 20px; opacity: 1; }
-    80% { bottom: 20px; opacity: 1; }
-    100% { bottom: -100px; opacity: 0; }
-}
-
-/* Стили для телефона Sukagram */
-#tax-phone-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-}
-
-.phone-frame {
-    width: 380px;
-    height: 700px;
-    border-radius: 40px;
+/* Обновленный контейнер карточки для рычага */
+.casino-card {
     position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
-}
-
-/* iPhone 17 Pro Max */
-.phone-iphone {
-    background: #0a0a0a;
-    border: 3px solid #2a2a2a;
-}
-
-/* Xiaomi */
-.phone-xiaomi {
-    background: #1a1a2e;
-    border: 3px solid #333;
-    width: 370px;
-    height: 680px;
-    border-radius: 20px;
-}
-
-.phone-notch {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 30px;
-    background: #000;
-    border-radius: 0 0 20px 20px;
-    z-index: 10;
-}
-
-.phone-screen {
-    width: 100%;
-    height: 100%;
-    background: #0d1117;
-    display: flex;
-    flex-direction: column;
-    padding-top: 45px;
-    box-sizing: border-box;
-}
-
-.sukagram-header {
-    background: #1a1f2e;
-    padding: 12px 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid #2a3040;
-}
-
-.sukagram-back {
-    color: #4ea4f6;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.sukagram-contact {
-    flex: 1;
-    text-align: center;
-}
-
-.sukagram-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-}
-
-.sukagram-status {
-    font-size: 11px;
-    color: #4ea4f6;
-}
-
-.sukagram-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #ff6600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-}
-
-.sukagram-chat {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #0d1117;
-}
-
-.message {
-    max-width: 80%;
-    padding: 10px 14px;
-    border-radius: 18px;
-    font-size: 13px;
-    line-height: 1.4;
-    animation: messageSlide 0.3s ease;
-}
-
-@keyframes messageSlide {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.message-received {
-    background: #1f2937;
-    color: #fff;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-}
-
-.message-sent {
-    background: #4ea4f6;
-    color: #fff;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-}
-
-.message-time {
-    font-size: 9px;
-    color: #888;
-    margin-top: 5px;
-    text-align: right;
-}
-
-.sukagram-input-area {
-    background: #1a1f2e;
-    padding: 10px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    border-top: 1px solid #2a3040;
-}
-
-.sukagram-input {
-    flex: 1;
-    background: #2a3040;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 13px;
-    outline: none;
-    font-family: 'Inter', sans-serif;
-}
-
-.sukagram-send {
-    background: #4ea4f6;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.phone-home-bar {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 4px;
-    background: #fff;
-    border-radius: 2px;
-    opacity: 0.5;
 }
