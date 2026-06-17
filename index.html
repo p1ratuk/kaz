@@ -7,340 +7,61 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #0b0c0d;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            position: relative;
-            flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .casino-card {
-            background-color: #141619;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 255, 100, 0.05);
-            text-align: center;
-            width: 450px;
-            border: 1px solid #1f2326;
-            margin-bottom: 15px;
-        }
-        .balance-main {
-            color: #4ef060;
-            font-size: 26px;
-            margin-bottom: 5px;
-        }
-        .balance-letters {
-            color: #7a828a;
-            font-size: 13px;
-            margin-bottom: 25px;
-            line-height: 1.4;
-        }
-        .label-text {
-            color: #8c969e;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            display: block;
-        }
-        select, input {
-            background-color: #202428;
-            color: #ffffff;
-            border: 1px solid #31373e;
-            padding: 10px;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            outline: none;
-            margin-bottom: 20px;
-        }
-        .row {
-            display: flex;
-            gap: 15px;
-        }
-        .col {
-            flex: 1;
-        }
-        .slots-container {
-            background-color: #0b0c0d;
-            border-radius: 8px;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 25px;
-            min-height: 46px;
-            align-items: center;
-        }
-        .slot-box {
-            background-color: #202428;
-            border: 2px solid #31373e;
-            border-radius: 6px;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: #4ef060;
-            text-transform: uppercase;
-            transition: all 0.1s;
-        }
-        .slot-box.spinning {
-            animation: slotSpin 0.1s infinite;
-            background-color: #2a3a2a;
-            border-color: #4ef060;
-        }
-        @keyframes slotSpin {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .btn-spin {
-            background-color: #00cc52;
-            color: #000000;
-            border: none;
-            padding: 15px;
-            border-radius: 30px;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 204, 82, 0.2);
-        }
-        .btn-spin:hover {
-            background-color: #00ff66;
-        }
-        .btn-spin:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-            color: #999;
-        }
-        .result-message {
-            margin-top: 20px;
-            font-size: 13px;
-            color: #e6b800;
-            min-height: 36px;
-        }
-        .secret-alert {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: #ff3333;
-            font-size: 11px;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        
-        /* НОВЫЕ СТИЛИ */
-        .btn-achievements {
-            background-color: #ffd700;
-            color: #000000;
-            border: none;
-            padding: 15px;
-            border-radius: 30px;
-            width: 450px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: background 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            margin-bottom: 15px;
-        }
-        .btn-achievements:hover {
-            background-color: #ffed4a;
-        }
-        
-        .cooldown-indicator {
-            font-size: 10px;
-            color: #ffaa00;
-            margin-top: 5px;
-            min-height: 15px;
-        }
-        
-        .winrate-meter {
-            background: #1a1a2e;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #00cc52;
-            width: 450px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-        }
-        .winrate-label {
-            font-size: 10px;
-            color: #00cc52;
-            text-transform: uppercase;
-            margin-bottom: 3px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .bar-bg {
-            background: #202428;
-            height: 12px;
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid #31373e;
-        }
-        .fill-winrate {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00cc52, #4ef060);
-            transition: width 0.3s;
-        }
-        .winrate-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 9px;
-            color: #8c969e;
-        }
-        
-        #achievements-overlay, #sukabank-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        .achievement-card {
-            background: #1a1a2e;
-            border: 2px solid #31373e;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 400px;
-        }
-        .achievement-card.unlocked {
-            border-color: #ffd700;
-            background: #1a2e1a;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-        .achievement-card.locked {
-            opacity: 0.5;
-            filter: grayscale(100%);
-        }
-        .achievement-icon {
-            font-size: 30px;
-            min-width: 40px;
-            text-align: center;
-        }
-        .achievement-info {
-            flex: 1;
-        }
-        .achievement-name {
-            font-size: 12px;
-            color: #ffd700;
-            text-transform: uppercase;
-        }
-        .achievement-desc {
-            font-size: 10px;
-            color: #8c969e;
-        }
-        .achievement-date {
-            font-size: 8px;
-            color: #666;
-        }
-        
-        .sukabank-content {
-            background: #1a0000;
-            border: 3px solid #ff0000;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-        }
-        .sukabank-title {
-            color: #ff0000;
-            font-size: 20px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .sukabank-text {
-            color: #ff6666;
-            font-size: 12px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .btn-close-popup {
-            background-color: #ff0000;
-            color: #ffffff;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        
-        .achievement-popup {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 204, 82, 0.95);
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 16px;
-            z-index: 1000;
-            animation: slideUp 3s forwards;
-            border: 2px solid #ffd700;
-            text-align: center;
-        }
-        
-        @keyframes slideUp {
-            0% { bottom: -100px; opacity: 0; }
-            20% { bottom: 20px; opacity: 1; }
-            80% { bottom: 20px; opacity: 1; }
-            100% { bottom: -100px; opacity: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
-<!-- ВСПЛЫВАШКА ДОСТИЖЕНИЙ -->
+<!-- ПРЕДУПРЕЖДЕНИЕ F12 -->
+<div id="f12-warning-overlay" onclick="closeF12Warning()">
+    <div class="f12-warning-text">⚠️ ПРЕДУПРЕЖДЕНИЕ ⚠️</div>
+    <div class="f12-warning-subtext">ЗАКРОЙ ЭТО, А ТО ЗАБЛОКИРУЕМ КАРТУ</div>
+    <div class="f12-warning-subtext" style="font-size: 16px; margin-top: 30px; opacity: 0.7;">Нажми на экран чтобы закрыть</div>
+</div>
+
+<!-- ОКНО ТЕЛЕФОНА SUKAGRAM -->
+<div id="tax-phone-overlay">
+    <div class="phone-frame" id="phone-frame">
+        <div class="phone-notch" id="phone-notch"></div>
+        <div class="phone-screen">
+            <div class="sukagram-header">
+                <div class="sukagram-back" onclick="closeTaxPhone()">← Назад</div>
+                <div class="sukagram-contact">
+                    <div class="sukagram-avatar">👮</div>
+                    <div class="sukagram-name">СУКАбанк Инспектор</div>
+                    <div class="sukagram-status">онлайн</div>
+                </div>
+            </div>
+            
+            <div class="sukagram-chat" id="sukagram-chat">
+                <div class="message message-received">
+                    <div>Добрый день! Это инспектор СУКАбанка. Вы не платили налоги уже 15 выигрышей подряд.</div>
+                    <div class="message-time">12:34</div>
+                </div>
+                <div class="message message-received">
+                    <div>Назовите ваш текущий баланс для расчета налога. Но учтите - если сумма будет сильно занижена, мы это увидим в базе.</div>
+                    <div class="message-time">12:34</div>
+                </div>
+            </div>
+            
+            <div class="sukagram-input-area">
+                <input type="text" class="sukagram-input" id="sukagram-input" placeholder="Введите баланс..." onkeypress="if(event.key==='Enter')sendTaxMessage()">
+                <button class="sukagram-send" onclick="sendTaxMessage()">📤</button>
+            </div>
+        </div>
+        <div class="phone-home-bar"></div>
+    </div>
+</div>
+
 <div id="achievements-overlay">
-    <div style="background:#141619; border: 3px solid #ffd700; padding: 20px; border-radius: 15px; max-height: 80vh; overflow-y: auto; text-align: center;">
+    <div style="background:#141619; border: 3px solid #ffd700; padding: 20px; border-radius: 15px; max-height: 80vh; overflow-y: auto; text-align: center; box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);">
         <h2 style="color:#ffd700; text-transform:uppercase; margin:0 0 15px 0; font-size:18px;">🏆 ДОСТИЖЕНИЯ (STEAM/XBOX 360)</h2>
         <div id="achievements-list"></div>
         <button class="btn-close-popup" style="background:#ffd700; color:#000; margin-top:15px;" onclick="closeAchievements()">ЗАКРЫТЬ</button>
     </div>
 </div>
 
-<!-- ВСПЛЫВАШКА СУКАБАНК -->
 <div id="sukabank-popup">
     <div class="sukabank-content">
         <div class="sukabank-title">🚫 СУКАБАНК</div>
@@ -387,13 +108,25 @@
         <div class="slot-box">—</div>
     </div>
 
-    <button class="btn-spin" id="btn-spin" onclick="spin()">крутить</button>
+    <!-- РЫЧАГ КАК У АВТОМАТА -->
+    <div class="lever-container">
+        <div class="lever-base">
+            <div class="lever-stick" id="lever-stick">
+                <div class="lever-ball"></div>
+            </div>
+        </div>
+        <div class="lever-text">ТЯНИ РЫЧАГ</div>
+    </div>
+
     <div class="cooldown-indicator" id="cooldown-indicator"></div>
 
     <div class="result-message" id="result-display"></div>
+    
+    <div class="tax-status" id="tax-status">
+        <span class="tax-paid">✅ Налоги уплачены</span>
+    </div>
 </div>
 
-<!-- ВИНРЕЙТ -->
 <div class="winrate-meter">
     <div class="winrate-label">
         <span>🎯 ВИНРЕЙТ</span>
@@ -407,464 +140,12 @@
     </div>
 </div>
 
-<!-- КНОПКА ДОСТИЖЕНИЙ -->
 <button class="btn-achievements" onclick="openAchievements()">🏆 ДОСТИЖЕНИЯ</button>
+<button class="btn-pay-taxes" onclick="payTaxes()">💳 ЗАПЛАТИТЬ НАЛОГИ (15%)</button>
+<button class="btn-belarus" onclick="escapeToBelarus()" id="btn-belarus">
+    🚜 УЕХАТЬ ИЗ КАЗИИ В БЕЗНАЛОГИЮ (5 мин)
+</button>
 
-<script>
-    // ================= НАСТРОЙКА СЕКРЕТНЫХ КНОПОК =================
-    const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
-    const SECRET_MULTIPLY_BY = 2n;
-    const SPIN_COOLDOWN = 500; // 1.5 секунды задержки
-    // ==============================================================
-
-    const maxJsNumber = 17976931348623157081452742373170435679807056752584499659891747680315726078002853876602841604862869853802707627511090146938459102431627447370420556114170685640321300057399439616010061329241517409249704289895240292376971510344482083512411547734028420155225345791771954714163901115161099238314115132219904229344n;
-
-    const shortNames = [
-        "", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", 
-        "секстил.", "септили.", "октил.", "нонил.", "децил.", 
-        "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
-        "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."
-    ];
-
-    const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-
-    let balance = 10000n;
-    let taxesPaid = true;
-    let cheatDetected = false;
-    let totalWon = 0n;
-    let spinsCount = 0;
-    let winsCount = 0;
-    let lossesCount = 0;
-    let canSpin = true;
-    let cooldownTimer = null;
-    
-    // СИСТЕМА ДОСТИЖЕНИЙ
-    let achievements = {
-        "first_thousand": { name: "🥉 Первая тысяча", desc: "Накопить 1 000 рублей", unlocked: false, icon: "💵", date: null },
-        "first_million": { name: "🥈 Первый лям", desc: "Накопить 1 000 000 рублей", unlocked: false, icon: "💰", date: null },
-        "billionaire": { name: "🥇 Миллиардер", desc: "Накопить 1 000 000 000 рублей", unlocked: false, icon: "💎", date: null },
-        "trillionaire": { name: "👑 Триллионер", desc: "Накопить 1 000 000 000 000 рублей", unlocked: false, icon: "👑", date: null },
-        "quadrillionaire": { name: "🌟 Квадриллионер", desc: "Накопить 1 000 000 000 000 000 рублей", unlocked: false, icon: "🌟", date: null },
-        "sukabank_victim": { name: "🚫 Жертва СУКАбанка", desc: "Получить блокировку карты", unlocked: false, icon: "💳", date: null },
-        "big_winner": { name: "🎰 Крупный выигрыш", desc: "Выиграть больше 1 000 000 за спин", unlocked: false, icon: "🎰", date: null },
-        "hundred_spins": { name: "🔄 Сотня прокрутов", desc: "Сделать 100 спинов", unlocked: false, icon: "🔄", date: null },
-        "mellstroy_style": { name: "🔨 Меллстрой стайл", desc: "Словить блокировку при огромном балансе", unlocked: false, icon: "🔨", date: null },
-        "leet_balance": { name: "🤖 1337", desc: "Иметь баланс ровно 1337 (почти невозможно)", unlocked: false, icon: "🤖", date: null },
-        "winrate_master": { name: "🎯 Мастер винрейта", desc: "Достигнуть винрейта 50% при 50+ спинах", unlocked: false, icon: "🎯", date: null },
-        "unlucky_streak": { name: "😢 Лузстрик", desc: "Проиграть 10 раз подряд", unlocked: false, icon: "😢", date: null }
-    };
-    
-    let loseStreak = 0;
-    
-    if (localStorage.getItem('ghetto_balance_big')) {
-        try {
-            balance = BigInt(localStorage.getItem('ghetto_balance_big'));
-        } catch(e) {
-            balance = 10000n;
-        }
-    }
-    
-    if (localStorage.getItem('ghetto_achievements_v2')) {
-        try {
-            let saved = JSON.parse(localStorage.getItem('ghetto_achievements_v2'));
-            Object.keys(saved).forEach(key => {
-                if (achievements[key]) {
-                    achievements[key].unlocked = saved[key].unlocked;
-                    achievements[key].date = saved[key].date;
-                }
-            });
-        } catch(e) {}
-    }
-    
-    if (localStorage.getItem('ghetto_spins_v2')) {
-        spinsCount = parseInt(localStorage.getItem('ghetto_spins_v2'));
-    }
-    
-    if (localStorage.getItem('ghetto_wins_v2')) {
-        winsCount = parseInt(localStorage.getItem('ghetto_wins_v2'));
-    }
-    
-    if (localStorage.getItem('ghetto_losses_v2')) {
-        lossesCount = parseInt(localStorage.getItem('ghetto_losses_v2'));
-    }
-    
-    if (localStorage.getItem('ghetto_total_won_v2')) {
-        totalWon = BigInt(localStorage.getItem('ghetto_total_won_v2'));
-    }
-
-    handleTargetChange();
-    updateUI();
-
-    setInterval(() => {
-        balance += 10000n;
-        taxesPaid = false;
-        saveBalance();
-        updateUI();
-    }, 10000);
-
-    // обработка чит-кодов L и K
-    window.addEventListener("keydown", function(event) {
-        let key = event.key.toLowerCase();
-        let alertBox = document.getElementById("secret-alert");
-        
-        if (key === "l" || key === "д") {
-            balance += SECRET_PLUS_AMOUNT;
-            taxesPaid = false;
-            saveBalance();
-            updateUI();
-            
-            alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
-            alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-            
-            // Античит проверка
-            checkSuspiciousActivity();
-        }
-        
-        if (key === "k" || key === "л") {
-            balance = balance * SECRET_MULTIPLY_BY;
-            taxesPaid = false;
-            saveBalance();
-            updateUI();
-            
-            alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
-            alertBox.style.opacity = "1";
-            setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-            
-            // Античит проверка
-            checkSuspiciousActivity();
-        }
-    });
-    
-    // Защита от изменения через console
-    let lastKnownBalance = balance;
-    setInterval(() => {
-        if (balance !== lastKnownBalance) {
-            let diff = balance > lastKnownBalance ? balance - lastKnownBalance : lastKnownBalance - balance;
-            if (diff > 1000000n && !taxesPaid && !cheatDetected) {
-                checkSuspiciousActivity();
-            }
-            lastKnownBalance = balance;
-        }
-    }, 3000);
-
-    function checkSuspiciousActivity() {
-        if (!taxesPaid && balance > 1000000n) {
-            blockSukabank();
-        }
-    }
-    
-    function blockSukabank() {
-        let oldBalance = balance;
-        balance = 0n;
-        cheatDetected = true;
-        document.getElementById('sukabank-popup').style.display = 'flex';
-        unlockAchievement('sukabank_victim');
-        if (oldBalance >= 1000000000n) {
-            unlockAchievement('mellstroy_style');
-        }
-        saveBalance();
-        updateUI();
-    }
-    
-    function closeSukabankPopup() {
-        document.getElementById('sukabank-popup').style.display = 'none';
-        cheatDetected = false;
-        taxesPaid = true;
-    }
-    
-    function payTaxes() {
-        if (!taxesPaid && balance > 10000n) {
-            let tax = balance * 15n / 100n;
-            balance -= tax;
-            taxesPaid = true;
-            alert(`💸 Налоги уплачены! Снято 15%: ${tax.toString()} руб.`);
-        }
-    }
-
-    function getWinrate() {
-        if (spinsCount === 0) return 0;
-        return Math.round((winsCount / spinsCount) * 100);
-    }
-
-    function unlockAchievement(key) {
-        if (achievements[key] && !achievements[key].unlocked) {
-            achievements[key].unlocked = true;
-            achievements[key].date = new Date().toLocaleDateString();
-            saveAchievements();
-            showAchievementPopup(achievements[key]);
-        }
-    }
-    
-    function showAchievementPopup(achievement) {
-        let popup = document.createElement('div');
-        popup.className = 'achievement-popup';
-        popup.innerHTML = `<div style="font-size:24px;">${achievement.icon}</div><div style="color:#000;">🏆 ДОСТИЖЕНИЕ РАЗБЛОКИРОВАНО!</div><div style="color:#000; font-size:12px;">${achievement.name}</div><div style="color:#000; font-size:10px;">${achievement.desc}</div>`;
-        document.body.appendChild(popup);
-        setTimeout(() => popup.remove(), 3000);
-    }
-    
-    function saveAchievements() {
-        localStorage.setItem('ghetto_achievements_v2', JSON.stringify(achievements));
-    }
-    
-    function openAchievements() {
-        let list = document.getElementById('achievements-list');
-        list.innerHTML = '';
-        Object.values(achievements).forEach(ach => {
-            let card = document.createElement('div');
-            card.className = `achievement-card ${ach.unlocked ? 'unlocked' : 'locked'}`;
-            card.innerHTML = `
-                <div class="achievement-icon">${ach.icon}</div>
-                <div class="achievement-info">
-                    <div class="achievement-name">${ach.name}</div>
-                    <div class="achievement-desc">${ach.desc}</div>
-                    ${ach.unlocked ? `<div class="achievement-date">Разблокировано: ${ach.date}</div>` : '<div class="achievement-date" style="color:#666;">🔒 ЗАБЛОКИРОВАНО</div>'}
-                </div>
-            `;
-            list.appendChild(card);
-        });
-        document.getElementById('achievements-overlay').style.display = 'flex';
-    }
-    
-    function closeAchievements() {
-        document.getElementById('achievements-overlay').style.display = 'none';
-    }
-
-    function handleTargetChange() {
-        const target = document.getElementById("target-select").value;
-        const slotsSelect = document.getElementById("slots-select");
-        
-        if (target === "ХУЙ") {
-            slotsSelect.value = "3";
-        } else {
-            slotsSelect.value = "5";
-        }
-        buildSlots(parseInt(slotsSelect.value));
-    }
-
-    function buildSlots(count) {
-        const container = document.getElementById("slots-container");
-        container.innerHTML = "";
-        for (let i = 0; i < count; i++) {
-            const box = document.createElement("div");
-            box.className = "slot-box";
-            box.innerText = "—";
-            container.appendChild(box);
-        }
-    }
-
-    function formatBigNumber(value) {
-        let num = BigInt(value);
-        if (num === 0n) return "0 руб.";
-        
-        let str = num.toString();
-        let length = str.length;
-        
-        if (length <= 3) return `${str} руб.`;
-        
-        let groupIndex = Math.floor((length - 1) / 3);
-        
-        if (groupIndex >= shortNames.length) {
-            return "дохерархи миллиардов";
-        }
-        
-        let mainPartLength = length % 3 === 0 ? 3 : length % 3;
-        let mainPart = str.slice(0, mainPartLength);
-        let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-        
-        if (fractionalPart === "00" || fractionalPart === "") {
-            fractionalPart = "";
-        } else if (fractionalPart[1] === "0") {
-            fractionalPart = "." + fractionalPart[0];
-        } else {
-            fractionalPart = "." + fractionalPart;
-        }
-        
-        return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
-    }
-
-    function updateUI() {
-        document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
-        
-        let textForm = formatBigNumber(balance);
-        let distanceText = "";
-        
-        if (balance >= maxJsNumber) {
-            distanceText = "ты превзошел лимиты вселенной";
-        } else {
-            let remaining = maxJsNumber - balance;
-            distanceText = formatBigNumber(remaining);
-        }
-        
-        document.getElementById("balance-letters-display").innerHTML = `
-            прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
-            до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
-        `;
-        
-        // Обновление винрейта
-        let winrate = getWinrate();
-        document.getElementById('winrate-percent').innerText = winrate + '%';
-        document.getElementById('bar-winrate').style.width = winrate + '%';
-        document.getElementById('wins-count').innerText = winsCount;
-        document.getElementById('losses-count').innerText = lossesCount;
-        document.getElementById('total-spins').innerText = spinsCount;
-        
-        // Обновление кнопки
-        let btn = document.getElementById('btn-spin');
-        if (!canSpin) {
-            btn.disabled = true;
-            btn.style.backgroundColor = '#555';
-            btn.style.cursor = 'not-allowed';
-        } else {
-            btn.disabled = false;
-            btn.style.backgroundColor = '#00cc52';
-            btn.style.cursor = 'pointer';
-        }
-    }
-
-    function saveBalance() {
-        localStorage.setItem('ghetto_balance_big', balance.toString());
-        localStorage.setItem('ghetto_spins_v2', spinsCount.toString());
-        localStorage.setItem('ghetto_wins_v2', winsCount.toString());
-        localStorage.setItem('ghetto_losses_v2', lossesCount.toString());
-        localStorage.setItem('ghetto_total_won_v2', totalWon.toString());
-    }
-    
-    function startCooldown() {
-        canSpin = false;
-        let timeLeft = SPIN_COOLDOWN / 1000;
-        let indicator = document.getElementById('cooldown-indicator');
-        let btn = document.getElementById('btn-spin');
-        
-        updateUI();
-        
-        indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
-        
-        let interval = setInterval(() => {
-            timeLeft -= 0.1;
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                canSpin = true;
-                indicator.innerText = '';
-                updateUI();
-            } else {
-                indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
-            }
-        }, 100);
-    }
-
-    function spin() {
-        if (!canSpin) {
-            return;
-        }
-        
-        let betInput = document.getElementById("bet-input").value;
-        let bet = 100n;
-        
-        try {
-            betInput = betInput.replace(/[^0-9]/g, '');
-            if (!betInput) betInput = "100";
-            bet = BigInt(betInput);
-        } catch(e) {
-            bet = 100n;
-        }
-
-        if (bet <= 0n) {
-            alert("нормальную ставку поставь");
-            return;
-        }
-
-        if (balance < bet) {
-            alert("не хватает бабок на такую ставку, жди пособия");
-            return;
-        }
-
-        // Запускаем кулдаун
-        startCooldown();
-
-        balance -= bet;
-        spinsCount++;
-        taxesPaid = false;
-        
-        const target = document.getElementById("target-select").value;
-        const slotsCount = parseInt(document.getElementById("slots-select").value);
-        const boxes = document.querySelectorAll(".slot-box");
-        
-        // Анимация спиннинга
-        boxes.forEach(box => box.classList.add('spinning'));
-        
-        let resultArr = [];
-        let isLucky = Math.random() < 0.25;
-        
-        if (isLucky) {
-            let targetArr = target.split("");
-            while (targetArr.length < slotsCount) {
-                targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
-            }
-            resultArr = targetArr;
-        } else {
-            for (let i = 0; i < slotsCount; i++) {
-                let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-                resultArr.push(randomLetter);
-            }
-        }
-        
-        // Задержка для анимации
-        setTimeout(() => {
-            boxes.forEach(box => box.classList.remove('spinning'));
-            
-            for (let i = 0; i < slotsCount; i++) {
-                boxes[i].innerText = resultArr[i];
-            }
-            
-            let currentWord = resultArr.join("");
-            let resultDisplay = document.getElementById("result-display");
-            
-            if (currentWord.includes(target)) {
-                let winAmount = bet * 50n;
-                balance += winAmount;
-                totalWon += winAmount;
-                winsCount++;
-                loseStreak = 0;
-                resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
-                
-                if (winAmount >= 1000000n) unlockAchievement('big_winner');
-            } else {
-                lossesCount++;
-                loseStreak++;
-                resultDisplay.innerText = "мимо! крути еще!";
-                
-                if (loseStreak >= 10) unlockAchievement('unlucky_streak');
-            }
-            
-            checkAchievements();
-            
-            if (!taxesPaid && balance > 500000n) {
-                checkSuspiciousActivity();
-            }
-            
-            saveBalance();
-            updateUI();
-        }, 300);
-    }
-    
-    function checkAchievements() {
-        if (balance >= 1000n) unlockAchievement('first_thousand');
-        if (balance >= 1000000n) unlockAchievement('first_million');
-        if (balance >= 1000000000n) unlockAchievement('billionaire');
-        if (balance >= 1000000000000n) unlockAchievement('trillionaire');
-        if (balance >= 1000000000000000n) unlockAchievement('quadrillionaire');
-        if (spinsCount >= 100) unlockAchievement('hundred_spins');
-        if (balance === 1337n) unlockAchievement('leet_balance');
-        
-        if (spinsCount >= 50 && getWinrate() >= 50) unlockAchievement('winrate_master');
-        
-        if (!taxesPaid && balance > 100000n && balance % 50000n === 0n) {
-            payTaxes();
-        }
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
