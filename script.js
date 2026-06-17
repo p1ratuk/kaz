@@ -62,6 +62,11 @@ let isPullingLever = false;
 let belarusMode = false;
 let belarusTimer = null;
 
+// Переменные для рычага
+let leverDragging = false;
+let leverStartY = 0;
+let leverPulled = false;
+
 let achievements = {
     "first_thousand": { name: "🥉 Первая тысяча", desc: "Накопить 1 000 рублей", unlocked: false, icon: "💵", date: null },
     "first_million": { name: "🥈 Первый лям", desc: "Накопить 1 000 000 рублей", unlocked: false, icon: "💰", date: null },
@@ -148,14 +153,81 @@ loadAchievements();
 handleTargetChange();
 updateUI();
 
-// Событие для рычага
-document.getElementById('lever-stick').addEventListener('click', function(event) {
+// ================== РЫЧАГ СПРАВА ==================
+let leverStick = document.getElementById('lever-stick');
+
+// Мышь
+leverStick.addEventListener('mousedown', function(event) {
+    if (!canSpin || isPullingLever) return;
+    
+    event.preventDefault();
     event.stopPropagation();
+    
+    leverDragging = true;
+    leverStartY = event.clientY;
+    leverPulled = false;
+    
+    document.addEventListener('mousemove', onLeverDrag);
+    document.addEventListener('mouseup', onLeverRelease);
+});
+
+// Тач
+leverStick.addEventListener('touchstart', function(event) {
+    if (!canSpin || isPullingLever) return;
+    
+    event.preventDefault();
+    event.stopPropagation();
+    
+    leverDragging = true;
+    leverStartY = event.touches[0].clientY;
+    leverPulled = false;
+    
+    document.addEventListener('touchmove', onLeverTouchDrag);
+    document.addEventListener('touchend', onLeverTouchRelease);
+});
+
+function onLeverDrag(event) {
+    if (!leverDragging) return;
+    
+    let currentY = event.clientY;
+    let deltaY = currentY - leverStartY;
+    
+    // Тянем вниз минимум на 20px
+    if (deltaY > 20 && !leverPulled) {
+        pullLever();
+    }
+}
+
+function onLeverRelease(event) {
+    leverDragging = false;
+    document.removeEventListener('mousemove', onLeverDrag);
+    document.removeEventListener('mouseup', onLeverRelease);
+}
+
+function onLeverTouchDrag(event) {
+    if (!leverDragging) return;
+    
+    let currentY = event.touches[0].clientY;
+    let deltaY = currentY - leverStartY;
+    
+    if (deltaY > 20 && !leverPulled) {
+        pullLever();
+    }
+}
+
+function onLeverTouchRelease(event) {
+    leverDragging = false;
+    document.removeEventListener('touchmove', onLeverTouchDrag);
+    document.removeEventListener('touchend', onLeverTouchRelease);
+}
+
+function pullLever() {
     if (isPullingLever || !canSpin) return;
     
+    leverPulled = true;
     isPullingLever = true;
+    
     let stick = document.getElementById('lever-stick');
-    let container = document.querySelector('.lever-container');
     
     // Анимация рычага
     stick.classList.add('pulled');
@@ -168,11 +240,12 @@ document.getElementById('lever-stick').addEventListener('click', function(event)
         stick.classList.remove('pulled');
         stick.classList.remove('spinning-active');
         isPullingLever = false;
+        leverPulled = false;
     }, 400);
     
     // Запуск спинов
     spin();
-});
+}
 
 // Защита от F12 и DevTools
 window.addEventListener("keydown", function(event) {
