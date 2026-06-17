@@ -74,58 +74,60 @@
     </div>
 </div>
 
-<div class="game-machine-wrapper">
-    <div class="casino-card">
-        <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
-        <div class="balance-letters" id="balance-letters-display">
-            прописью: 0 руб.<br>
-            до бесконечности: расчет...
+<div class="casino-card">
+    <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
+    <div class="balance-letters" id="balance-letters-display">
+        прописью: 0 руб.<br>
+        до бесконечности: расчет...
+    </div>
+
+    <span class="label-text">твоя главная цель в жизни</span>
+    <select id="target-select" onchange="handleTargetChange()">
+        <option value="ХУЙ">собрать ХУЙ</option>
+        <option value="ЕБЛАН">собрать ЕБЛАН</option>
+        <option value="ПИДОР">собрать ПИДОР</option>
+    </select>
+
+    <div class="row">
+        <div class="col">
+            <span class="label-text">кол-во слотов</span>
+            <select id="slots-select">
+                <option value="3">3</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class="col">
+            <span class="label-text">ставка</span>
+            <input type="text" id="bet-input" value="100">
+        </div>
+    </div>
+
+    <!-- СЛОТЫ С РЫЧАГОМ СЛЕВА -->
+    <div class="slots-area">
+        <!-- РЫЧАГ СЛЕВА -->
+        <div class="lever-container" id="lever-container">
+            <div class="lever-base">
+                <div class="lever-stick" id="lever-stick">
+                    <div class="lever-ball"></div>
+                </div>
+            </div>
+            <div class="lever-text">ТЯНИ</div>
         </div>
 
-        <span class="label-text">твоя главная цель в жизни</span>
-        <select id="target-select" onchange="handleTargetChange()">
-            <option value="ХУЙ">собрать ХУЙ</option>
-            <option value="ЕБЛАН">собрать ЕБЛАН</option>
-            <option value="ПИДОР">собрать ПИДОР</option>
-        </select>
-
-        <div class="row">
-            <div class="col">
-                <span class="label-text">кол-во слотов</span>
-                <select id="slots-select">
-                    <option value="3">3</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div class="col">
-                <span class="label-text">ставка</span>
-                <input type="text" id="bet-input" value="100">
-            </div>
-        </div>
-
+        <!-- СЛОТЫ -->
         <div class="slots-container" id="slots-container">
             <div class="slot-box">—</div>
             <div class="slot-box">—</div>
             <div class="slot-box">—</div>
         </div>
-
-        <div class="cooldown-indicator" id="cooldown-indicator"></div>
-
-        <div class="result-message" id="result-display"></div>
-        
-        <div class="tax-status" id="tax-status">
-            <span class="tax-paid">✅ Налоги уплачены</span>
-        </div>
     </div>
 
-    <!-- РЫЧАГ СПРАВА ОТ АВТОМАТА -->
-    <div class="lever-container" id="lever-container">
-        <div class="lever-base">
-            <div class="lever-stick" id="lever-stick">
-                <div class="lever-ball"></div>
-            </div>
-        </div>
-        <div class="lever-text">ТЯНИ</div>
+    <div class="cooldown-indicator" id="cooldown-indicator"></div>
+
+    <div class="result-message" id="result-display"></div>
+    
+    <div class="tax-status" id="tax-status">
+        <span class="tax-paid">✅ Налоги уплачены</span>
     </div>
 </div>
 
