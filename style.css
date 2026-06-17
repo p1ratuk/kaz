@@ -160,30 +160,28 @@ select, input {
     position: absolute;
     top: -50px;
     transform-origin: bottom center;
-    transition: transform 0.15s ease;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     border-radius: 2px;
     cursor: grab;
     z-index: 101;
+    transform: rotate(0deg);
 }
 
 .lever-stick:active {
     cursor: grabbing;
 }
 
-.lever-stick.pulled {
-    transform: rotate(-25deg);
+.lever-stick.jerking {
+    animation: leverJerk 0.6s ease-in-out;
 }
 
-.lever-stick.spinning-active {
-    animation: leverShake 0.08s infinite;
-}
-
-@keyframes leverShake {
-    0% { transform: rotate(-25deg); }
-    25% { transform: rotate(-23deg); }
-    50% { transform: rotate(-27deg); }
-    75% { transform: rotate(-24deg); }
-    100% { transform: rotate(-25deg); }
+@keyframes leverJerk {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(35deg); }
+    40% { transform: rotate(5deg); }
+    60% { transform: rotate(25deg); }
+    80% { transform: rotate(10deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .lever-ball {
@@ -195,13 +193,8 @@ select, input {
     top: -12px;
     left: -8px;
     box-shadow: 0 4px 12px rgba(255,0,0,0.6);
-    transition: all 0.15s;
+    transition: all 0.3s ease;
     border: 2px solid #cc0000;
-}
-
-.lever-stick.pulled .lever-ball {
-    box-shadow: 0 6px 20px rgba(255,0,0,0.9);
-    background: radial-gradient(circle at 35% 35%, #ff6666, #cc0000);
 }
 
 .lever-text {
