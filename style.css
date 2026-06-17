@@ -14,22 +14,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Обёртка для автомата и рычага */
-.game-machine-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    width: 550px;
-    margin: 0 auto 15px auto;
-}
-
-.game-machine-wrapper .casino-card {
-    width: 450px;
-    margin-bottom: 0;
-}
-
 .casino-card {
     background-color: #141619;
     padding: 30px;
@@ -88,6 +72,16 @@ select, input {
     flex: 1;
 }
 
+/* Область слотов с рычагом слева */
+.slots-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
 .slots-container {
     background-color: #0b0c0d;
     border-radius: 8px;
@@ -95,9 +89,9 @@ select, input {
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 25px;
     min-height: 46px;
     align-items: center;
+    flex: 1;
 }
 
 .slot-box {
@@ -128,7 +122,7 @@ select, input {
     100% { transform: scale(1); }
 }
 
-/* Стили рычага справа как у автомата */
+/* Стили рычага СЛЕВА от слотов */
 .lever-container {
     width: 60px;
     display: flex;
@@ -138,6 +132,7 @@ select, input {
     user-select: none;
     z-index: 100;
     flex-shrink: 0;
+    padding-top: 20px;
 }
 
 .lever-container:active {
@@ -146,7 +141,7 @@ select, input {
 
 .lever-base {
     width: 40px;
-    height: 140px;
+    height: 100px;
     background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
     border-radius: 8px;
     position: relative;
@@ -160,10 +155,10 @@ select, input {
 
 .lever-stick {
     width: 8px;
-    height: 70px;
+    height: 60px;
     background: linear-gradient(90deg, #ddd, #aaa, #ddd);
     position: absolute;
-    top: -60px;
+    top: -50px;
     transform-origin: bottom center;
     transition: transform 0.15s ease;
     border-radius: 2px;
@@ -192,13 +187,13 @@ select, input {
 }
 
 .lever-ball {
-    width: 28px;
-    height: 28px;
+    width: 25px;
+    height: 25px;
     background: radial-gradient(circle at 35% 35%, #ff4444, #990000);
     border-radius: 50%;
     position: absolute;
-    top: -14px;
-    left: -10px;
+    top: -12px;
+    left: -8px;
     box-shadow: 0 4px 12px rgba(255,0,0,0.6);
     transition: all 0.15s;
     border: 2px solid #cc0000;
@@ -211,13 +206,11 @@ select, input {
 
 .lever-text {
     color: #ffcc00;
-    font-size: 12px;
-    margin-top: 8px;
+    font-size: 10px;
+    margin-top: 5px;
     text-transform: uppercase;
     letter-spacing: 2px;
     animation: leverPulse 1.5s infinite;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
 }
 
 @keyframes leverPulse {
@@ -311,7 +304,7 @@ select, input {
     box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
 }
 
-/* Кнопка Безналогия без градиента */
+/* Кнопка Безналогия */
 .btn-belarus {
     background-color: #cc0000;
     color: #ffffff;
@@ -620,13 +613,11 @@ select, input {
     box-shadow: 0 0 50px rgba(0,0,0,0.8);
 }
 
-/* iPhone 17 Pro Max */
 .phone-iphone {
     background: #0a0a0a;
     border: 3px solid #2a2a2a;
 }
 
-/* Xiaomi */
 .phone-xiaomi {
     background: #1a1a2e;
     border: 3px solid #333;
