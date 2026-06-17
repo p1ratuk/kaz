@@ -58,6 +58,9 @@ let lastTaxPayment = Date.now();
 let f12Count = 0;
 let unpaidWinsCount = 0;
 let declaredBalance = 0n;
+let isPullingLever = false;
+let belarusMode = false;
+let belarusTimer = null;
 
 let achievements = {
     "first_thousand": { name: "🥉 Первая тысяча", desc: "Накопить 1 000 рублей", unlocked: false, icon: "💵", date: null },
@@ -72,7 +75,8 @@ let achievements = {
     "leet_balance": { name: "🤖 1337", desc: "Иметь баланс ровно 1337 (почти невозможно)", unlocked: false, icon: "🤖", date: null },
     "winrate_master": { name: "🎯 Мастер винрейта", desc: "Достигнуть винрейта 50% при 50+ спинах", unlocked: false, icon: "🎯", date: null },
     "unlucky_streak": { name: "😢 Лузстрик", desc: "Проиграть 10 раз подряд", unlocked: false, icon: "😢", date: null },
-    "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null }
+    "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null },
+    "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null }
 };
 
 let loseStreak = 0;
@@ -144,6 +148,33 @@ loadAchievements();
 handleTargetChange();
 updateUI();
 
+// Событие для рычага
+document.getElementById('lever-stick').addEventListener('click', function(event) {
+    event.stopPropagation();
+    if (isPullingLever || !canSpin) return;
+    
+    isPullingLever = true;
+    let stick = document.getElementById('lever-stick');
+    let container = document.querySelector('.lever-container');
+    
+    // Анимация рычага
+    stick.classList.add('pulled');
+    
+    setTimeout(() => {
+        stick.classList.add('spinning-active');
+    }, 100);
+    
+    setTimeout(() => {
+        stick.classList.remove('pulled');
+        stick.classList.remove('spinning-active');
+        isPullingLever = false;
+    }, 400);
+    
+    // Запуск спинов
+    spin();
+});
+
+// Защита от F12 и DevTools
 window.addEventListener("keydown", function(event) {
     if (event.key === "F12" || event.keyCode === 123) {
         event.preventDefault();
@@ -176,4 +207,564 @@ document.addEventListener('contextmenu', function(event) {
     return false;
 });
 
-function handleF12Detection()
+function handleF12Detection() {
+    f12Count++;
+    saveGame();
+    
+    unlockAchievement('f12_detected');
+    
+    if (f12Count === 1) {
+        document.getElementById('f12-warning-overlay').style.display = 'flex';
+    }
+    
+    if (f12Count >= 2) {
+        blockSukabank();
+    }
+}
+
+function closeF12Warning() {
+    document.getElementById('f12-warning-overlay').style.display = 'none';
+}
+
+// Пассивный доход
+setInterval(() => {
+    if (!belarusMode) {
+        balance += 10000n;
+        taxesPaid = false;
+    }
+    saveGame();
+    updateUI();
+}, 10000);
+
+// Чит-коды L и K
+window.addEventListener("keydown", function(event) {
+    let key = event.key.toLowerCase();
+    let alertBox = document.getElementById("secret-alert");
+    
+    if (key === "l" || key === "д") {
+        balance += SECRET_PLUS_AMOUNT;
+        taxesPaid = false;
+        saveGame();
+        updateUI();
+        
+        alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
+        alertBox.style.opacity = "1";
+        setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+    }
+    
+    if (key === "k" || key === "л") {
+        balance = balance * SECRET_MULTIPLY_BY;
+        taxesPaid = false;
+        saveGame();
+        updateUI();
+        
+        alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
+        alertBox.style.opacity = "1";
+        setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
+    }
+});
+
+function blockSukabank() {
+    let oldBalance = balance;
+    balance = 0n;
+    cheatDetected = true;
+    document.getElementById('sukabank-popup').style.display = 'flex';
+    unlockAchievement('sukabank_victim');
+    if (oldBalance >= 1000000000n) unlockAchievement('mellstroy_style');
+    saveGame();
+    updateUI();
+}
+
+function closeSukabankPopup() {
+    document.getElementById('sukabank-popup').style.display = 'none';
+    cheatDetected = false;
+    taxesPaid = true;
+    lastTaxPayment = Date.now();
+    saveGame();
+    updateUI();
+}
+
+function payTaxes() {
+    if (belarusMode) {
+        alert("🚜 Ты в Безналогии! Налоги 0%! Наслаждайся!");
+        return;
+    }
+    
+    if (taxesPaid) {
+        alert("✅ Налоги уже уплачены! Можешь крутить дальше.");
+        return;
+    }
+    
+    if (balance <= 0n) {
+        alert("💰 Нечего облагать налогом! Баланс пуст.");
+        return;
+    }
+    
+    let tax = balance * 15n / 100n;
+    if (tax <= 0n) {
+        alert("💰 Сумма налога слишком мала.");
+        return;
+    }
+    
+    balance -= tax;
+    taxesPaid = true;
+    unpaidWinsCount = 0;
+    lastTaxPayment = Date.now();
+    saveGame();
+    updateUI();
+    alert(`💸 Налоги уплачены! Снято 15%: ${tax.toString()} руб.`);
+}
+
+function escapeToBelarus() {
+    if (belarusMode) {
+        alert("🚜 Ты уже в Безналогии! Наслаждайся отсутствием налогов.");
+        return;
+    }
+    
+    belarusMode = true;
+    taxesPaid = true;
+    let btn = document.getElementById('btn-belarus');
+    btn.disabled = true;
+    
+    unlockAchievement('belarus_escape');
+    
+    alert("🚜 ТЫ УЕХАЛ В БЕЗНАЛОГИЮ! Налоги 0% на 5 минут! Визовый режим активирован.");
+    
+    let timeLeft = 300;
+    btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
+    
+    belarusTimer = setInterval(() => {
+        timeLeft--;
+        btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(belarusTimer);
+            belarusMode = false;
+            btn.disabled = false;
+            btn.innerText = '🚜 УЕХАТЬ ИЗ КАЗИИ В БЕЗНАЛОГИЮ (5 мин)';
+            alert("🛂 ВИЗА ИСТЕКЛА! Ты вернулся в Казию. СУКАбанк снова следит за тобой!");
+            saveGame();
+            updateUI();
+        }
+    }, 1000);
+    
+    saveGame();
+    updateUI();
+}
+
+function getWinrate() {
+    if (spinsCount === 0) return 0;
+    return Math.round((winsCount / spinsCount) * 100);
+}
+
+function unlockAchievement(key) {
+    if (achievements[key] && !achievements[key].unlocked) {
+        achievements[key].unlocked = true;
+        achievements[key].date = new Date().toLocaleDateString();
+        saveAchievements();
+        showAchievementPopup(achievements[key]);
+    }
+}
+
+function showAchievementPopup(achievement) {
+    let popup = document.createElement('div');
+    popup.className = 'achievement-popup';
+    popup.innerHTML = `<div style="font-size:24px;">${achievement.icon}</div><div style="color:#000;">🏆 ДОСТИЖЕНИЕ РАЗБЛОКИРОВАНО!</div><div style="color:#000; font-size:12px;">${achievement.name}</div><div style="color:#000; font-size:10px;">${achievement.desc}</div>`;
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 3000);
+}
+
+function saveAchievements() {
+    let encrypted = encryptData(JSON.stringify(achievements));
+    localStorage.setItem('ghetto_achievements_encrypted', encrypted);
+}
+
+function openAchievements() {
+    let list = document.getElementById('achievements-list');
+    list.innerHTML = '';
+    Object.values(achievements).forEach(ach => {
+        let card = document.createElement('div');
+        card.className = `achievement-card ${ach.unlocked ? 'unlocked' : 'locked'}`;
+        card.innerHTML = `
+            <div class="achievement-icon">${ach.icon}</div>
+            <div class="achievement-info">
+                <div class="achievement-name">${ach.name}</div>
+                <div class="achievement-desc">${ach.desc}</div>
+                ${ach.unlocked ? `<div class="achievement-date">Разблокировано: ${ach.date}</div>` : '<div class="achievement-date" style="color:#666;">🔒 ЗАБЛОКИРОВАНО</div>'}
+            </div>
+        `;
+        list.appendChild(card);
+    });
+    document.getElementById('achievements-overlay').style.display = 'flex';
+}
+
+function closeAchievements() {
+    document.getElementById('achievements-overlay').style.display = 'none';
+}
+
+function handleTargetChange() {
+    const target = document.getElementById("target-select").value;
+    const slotsSelect = document.getElementById("slots-select");
+    
+    if (target === "ХУЙ") {
+        slotsSelect.value = "3";
+    } else {
+        slotsSelect.value = "5";
+    }
+    buildSlots(parseInt(slotsSelect.value));
+}
+
+function buildSlots(count) {
+    const container = document.getElementById("slots-container");
+    container.innerHTML = "";
+    for (let i = 0; i < count; i++) {
+        const box = document.createElement("div");
+        box.className = "slot-box";
+        box.innerText = "—";
+        container.appendChild(box);
+    }
+}
+
+function formatBigNumber(value) {
+    let num = BigInt(value);
+    if (num === 0n) return "0 руб.";
+    
+    let str = num.toString();
+    let length = str.length;
+    
+    if (length <= 3) return `${str} руб.`;
+    
+    let groupIndex = Math.floor((length - 1) / 3);
+    
+    if (groupIndex >= shortNames.length) {
+        return "дохерархи миллиардов";
+    }
+    
+    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
+    let mainPart = str.slice(0, mainPartLength);
+    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
+    
+    if (fractionalPart === "00" || fractionalPart === "") {
+        fractionalPart = "";
+    } else if (fractionalPart[1] === "0") {
+        fractionalPart = "." + fractionalPart[0];
+    } else {
+        fractionalPart = "." + fractionalPart;
+    }
+    
+    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
+}
+
+function updateUI() {
+    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
+    
+    let textForm = formatBigNumber(balance);
+    let distanceText = "";
+    
+    if (balance >= maxJsNumber) {
+        distanceText = "ты превзошел лимиты вселенной";
+    } else {
+        let remaining = maxJsNumber - balance;
+        distanceText = formatBigNumber(remaining);
+    }
+    
+    document.getElementById("balance-letters-display").innerHTML = `
+        прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
+        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
+    `;
+    
+    let taxStatus = document.getElementById('tax-status');
+    if (belarusMode) {
+        taxStatus.innerHTML = '<span style="color: #00ff00;">🚜 БЕЗНАЛОГИЯ! Налоги 0%</span>';
+    } else if (taxesPaid) {
+        taxStatus.innerHTML = '<span class="tax-paid">✅ Налоги уплачены</span>';
+    } else {
+        taxStatus.innerHTML = '<span class="tax-unpaid">⚠️ Налоги не уплачены! СУКАбанк следит за тобой</span>';
+    }
+    
+    let winrate = getWinrate();
+    document.getElementById('winrate-percent').innerText = winrate + '%';
+    document.getElementById('bar-winrate').style.width = winrate + '%';
+    document.getElementById('wins-count').innerText = winsCount;
+    document.getElementById('losses-count').innerText = lossesCount;
+    document.getElementById('total-spins').innerText = spinsCount;
+    
+    // Обновление состояния рычага
+    let leverContainer = document.querySelector('.lever-container');
+    if (!canSpin || isPullingLever) {
+        leverContainer.classList.add('disabled');
+    } else {
+        leverContainer.classList.remove('disabled');
+    }
+}
+
+function saveGame() {
+    let saveData = {
+        balance: balance.toString(),
+        taxesPaid: taxesPaid,
+        lastTaxPayment: lastTaxPayment,
+        spinsCount: spinsCount,
+        winsCount: winsCount,
+        lossesCount: lossesCount,
+        totalWon: totalWon.toString(),
+        f12Count: f12Count,
+        f12Blocked: cheatDetected,
+        unpaidWinsCount: unpaidWinsCount
+    };
+    
+    let jsonData = JSON.stringify(saveData);
+    let hash = generateHash(jsonData + SECRET_KEY);
+    
+    localStorage.setItem('ghetto_data_encrypted', encryptData(jsonData));
+    localStorage.setItem('ghetto_hash', hash);
+}
+
+function startCooldown() {
+    canSpin = false;
+    let timeLeft = SPIN_COOLDOWN / 1000;
+    let indicator = document.getElementById('cooldown-indicator');
+    
+    updateUI();
+    
+    indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
+    
+    let interval = setInterval(() => {
+        timeLeft -= 0.1;
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            canSpin = true;
+            indicator.innerText = '';
+            updateUI();
+        } else {
+            indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
+        }
+    }, 100);
+}
+
+function spin() {
+    if (!canSpin) return;
+    
+    let betInput = document.getElementById("bet-input").value;
+    let bet = 100n;
+    
+    try {
+        betInput = betInput.replace(/[^0-9]/g, '');
+        if (!betInput) betInput = "100";
+        bet = BigInt(betInput);
+    } catch(e) {
+        bet = 100n;
+    }
+
+    if (bet <= 0n) {
+        alert("нормальную ставку поставь");
+        return;
+    }
+
+    if (balance < bet) {
+        alert("не хватает бабок на такую ставку, жди пособия");
+        return;
+    }
+
+    startCooldown();
+
+    balance -= bet;
+    spinsCount++;
+    if (!belarusMode) {
+        taxesPaid = false;
+    }
+    
+    const target = document.getElementById("target-select").value;
+    const slotsCount = parseInt(document.getElementById("slots-select").value);
+    const boxes = document.querySelectorAll(".slot-box");
+    
+    boxes.forEach(box => box.classList.add('spinning'));
+    
+    let resultArr = [];
+    let isLucky = Math.random() < 0.25;
+    
+    if (isLucky) {
+        let targetArr = target.split("");
+        while (targetArr.length < slotsCount) {
+            targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+        }
+        resultArr = targetArr;
+    } else {
+        for (let i = 0; i < slotsCount; i++) {
+            let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+            resultArr.push(randomLetter);
+        }
+    }
+    
+    setTimeout(() => {
+        boxes.forEach(box => box.classList.remove('spinning'));
+        
+        for (let i = 0; i < slotsCount; i++) {
+            boxes[i].innerText = resultArr[i];
+        }
+        
+        let currentWord = resultArr.join("");
+        let resultDisplay = document.getElementById("result-display");
+        
+        if (currentWord.includes(target)) {
+            let winAmount = bet * 50n;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            
+            if (!belarusMode) {
+                unpaidWinsCount++;
+            }
+            
+            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
+            
+            if (winAmount >= 1000000n) unlockAchievement('big_winner');
+            
+            // Звонок из налоговой каждые 15 выигрышей
+            if (unpaidWinsCount >= 15 && !belarusMode) {
+                setTimeout(() => triggerTaxPhone(), 1500);
+            }
+        } else {
+            lossesCount++;
+            loseStreak++;
+            resultDisplay.innerText = "мимо! крути еще!";
+            
+            if (loseStreak >= 10) unlockAchievement('unlucky_streak');
+        }
+        
+        checkAchievements();
+        saveGame();
+        updateUI();
+    }, 300);
+}
+
+function checkAchievements() {
+    if (balance >= 1000n) unlockAchievement('first_thousand');
+    if (balance >= 1000000n) unlockAchievement('first_million');
+    if (balance >= 1000000000n) unlockAchievement('billionaire');
+    if (balance >= 1000000000000n) unlockAchievement('trillionaire');
+    if (balance >= 1000000000000000n) unlockAchievement('quadrillionaire');
+    if (spinsCount >= 100) unlockAchievement('hundred_spins');
+    if (balance === 1337n) unlockAchievement('leet_balance');
+    if (spinsCount >= 50 && getWinrate() >= 50) unlockAchievement('winrate_master');
+}
+
+// ФУНКЦИИ SUKAGRAM (Звонок из налоговой)
+function triggerTaxPhone() {
+    let frame = document.getElementById('phone-frame');
+    let notch = document.getElementById('phone-notch');
+    
+    if (balance >= 10000000n) {
+        frame.className = 'phone-frame phone-iphone';
+        notch.style.display = 'block';
+    } else {
+        frame.className = 'phone-frame phone-xiaomi';
+        notch.style.display = 'none';
+    }
+    
+    // Очищаем чат
+    document.getElementById('sukagram-chat').innerHTML = `
+        <div class="message message-received">
+            <div>Добрый день! Это инспектор СУКАбанка. Вы не платили налоги уже 15 выигрышей подряд.</div>
+            <div class="message-time">12:34</div>
+        </div>
+        <div class="message message-received">
+            <div>Назовите ваш текущий баланс для расчета налога. Но учтите - если сумма будет сильно занижена, мы это увидим в базе.</div>
+            <div class="message-time">12:34</div>
+        </div>
+    `;
+    
+    document.getElementById('tax-phone-overlay').style.display = 'flex';
+    document.getElementById('sukagram-input').focus();
+    
+    setTimeout(() => {
+        addTaxMessage('received', 'Ну так что? Какой у вас баланс? Не тяните, я жду.');
+    }, 2000);
+}
+
+function closeTaxPhone() {
+    document.getElementById('tax-phone-overlay').style.display = 'none';
+}
+
+function sendTaxMessage() {
+    let input = document.getElementById('sukagram-input');
+    let message = input.value.trim();
+    
+    if (!message) return;
+    
+    let amount = message.replace(/[^0-9]/g, '');
+    if (!amount) {
+        addTaxMessage('sent', message);
+        addTaxMessage('received', 'Я не понял, назовите сумму цифрами. Сколько у вас на балансе?');
+        input.value = '';
+        return;
+    }
+    
+    declaredBalance = BigInt(amount);
+    let realBalance = balance;
+    let minAllowed = realBalance * 10n / 100n;
+    
+    addTaxMessage('sent', formatBigNumber(declaredBalance) + ' руб.');
+    input.value = '';
+    
+    if (declaredBalance < minAllowed) {
+        setTimeout(() => {
+            addTaxMessage('received', '🚨 ТАК! Я ПРОВЕРИЛ ПО БАЗЕ! У ВАС НАМНОГО БОЛЬШЕ! ЭТО УКЛОНЕНИЕ ОТ НАЛОГОВ!');
+        }, 1000);
+        
+        setTimeout(() => {
+            addTaxMessage('received', 'ВАША КАРТА ЗАБЛОКИРОВАНА. ВСЕ СРЕДСТВА КОНФИСКОВАНЫ.');
+        }, 2500);
+        
+        setTimeout(() => {
+            closeTaxPhone();
+            unpaidWinsCount = 0;
+            blockSukabank();
+        }, 3500);
+        return;
+    }
+    
+    let tax = declaredBalance * 15n / 100n;
+    balance -= tax;
+    taxesPaid = true;
+    unpaidWinsCount = 0;
+    lastTaxPayment = Date.now();
+    
+    if (declaredBalance < realBalance) {
+        setTimeout(() => {
+            addTaxMessage('received', `😏 Хм, ладно. Поверю вам на слово. Списываю ${formatBigNumber(tax)} руб. налогов.`);
+        }, 1000);
+        setTimeout(() => {
+            addTaxMessage('received', 'Но я за вами слежу! Следующая проверка будет строже.');
+        }, 2500);
+    } else {
+        setTimeout(() => {
+            addTaxMessage('received', `👍 Отлично! Честность - лучшая политика. Списываю ${formatBigNumber(tax)} руб. налогов.`);
+        }, 1000);
+        setTimeout(() => {
+            addTaxMessage('received', 'Всего доброго! Не забывайте платить налоги вовремя.');
+        }, 2500);
+    }
+    
+    saveGame();
+    updateUI();
+    
+    setTimeout(() => closeTaxPhone(), 4500);
+}
+
+function addTaxMessage(type, text) {
+    let chat = document.getElementById('sukagram-chat');
+    let msgDiv = document.createElement('div');
+    msgDiv.className = `message message-${type}`;
+    
+    let now = new Date();
+    let time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    
+    msgDiv.innerHTML = `
+        <div>${text}</div>
+        <div class="message-time">${time}</div>
+    `;
+    
+    chat.appendChild(msgDiv);
+    chat.scrollTop = chat.scrollHeight;
+}
