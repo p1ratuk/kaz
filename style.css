@@ -99,41 +99,107 @@ select, input {
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
-.btn-spin {
-    background-color: #00cc52;
-    color: #000000;
-    border: none;
-    padding: 15px;
-    border-radius: 30px;
+
+/* Стили рычага как у автомата */
+.lever-container {
     width: 100%;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
     cursor: pointer;
-    letter-spacing: 2px;
+    user-select: none;
+}
+
+.lever-base {
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 2px solid #333;
+    transition: all 0.3s;
+}
+
+.lever-base:active {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    transform: scale(0.98);
+}
+
+.lever-stick {
+    width: 10px;
+    height: 80px;
+    background: linear-gradient(90deg, #ccc, #999, #ccc);
+    position: absolute;
+    bottom: 20px;
+    transform-origin: bottom center;
+    transition: transform 0.3s ease;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.lever-stick.pulled {
+    transform: rotate(-35deg);
+}
+
+.lever-stick.spinning-active {
+    animation: leverShake 0.1s infinite;
+}
+
+@keyframes leverShake {
+    0% { transform: rotate(-35deg); }
+    25% { transform: rotate(-32deg); }
+    50% { transform: rotate(-38deg); }
+    75% { transform: rotate(-33deg); }
+    100% { transform: rotate(-35deg); }
+}
+
+.lever-ball {
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle at 30% 30%, #ff3333, #990000);
+    border-radius: 50%;
+    position: absolute;
+    top: -12px;
+    left: -7px;
+    box-shadow: 0 4px 10px rgba(255,0,0,0.5);
+    transition: all 0.3s;
+}
+
+.lever-stick.pulled .lever-ball {
+    box-shadow: 0 4px 20px rgba(255,0,0,0.8);
+    background: radial-gradient(circle at 30% 30%, #ff5555, #cc0000);
+}
+
+.lever-text {
+    color: #ffcc00;
+    font-size: 14px;
+    margin-top: 10px;
     text-transform: uppercase;
-    transition: all 0.2s;
-    box-shadow: 0 6px 20px rgba(0, 204, 82, 0.4);
+    letter-spacing: 3px;
+    animation: leverPulse 1s infinite;
 }
-.btn-spin:hover {
-    background-color: #00ff66;
-    box-shadow: 0 8px 25px rgba(0, 255, 100, 0.6);
-    transform: translateY(-2px);
+
+@keyframes leverPulse {
+    0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(255,204,0,0.5); }
+    50% { opacity: 0.7; text-shadow: 0 0 20px rgba(255,204,0,0.8); }
 }
-.btn-spin:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(0, 204, 82, 0.3);
-}
-.btn-spin:disabled {
-    background-color: #555;
+
+.lever-container.disabled {
+    opacity: 0.5;
     cursor: not-allowed;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    color: #999;
+    pointer-events: none;
 }
-.btn-spin:disabled:hover {
-    transform: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+.lever-container.disabled .lever-text {
+    animation: none;
+    color: #666;
 }
+
 .result-message {
     margin-top: 20px;
     font-size: 13px;
@@ -202,6 +268,49 @@ select, input {
 .btn-pay-taxes:active {
     transform: translateY(0);
     box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+}
+
+/* Кнопка Безналогия */
+.btn-belarus {
+    background: linear-gradient(135deg, #ff0000, #00ff00);
+    color: #ffffff;
+    border: 3px solid #fff;
+    padding: 15px;
+    border-radius: 30px;
+    width: 450px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    margin-bottom: 15px;
+    animation: belarusFlag 2s infinite;
+}
+
+@keyframes belarusFlag {
+    0%, 100% { background: linear-gradient(135deg, #ff0000, #00ff00); }
+    25% { background: linear-gradient(135deg, #ff0000, #00ff00); }
+    50% { background: linear-gradient(135deg, #00ff00, #ff0000); }
+    75% { background: linear-gradient(135deg, #00ff00, #ff0000); }
+}
+
+.btn-belarus:hover {
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+.btn-belarus:active {
+    transform: translateY(0);
+}
+
+.btn-belarus:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    animation: none;
+    background: #555;
 }
 
 .btn-close-popup {
