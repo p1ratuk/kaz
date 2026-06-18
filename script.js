@@ -25,7 +25,7 @@ let balance = 10000n, taxesPaid = true, cheatDetected = false, totalWon = 0n;
 let spinsCount = 0, winsCount = 0, lossesCount = 0, canSpin = true;
 let lastTaxPayment = Date.now(), f12Count = 0, unpaidWinsCount = 0, declaredBalance = 0n;
 let isPullingLever = false, belarusMode = false, belarusTimer = null;
-let leverDragging = false, leverStartY = 0, leverPulled = false;
+let leverPulled = false;
 let loseStreak = 0;
 
 let achievements = {
@@ -58,15 +58,25 @@ loadAchievements();
 handleTargetChange();
 updateUI();
 
-// Рычаг
-let leverStick = document.getElementById('lever-stick');
-leverStick.addEventListener('mousedown', function(e) { if(!canSpin||isPullingLever)return; e.preventDefault(); e.stopPropagation(); leverDragging=true; leverStartY=e.clientY; leverPulled=false; leverStick.style.transition='none'; document.addEventListener('mousemove',onLeverDrag); document.addEventListener('mouseup',onLeverRelease); });
-leverStick.addEventListener('touchstart', function(e) { if(!canSpin||isPullingLever)return; e.preventDefault(); e.stopPropagation(); leverDragging=true; leverStartY=e.touches[0].clientY; leverPulled=false; leverStick.style.transition='none'; document.addEventListener('touchmove',onLeverTouchDrag); document.addEventListener('touchend',onLeverTouchRelease); });
-function onLeverDrag(e) { if(!leverDragging)return; let d=e.clientY-leverStartY; if(d>0&&d<40) leverStick.style.transform=`rotate(${Math.min(d*0.8,30)}deg)`; if(d>25&&!leverPulled) pullLeverDown(); }
-function onLeverRelease(e) { if(leverDragging&&!leverPulled){leverStick.style.transition='transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; leverStick.style.transform='rotate(0deg)';} leverDragging=false; document.removeEventListener('mousemove',onLeverDrag); document.removeEventListener('mouseup',onLeverRelease); }
-function onLeverTouchDrag(e) { if(!leverDragging)return; let d=e.touches[0].clientY-leverStartY; if(d>0&&d<40) leverStick.style.transform=`rotate(${Math.min(d*0.8,30)}deg)`; if(d>25&&!leverPulled) pullLeverDown(); }
-function onLeverTouchRelease(e) { if(leverDragging&&!leverPulled){leverStick.style.transition='transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; leverStick.style.transform='rotate(0deg)';} leverDragging=false; document.removeEventListener('touchmove',onLeverTouchDrag); document.removeEventListener('touchend',onLeverTouchRelease); }
-function pullLeverDown() { if(isPullingLever||!canSpin)return; leverPulled=true; isPullingLever=true; let s=document.getElementById('lever-stick'), b=s.querySelector('.lever-ball'); s.style.transition='transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; s.style.transform='rotate(35deg)'; if(b){b.style.boxShadow='0 0 25px rgba(255,0,0,1), 0 0 50px rgba(255,0,0,0.8)'; b.style.background='radial-gradient(circle at 35% 35%, #ff8888, #ff0000)';} spin(); setTimeout(()=>{s.style.transition='transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; s.style.transform='rotate(0deg)'; if(b){b.style.boxShadow='0 4px 12px rgba(255,0,0,0.6)'; b.style.background='radial-gradient(circle at 35% 35%, #ff4444, #990000)';} isPullingLever=false; leverPulled=false;},400); }
+// Рычаг по Enter
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && canSpin && !isPullingLever) {
+        e.preventDefault();
+        pullLeverDown();
+    }
+});
+
+function pullLeverDown() { 
+    if(isPullingLever||!canSpin)return; 
+    leverPulled=true; 
+    isPullingLever=true; 
+    let s=document.getElementById('lever-stick'), b=s.querySelector('.lever-ball'); 
+    s.style.transition='transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; 
+    s.style.transform='rotate(35deg)'; 
+    if(b){b.style.boxShadow='0 0 25px rgba(255,0,0,1), 0 0 50px rgba(255,0,0,0.8)'; b.style.background='radial-gradient(circle at 35% 35%, #ff8888, #ff0000)';} 
+    spin(); 
+    setTimeout(()=>{s.style.transition='transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; s.style.transform='rotate(0deg)'; if(b){b.style.boxShadow='0 4px 12px rgba(255,0,0,0.6)'; b.style.background='radial-gradient(circle at 35% 35%, #ff4444, #990000)';} isPullingLever=false; leverPulled=false;},400); 
+}
 
 // Защита
 window.addEventListener("keydown", function(e) { if(e.key==="F12"||e.keyCode===123){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="i"||e.keyCode===73)){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&e.shiftKey&&(e.key==="J"||e.key==="j"||e.keyCode===74)){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&(e.key==="U"||e.key==="u"||e.keyCode===85)){e.preventDefault();handleF12Detection();return false;} });
@@ -75,7 +85,23 @@ function handleF12Detection() { f12Count++; saveGame(); unlockAchievement('f12_d
 function closeF12Warning() { document.getElementById('f12-warning-overlay').style.display='none'; }
 
 // Пособие
-setInterval(() => { if(!belarusMode){ balance+=10000n; taxesPaid=false; } else { balance-=250000n; if(balance<0n)balance=0n; } saveGame(); updateUI(); }, 10000);
+setInterval(() => {
+    if (!belarusMode) {
+        balance += 10000n;
+        taxesPaid = false;
+        saveGame();
+        updateUI();
+    }
+}, 10000);
+
+setInterval(() => {
+    if (belarusMode) {
+        balance -= 250000n;
+        if (balance < 0n) balance = 0n;
+        saveGame();
+        updateUI();
+    }
+}, 10000);
 
 // Чит-коды
 window.addEventListener("keydown", function(e) { let k=e.key.toLowerCase(), a=document.getElementById("secret-alert"); if(k==="l"||k==="д"){balance+=SECRET_PLUS_AMOUNT; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: +${SECRET_PLUS_AMOUNT.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} if(k==="k"||k==="л"){balance=balance*SECRET_MULTIPLY_BY; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} });
