@@ -175,3 +175,25 @@ select, input {
 .sukagram-input { flex: 1; background: #2a3040; border: none; padding: 10px 15px; border-radius: 20px; color: #fff; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; }
 .sukagram-send { background: #4ea4f6; border: none; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .phone-home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 120px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.5; }
+.btn-ludomania {
+    position: fixed;
+    background-color: #ff4444;
+    color: #ffffff;
+    border: 3px solid #ff0000;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10001;
+    transition: all 0.1s;
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+    animation: ludomaniaPulse 0.5s infinite;
+    left: 20px;
+    bottom: 20px;
+}
+@keyframes ludomaniaPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
