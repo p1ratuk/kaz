@@ -25,7 +25,6 @@ let balance = 10000n, taxesPaid = true, cheatDetected = false, totalWon = 0n;
 let spinsCount = 0, winsCount = 0, lossesCount = 0, canSpin = true;
 let lastTaxPayment = Date.now(), f12Count = 0, unpaidWinsCount = 0, declaredBalance = 0n;
 let isPullingLever = false, belarusMode = false, belarusTimer = null;
-let leverPulled = false;
 let loseStreak = 0;
 
 let achievements = {
@@ -58,24 +57,24 @@ loadAchievements();
 handleTargetChange();
 updateUI();
 
-// Рычаг по Enter
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && canSpin && !isPullingLever) {
-        e.preventDefault();
+// Рычаг по клику ЛКМ
+document.getElementById('lever-stick').addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (canSpin && !isPullingLever) {
         pullLeverDown();
     }
 });
 
 function pullLeverDown() { 
     if(isPullingLever||!canSpin)return; 
-    leverPulled=true; 
     isPullingLever=true; 
     let s=document.getElementById('lever-stick'), b=s.querySelector('.lever-ball'); 
     s.style.transition='transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; 
     s.style.transform='rotate(35deg)'; 
     if(b){b.style.boxShadow='0 0 25px rgba(255,0,0,1), 0 0 50px rgba(255,0,0,0.8)'; b.style.background='radial-gradient(circle at 35% 35%, #ff8888, #ff0000)';} 
     spin(); 
-    setTimeout(()=>{s.style.transition='transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; s.style.transform='rotate(0deg)'; if(b){b.style.boxShadow='0 4px 12px rgba(255,0,0,0.6)'; b.style.background='radial-gradient(circle at 35% 35%, #ff4444, #990000)';} isPullingLever=false; leverPulled=false;},400); 
+    setTimeout(()=>{s.style.transition='transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; s.style.transform='rotate(0deg)'; if(b){b.style.boxShadow='0 4px 12px rgba(255,0,0,0.6)'; b.style.background='radial-gradient(circle at 35% 35%, #ff4444, #990000)';} isPullingLever=false;},400); 
 }
 
 // Защита
