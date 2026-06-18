@@ -12,61 +12,21 @@ function encryptData(data) {
     }
     return btoa(encrypted);
 }
-
 function decryptData(encrypted) {
-    try {
-        let decoded = atob(encrypted);
-        let decrypted = '';
-        for (let i = 0; i < decoded.length; i++) {
-            decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
-        }
-        return decrypted;
-    } catch(e) {
-        return null;
-    }
+    try { let decoded = atob(encrypted); let decrypted = ''; for (let i = 0; i < decoded.length; i++) { decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length)); } return decrypted; } catch(e) { return null; }
 }
-
-function generateHash(data) {
-    let hash = 0;
-    for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data.charCodeAt(i);
-        hash |= 0;
-    }
-    return hash.toString();
-}
+function generateHash(data) { let hash = 0; for (let i = 0; i < data.length; i++) { hash = ((hash << 5) - hash) + data.charCodeAt(i); hash |= 0; } return hash.toString(); }
 
 const maxJsNumber = 17976931348623157081452742373170435679807056752584499659891747680315726078002853876602841604862869853802707627511090146938459102431627447370420556114170685640321300057399439616010061329241517409249704289895240292376971510344482083512411547734028420155225345791771954714163901115161099238314115132219904229344n;
-
-const shortNames = [
-    "", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", 
-    "секстил.", "септили.", "октил.", "нонил.", "децил.", 
-    "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
-    "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."
-];
-
+const shortNames = ["", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", "секстил.", "септили.", "октил.", "нонил.", "децил.", "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.", "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."];
 const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 
-let balance = 10000n;
-let taxesPaid = true;
-let cheatDetected = false;
-let totalWon = 0n;
-let spinsCount = 0;
-let winsCount = 0;
-let lossesCount = 0;
-let canSpin = true;
-let lastTaxPayment = Date.now();
-let f12Count = 0;
-let unpaidWinsCount = 0;
-let declaredBalance = 0n;
-let isPullingLever = false;
-let belarusMode = false;
-let belarusTimer = null;
-let belarusMinutesLeft = 0;
-
-// Переменные для рычага
-let leverDragging = false;
-let leverStartY = 0;
-let leverPulled = false;
+let balance = 10000n, taxesPaid = true, cheatDetected = false, totalWon = 0n;
+let spinsCount = 0, winsCount = 0, lossesCount = 0, canSpin = true;
+let lastTaxPayment = Date.now(), f12Count = 0, unpaidWinsCount = 0, declaredBalance = 0n;
+let isPullingLever = false, belarusMode = false, belarusTimer = null;
+let leverDragging = false, leverStartY = 0, leverPulled = false;
+let loseStreak = 0;
 
 let achievements = {
     "first_thousand": { name: "🥉 Первая тысяча", desc: "Накопить 1 000 рублей", unlocked: false, icon: "💵", date: null },
@@ -78,806 +38,70 @@ let achievements = {
     "big_winner": { name: "🎰 Крупный выигрыш", desc: "Выиграть больше 1 000 000 за спин", unlocked: false, icon: "🎰", date: null },
     "hundred_spins": { name: "🔄 Сотня прокрутов", desc: "Сделать 100 спинов", unlocked: false, icon: "🔄", date: null },
     "mellstroy_style": { name: "🔨 Меллстрой стайл", desc: "Словить блокировку при огромном балансе", unlocked: false, icon: "🔨", date: null },
-    "leet_balance": { name: "🤖 1337", desc: "Иметь баланс ровно 1337 (почти невозможно)", unlocked: false, icon: "🤖", date: null },
+    "leet_balance": { name: "🤖 1337", desc: "Иметь баланс ровно 1337", unlocked: false, icon: "🤖", date: null },
     "winrate_master": { name: "🎯 Мастер винрейта", desc: "Достигнуть винрейта 50% при 50+ спинах", unlocked: false, icon: "🎯", date: null },
     "unlucky_streak": { name: "😢 Лузстрик", desc: "Проиграть 10 раз подряд", unlocked: false, icon: "😢", date: null },
     "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null },
     "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null }
 };
 
-let loseStreak = 0;
-
 function loadGame() {
-    let encryptedData = localStorage.getItem('ghetto_data_encrypted');
-    let savedHash = localStorage.getItem('ghetto_hash');
-    
-    if (encryptedData && savedHash) {
-        let decrypted = decryptData(encryptedData);
-        
-        if (decrypted) {
-            let calculatedHash = generateHash(decrypted + SECRET_KEY);
-            
-            if (calculatedHash === savedHash) {
-                try {
-                    let saveData = JSON.parse(decrypted);
-                    
-                    balance = BigInt(saveData.balance || "10000");
-                    taxesPaid = saveData.taxesPaid === true;
-                    lastTaxPayment = parseInt(saveData.lastTaxPayment || Date.now().toString());
-                    spinsCount = parseInt(saveData.spinsCount || "0");
-                    winsCount = parseInt(saveData.winsCount || "0");
-                    lossesCount = parseInt(saveData.lossesCount || "0");
-                    totalWon = BigInt(saveData.totalWon || "0");
-                    f12Count = parseInt(saveData.f12Count || "0");
-                    cheatDetected = saveData.f12Blocked === true;
-                    unpaidWinsCount = parseInt(saveData.unpaidWinsCount || "0");
-                    
-                    return true;
-                } catch(e) {
-                    console.error("Ошибка загрузки сохранений");
-                }
-            } else {
-                blockSukabank();
-                return false;
-            }
-        }
-    }
-    return false;
+    let ed = localStorage.getItem('ghetto_data_encrypted'), sh = localStorage.getItem('ghetto_hash');
+    if (ed && sh) { let d = decryptData(ed); if (d && generateHash(d + SECRET_KEY) === sh) { try { let s = JSON.parse(d); balance = BigInt(s.balance||"10000"); taxesPaid = s.taxesPaid===true; lastTaxPayment = parseInt(s.lastTaxPayment||Date.now().toString()); spinsCount = parseInt(s.spinsCount||"0"); winsCount = parseInt(s.winsCount||"0"); lossesCount = parseInt(s.lossesCount||"0"); totalWon = BigInt(s.totalWon||"0"); f12Count = parseInt(s.f12Count||"0"); cheatDetected = s.f12Blocked===true; unpaidWinsCount = parseInt(s.unpaidWinsCount||"0"); return true; } catch(e) {} } else { blockSukabank(); return false; } } return false;
 }
-
 function loadAchievements() {
-    let encryptedAchievements = localStorage.getItem('ghetto_achievements_encrypted');
-    if (encryptedAchievements) {
-        let decrypted = decryptData(encryptedAchievements);
-        if (decrypted) {
-            try {
-                let saved = JSON.parse(decrypted);
-                Object.keys(saved).forEach(key => {
-                    if (achievements[key]) {
-                        achievements[key].unlocked = saved[key].unlocked;
-                        achievements[key].date = saved[key].date;
-                    }
-                });
-            } catch(e) {}
-        }
-    }
+    let ea = localStorage.getItem('ghetto_achievements_encrypted'); if (ea) { let d = decryptData(ea); if (d) { try { let s = JSON.parse(d); Object.keys(s).forEach(k => { if (achievements[k]) { achievements[k].unlocked = s[k].unlocked; achievements[k].date = s[k].date; } }); } catch(e) {} } }
 }
 
-if (!loadGame()) {
-    balance = 10000n;
-    taxesPaid = true;
-    lastTaxPayment = Date.now();
-    cheatDetected = false;
-}
+if (!loadGame()) { balance = 10000n; taxesPaid = true; lastTaxPayment = Date.now(); cheatDetected = false; }
 loadAchievements();
-
 handleTargetChange();
 updateUI();
 
-// ================== РЫЧАГ СЛЕВА (ТЯНЕМ ВНИЗ) ==================
+// Рычаг
 let leverStick = document.getElementById('lever-stick');
-let leverContainer = document.getElementById('lever-container');
+leverStick.addEventListener('mousedown', function(e) { if(!canSpin||isPullingLever)return; e.preventDefault(); e.stopPropagation(); leverDragging=true; leverStartY=e.clientY; leverPulled=false; leverStick.style.transition='none'; document.addEventListener('mousemove',onLeverDrag); document.addEventListener('mouseup',onLeverRelease); });
+leverStick.addEventListener('touchstart', function(e) { if(!canSpin||isPullingLever)return; e.preventDefault(); e.stopPropagation(); leverDragging=true; leverStartY=e.touches[0].clientY; leverPulled=false; leverStick.style.transition='none'; document.addEventListener('touchmove',onLeverTouchDrag); document.addEventListener('touchend',onLeverTouchRelease); });
+function onLeverDrag(e) { if(!leverDragging)return; let d=e.clientY-leverStartY; if(d>0&&d<40) leverStick.style.transform=`rotate(${Math.min(d*0.8,30)}deg)`; if(d>25&&!leverPulled) pullLeverDown(); }
+function onLeverRelease(e) { if(leverDragging&&!leverPulled){leverStick.style.transition='transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; leverStick.style.transform='rotate(0deg)';} leverDragging=false; document.removeEventListener('mousemove',onLeverDrag); document.removeEventListener('mouseup',onLeverRelease); }
+function onLeverTouchDrag(e) { if(!leverDragging)return; let d=e.touches[0].clientY-leverStartY; if(d>0&&d<40) leverStick.style.transform=`rotate(${Math.min(d*0.8,30)}deg)`; if(d>25&&!leverPulled) pullLeverDown(); }
+function onLeverTouchRelease(e) { if(leverDragging&&!leverPulled){leverStick.style.transition='transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; leverStick.style.transform='rotate(0deg)';} leverDragging=false; document.removeEventListener('touchmove',onLeverTouchDrag); document.removeEventListener('touchend',onLeverTouchRelease); }
+function pullLeverDown() { if(isPullingLever||!canSpin)return; leverPulled=true; isPullingLever=true; let s=document.getElementById('lever-stick'), b=s.querySelector('.lever-ball'); s.style.transition='transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; s.style.transform='rotate(35deg)'; if(b){b.style.boxShadow='0 0 25px rgba(255,0,0,1), 0 0 50px rgba(255,0,0,0.8)'; b.style.background='radial-gradient(circle at 35% 35%, #ff8888, #ff0000)';} spin(); setTimeout(()=>{s.style.transition='transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)'; s.style.transform='rotate(0deg)'; if(b){b.style.boxShadow='0 4px 12px rgba(255,0,0,0.6)'; b.style.background='radial-gradient(circle at 35% 35%, #ff4444, #990000)';} isPullingLever=false; leverPulled=false;},400); }
 
-leverStick.addEventListener('mousedown', function(event) {
-    if (!canSpin || isPullingLever) return;
-    
-    event.preventDefault();
-    event.stopPropagation();
-    
-    leverDragging = true;
-    leverStartY = event.clientY;
-    leverPulled = false;
-    
-    leverStick.style.transition = 'none';
-    
-    document.addEventListener('mousemove', onLeverDrag);
-    document.addEventListener('mouseup', onLeverRelease);
-});
+// Защита
+window.addEventListener("keydown", function(e) { if(e.key==="F12"||e.keyCode===123){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="i"||e.keyCode===73)){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&e.shiftKey&&(e.key==="J"||e.key==="j"||e.keyCode===74)){e.preventDefault();handleF12Detection();return false;} if(e.ctrlKey&&(e.key==="U"||e.key==="u"||e.keyCode===85)){e.preventDefault();handleF12Detection();return false;} });
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); handleF12Detection(); return false; });
+function handleF12Detection() { f12Count++; saveGame(); unlockAchievement('f12_detected'); if(f12Count===1) document.getElementById('f12-warning-overlay').style.display='flex'; if(f12Count>=2) blockSukabank(); }
+function closeF12Warning() { document.getElementById('f12-warning-overlay').style.display='none'; }
 
-leverStick.addEventListener('touchstart', function(event) {
-    if (!canSpin || isPullingLever) return;
-    
-    event.preventDefault();
-    event.stopPropagation();
-    
-    leverDragging = true;
-    leverStartY = event.touches[0].clientY;
-    leverPulled = false;
-    
-    leverStick.style.transition = 'none';
-    
-    document.addEventListener('touchmove', onLeverTouchDrag);
-    document.addEventListener('touchend', onLeverTouchRelease);
-});
+// Пособие
+setInterval(() => { if(!belarusMode){ balance+=10000n; taxesPaid=false; } else { balance-=250000n; if(balance<0n)balance=0n; } saveGame(); updateUI(); }, 10000);
 
-function onLeverDrag(event) {
-    if (!leverDragging) return;
-    
-    let currentY = event.clientY;
-    let deltaY = currentY - leverStartY;
-    
-    if (deltaY > 0 && deltaY < 40) {
-        let rotation = Math.min(deltaY * 0.8, 30);
-        leverStick.style.transform = `rotate(${rotation}deg)`;
-    }
-    
-    if (deltaY > 25 && !leverPulled) {
-        pullLeverDown();
-    }
-}
+// Чит-коды
+window.addEventListener("keydown", function(e) { let k=e.key.toLowerCase(), a=document.getElementById("secret-alert"); if(k==="l"||k==="д"){balance+=SECRET_PLUS_AMOUNT; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: +${SECRET_PLUS_AMOUNT.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} if(k==="k"||k==="л"){balance=balance*SECRET_MULTIPLY_BY; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} });
 
-function onLeverRelease(event) {
-    if (leverDragging && !leverPulled) {
-        leverStick.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-        leverStick.style.transform = 'rotate(0deg)';
-    }
-    
-    leverDragging = false;
-    document.removeEventListener('mousemove', onLeverDrag);
-    document.removeEventListener('mouseup', onLeverRelease);
-}
+function blockSukabank() { let o=balance; balance=0n; cheatDetected=true; document.getElementById('sukabank-popup').style.display='flex'; unlockAchievement('sukabank_victim'); if(o>=1000000000n)unlockAchievement('mellstroy_style'); saveGame(); updateUI(); }
+function closeSukabankPopup() { document.getElementById('sukabank-popup').style.display='none'; cheatDetected=false; taxesPaid=true; lastTaxPayment=Date.now(); saveGame(); updateUI(); }
 
-function onLeverTouchDrag(event) {
-    if (!leverDragging) return;
-    
-    let currentY = event.touches[0].clientY;
-    let deltaY = currentY - leverStartY;
-    
-    if (deltaY > 0 && deltaY < 40) {
-        let rotation = Math.min(deltaY * 0.8, 30);
-        leverStick.style.transform = `rotate(${rotation}deg)`;
-    }
-    
-    if (deltaY > 25 && !leverPulled) {
-        pullLeverDown();
-    }
-}
+function payTaxes() { if(belarusMode){alert("🚜 Ты в Безналогии! Налоги 0%!");return;} if(taxesPaid){alert("✅ Налоги уже уплачены!");return;} if(balance<=0n){alert("💰 Баланс пуст.");return;} let t=balance*15n/100n; if(t<=0n){alert("💰 Сумма налога слишком мала.");return;} balance-=t; taxesPaid=true; unpaidWinsCount=0; lastTaxPayment=Date.now(); saveGame(); updateUI(); alert(`💸 Налоги уплачены! Снято 15%: ${t.toString()} руб.`); }
 
-function onLeverTouchRelease(event) {
-    if (leverDragging && !leverPulled) {
-        leverStick.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-        leverStick.style.transform = 'rotate(0deg)';
-    }
-    
-    leverDragging = false;
-    document.removeEventListener('touchmove', onLeverTouchDrag);
-    document.removeEventListener('touchend', onLeverTouchRelease);
-}
+function escapeToBelarus() { if(belarusMode){alert("🚜 Ты уже в Безналогии!");return;} if(balance<10000000n){alert("💰 Нужно 10 000 000 рублей для въезда!");return;} balance-=10000000n; belarusMode=true; taxesPaid=true; let b=document.getElementById('btn-belarus'); b.disabled=true; unlockAchievement('belarus_escape'); alert("🚜 ТЫ УЕХАЛ В БЕЗНАЛОГИЮ! Въезд: 10 млн. Жизнь: 1.5 млн/мин. Виза на 5 мин."); let tl=300; b.innerText=`🚜 БЕЗНАЛОГИЯ: ${Math.floor(tl/60)}:${(tl%60).toString().padStart(2,'0')}`; belarusTimer=setInterval(()=>{tl--; b.innerText=`🚜 БЕЗНАЛОГИЯ: ${Math.floor(tl/60)}:${(tl%60).toString().padStart(2,'0')}`; if(tl<=0){clearInterval(belarusTimer); belarusMode=false; b.disabled=false; b.innerText='🚜 УЕХАТЬ В БЕЗНАЛОГИЮ (10 млн + 1.5 млн/мин)'; alert("🛂 ВИЗА ИСТЕКЛА!"); saveGame(); updateUI();}},1000); saveGame(); updateUI(); }
 
-function pullLeverDown() {
-    if (isPullingLever || !canSpin) return;
-    
-    leverPulled = true;
-    isPullingLever = true;
-    
-    let stick = document.getElementById('lever-stick');
-    let ball = stick.querySelector('.lever-ball');
-    
-    stick.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    stick.style.transform = 'rotate(35deg)';
-    
-    if (ball) {
-        ball.style.boxShadow = '0 0 25px rgba(255,0,0,1), 0 0 50px rgba(255,0,0,0.8)';
-        ball.style.background = 'radial-gradient(circle at 35% 35%, #ff8888, #ff0000)';
-    }
-    
-    spin();
-    
-    setTimeout(() => {
-        stick.style.transition = 'transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-        stick.style.transform = 'rotate(0deg)';
-        
-        if (ball) {
-            ball.style.boxShadow = '0 4px 12px rgba(255,0,0,0.6)';
-            ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
-        }
-        
-        isPullingLever = false;
-        leverPulled = false;
-    }, 400);
-}
-
-// Защита от F12 и DevTools
-window.addEventListener("keydown", function(event) {
-    if (event.key === "F12" || event.keyCode === 123) {
-        event.preventDefault();
-        handleF12Detection();
-        return false;
-    }
-    
-    if (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "i" || event.keyCode === 73)) {
-        event.preventDefault();
-        handleF12Detection();
-        return false;
-    }
-    
-    if (event.ctrlKey && event.shiftKey && (event.key === "J" || event.key === "j" || event.keyCode === 74)) {
-        event.preventDefault();
-        handleF12Detection();
-        return false;
-    }
-    
-    if (event.ctrlKey && (event.key === "U" || event.key === "u" || event.keyCode === 85)) {
-        event.preventDefault();
-        handleF12Detection();
-        return false;
-    }
-});
-
-document.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
-    handleF12Detection();
-    return false;
-});
-
-function handleF12Detection() {
-    f12Count++;
-    saveGame();
-    
-    unlockAchievement('f12_detected');
-    
-    if (f12Count === 1) {
-        document.getElementById('f12-warning-overlay').style.display = 'flex';
-    }
-    
-    if (f12Count >= 2) {
-        blockSukabank();
-    }
-}
-
-function closeF12Warning() {
-    document.getElementById('f12-warning-overlay').style.display = 'none';
-}
-
-// Пассивный доход (пособие) - ИСПРАВЛЕНО
-setInterval(() => {
-    if (!belarusMode) {
-        balance += 10000n;
-        taxesPaid = false;
-    } else {
-        // В Безналогии списываем 1.5 млн каждую минуту
-        balance -= 1500000n;
-        if (balance < 0n) balance = 0n;
-    }
-    saveGame();
-    updateUI();
-}, 60000); // Каждую минуту
-
-// Чит-коды L и K
-window.addEventListener("keydown", function(event) {
-    let key = event.key.toLowerCase();
-    let alertBox = document.getElementById("secret-alert");
-    
-    if (key === "l" || key === "д") {
-        balance += SECRET_PLUS_AMOUNT;
-        taxesPaid = false;
-        saveGame();
-        updateUI();
-        
-        alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
-        alertBox.style.opacity = "1";
-        setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-    }
-    
-    if (key === "k" || key === "л") {
-        balance = balance * SECRET_MULTIPLY_BY;
-        taxesPaid = false;
-        saveGame();
-        updateUI();
-        
-        alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
-        alertBox.style.opacity = "1";
-        setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
-    }
-});
-
-function blockSukabank() {
-    let oldBalance = balance;
-    balance = 0n;
-    cheatDetected = true;
-    document.getElementById('sukabank-popup').style.display = 'flex';
-    unlockAchievement('sukabank_victim');
-    if (oldBalance >= 1000000000n) unlockAchievement('mellstroy_style');
-    saveGame();
-    updateUI();
-}
-
-function closeSukabankPopup() {
-    document.getElementById('sukabank-popup').style.display = 'none';
-    cheatDetected = false;
-    taxesPaid = true;
-    lastTaxPayment = Date.now();
-    saveGame();
-    updateUI();
-}
-
-function payTaxes() {
-    if (belarusMode) {
-        alert("🚜 Ты в Безналогии! Налоги 0%! Но жизнь дорогая - 1.5 млн/мин!");
-        return;
-    }
-    
-    if (taxesPaid) {
-        alert("✅ Налоги уже уплачены! Можешь крутить дальше.");
-        return;
-    }
-    
-    if (balance <= 0n) {
-        alert("💰 Нечего облагать налогом! Баланс пуст.");
-        return;
-    }
-    
-    let tax = balance * 15n / 100n;
-    if (tax <= 0n) {
-        alert("💰 Сумма налога слишком мала.");
-        return;
-    }
-    
-    balance -= tax;
-    taxesPaid = true;
-    unpaidWinsCount = 0;
-    lastTaxPayment = Date.now();
-    saveGame();
-    updateUI();
-    alert(`💸 Налоги уплачены! Снято 15%: ${tax.toString()} руб.`);
-}
-
-function escapeToBelarus() {
-    if (belarusMode) {
-        alert("🚜 Ты уже в Безналогии! Жизнь дорогая - 1.5 млн/мин!");
-        return;
-    }
-    
-    // Проверяем хватает ли денег на въезд
-    if (balance < 10000000n) {
-        alert("💰 Нужно 10 000 000 рублей для въезда в Безналогию! Гуляй пока.");
-        return;
-    }
-    
-    // Списываем плату за въезд
-    balance -= 10000000n;
-    belarusMode = true;
-    taxesPaid = true;
-    let btn = document.getElementById('btn-belarus');
-    btn.disabled = true;
-    
-    unlockAchievement('belarus_escape');
-    
-    alert("🚜 ТЫ УЕХАЛ В БЕЗНАЛОГИЮ! Въезд: 10 млн руб. Жизнь: 1.5 млн/мин. Налоги 0%! Визовый режим на 5 минут.");
-    
-    let timeLeft = 300;
-    btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')} (-1.5M/мин)`;
-    
-    belarusTimer = setInterval(() => {
-        timeLeft--;
-        btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')} (-1.5M/мин)`;
-        
-        if (timeLeft <= 0) {
-            clearInterval(belarusTimer);
-            belarusMode = false;
-            btn.disabled = false;
-            btn.innerText = '🚜 УЕХАТЬ В БЕЗНАЛОГИЮ (10 млн + 1.5 млн/мин)';
-            alert("🛂 ВИЗА ИСТЕКЛА! Ты вернулся в Казию. СУКАбанк снова следит за тобой!");
-            saveGame();
-            updateUI();
-        }
-    }, 1000);
-    
-    saveGame();
-    updateUI();
-}
-
-function getWinrate() {
-    if (spinsCount === 0) return 0;
-    return Math.round((winsCount / spinsCount) * 100);
-}
-
-function unlockAchievement(key) {
-    if (achievements[key] && !achievements[key].unlocked) {
-        achievements[key].unlocked = true;
-        achievements[key].date = new Date().toLocaleDateString();
-        saveAchievements();
-        showAchievementPopup(achievements[key]);
-    }
-}
-
-function showAchievementPopup(achievement) {
-    let popup = document.createElement('div');
-    popup.className = 'achievement-popup';
-    popup.innerHTML = `<div style="font-size:24px;">${achievement.icon}</div><div style="color:#000;">🏆 ДОСТИЖЕНИЕ РАЗБЛОКИРОВАНО!</div><div style="color:#000; font-size:12px;">${achievement.name}</div><div style="color:#000; font-size:10px;">${achievement.desc}</div>`;
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 3000);
-}
-
-function saveAchievements() {
-    let encrypted = encryptData(JSON.stringify(achievements));
-    localStorage.setItem('ghetto_achievements_encrypted', encrypted);
-}
-
-function openAchievements() {
-    let list = document.getElementById('achievements-list');
-    list.innerHTML = '';
-    Object.values(achievements).forEach(ach => {
-        let card = document.createElement('div');
-        card.className = `achievement-card ${ach.unlocked ? 'unlocked' : 'locked'}`;
-        card.innerHTML = `
-            <div class="achievement-icon">${ach.icon}</div>
-            <div class="achievement-info">
-                <div class="achievement-name">${ach.name}</div>
-                <div class="achievement-desc">${ach.desc}</div>
-                ${ach.unlocked ? `<div class="achievement-date">Разблокировано: ${ach.date}</div>` : '<div class="achievement-date" style="color:#666;">🔒 ЗАБЛОКИРОВАНО</div>'}
-            </div>
-        `;
-        list.appendChild(card);
-    });
-    document.getElementById('achievements-overlay').style.display = 'flex';
-}
-
-function closeAchievements() {
-    document.getElementById('achievements-overlay').style.display = 'none';
-}
-
-function handleTargetChange() {
-    const target = document.getElementById("target-select").value;
-    const slotsSelect = document.getElementById("slots-select");
-    
-    if (target === "ХУЙ") {
-        slotsSelect.value = "3";
-    } else {
-        slotsSelect.value = "5";
-    }
-    buildSlots(parseInt(slotsSelect.value));
-}
-
-function buildSlots(count) {
-    const container = document.getElementById("slots-container");
-    container.innerHTML = "";
-    for (let i = 0; i < count; i++) {
-        const box = document.createElement("div");
-        box.className = "slot-box";
-        box.innerText = "—";
-        container.appendChild(box);
-    }
-}
-
-function formatBigNumber(value) {
-    let num = BigInt(value);
-    if (num < 0n) return "0 руб.";
-    if (num === 0n) return "0 руб.";
-    
-    let str = num.toString();
-    let length = str.length;
-    
-    if (length <= 3) return `${str} руб.`;
-    
-    let groupIndex = Math.floor((length - 1) / 3);
-    
-    if (groupIndex >= shortNames.length) {
-        return "дохерархи миллиардов";
-    }
-    
-    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
-    let mainPart = str.slice(0, mainPartLength);
-    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-    
-    if (fractionalPart === "00" || fractionalPart === "") {
-        fractionalPart = "";
-    } else if (fractionalPart[1] === "0") {
-        fractionalPart = "." + fractionalPart[0];
-    } else {
-        fractionalPart = "." + fractionalPart;
-    }
-    
-    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
-}
-
-function updateUI() {
-    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
-    
-    let textForm = formatBigNumber(balance);
-    let distanceText = "";
-    
-    if (balance >= maxJsNumber) {
-        distanceText = "ты превзошел лимиты вселенной";
-    } else {
-        let remaining = maxJsNumber - balance;
-        distanceText = formatBigNumber(remaining);
-    }
-    
-    document.getElementById("balance-letters-display").innerHTML = `
-        прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
-        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
-    `;
-    
-    let taxStatus = document.getElementById('tax-status');
-    if (belarusMode) {
-        taxStatus.innerHTML = '<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Налоги 0% | Жизнь: -1.5M/мин</span>';
-    } else if (taxesPaid) {
-        taxStatus.innerHTML = '<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/мин</span>';
-    } else {
-        taxStatus.innerHTML = '<span class="tax-unpaid">⚠️ Налоги не уплачены! СУКАбанк следит за тобой</span>';
-    }
-    
-    let winrate = getWinrate();
-    document.getElementById('winrate-percent').innerText = winrate + '%';
-    document.getElementById('bar-winrate').style.width = winrate + '%';
-    document.getElementById('wins-count').innerText = winsCount;
-    document.getElementById('losses-count').innerText = lossesCount;
-    document.getElementById('total-spins').innerText = spinsCount;
-    
-    let leverContainer = document.querySelector('.lever-container');
-    if (!canSpin || isPullingLever) {
-        leverContainer.classList.add('disabled');
-    } else {
-        leverContainer.classList.remove('disabled');
-    }
-}
-
-function saveGame() {
-    let saveData = {
-        balance: balance.toString(),
-        taxesPaid: taxesPaid,
-        lastTaxPayment: lastTaxPayment,
-        spinsCount: spinsCount,
-        winsCount: winsCount,
-        lossesCount: lossesCount,
-        totalWon: totalWon.toString(),
-        f12Count: f12Count,
-        f12Blocked: cheatDetected,
-        unpaidWinsCount: unpaidWinsCount
-    };
-    
-    let jsonData = JSON.stringify(saveData);
-    let hash = generateHash(jsonData + SECRET_KEY);
-    
-    localStorage.setItem('ghetto_data_encrypted', encryptData(jsonData));
-    localStorage.setItem('ghetto_hash', hash);
-}
-
-function startCooldown() {
-    canSpin = false;
-    let timeLeft = SPIN_COOLDOWN / 1000;
-    let indicator = document.getElementById('cooldown-indicator');
-    
-    updateUI();
-    
-    indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
-    
-    let interval = setInterval(() => {
-        timeLeft -= 0.1;
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            canSpin = true;
-            indicator.innerText = '';
-            updateUI();
-        } else {
-            indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
-        }
-    }, 100);
-}
-
-function spin() {
-    if (!canSpin) return;
-    
-    let betInput = document.getElementById("bet-input").value;
-    let bet = 100n;
-    
-    try {
-        betInput = betInput.replace(/[^0-9]/g, '');
-        if (!betInput) betInput = "100";
-        bet = BigInt(betInput);
-    } catch(e) {
-        bet = 100n;
-    }
-
-    if (bet <= 0n) {
-        alert("нормальную ставку поставь");
-        return;
-    }
-
-    if (balance < bet) {
-        alert("не хватает бабок на такую ставку, жди пособия");
-        return;
-    }
-
-    startCooldown();
-
-    balance -= bet;
-    spinsCount++;
-    if (!belarusMode) {
-        taxesPaid = false;
-    }
-    
-    const target = document.getElementById("target-select").value;
-    const slotsCount = parseInt(document.getElementById("slots-select").value);
-    const boxes = document.querySelectorAll(".slot-box");
-    
-    boxes.forEach(box => box.classList.add('spinning'));
-    
-    let resultArr = [];
-    let isLucky = Math.random() < 0.25;
-    
-    if (isLucky) {
-        let targetArr = target.split("");
-        while (targetArr.length < slotsCount) {
-            targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
-        }
-        resultArr = targetArr;
-    } else {
-        for (let i = 0; i < slotsCount; i++) {
-            let randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-            resultArr.push(randomLetter);
-        }
-    }
-    
-    setTimeout(() => {
-        boxes.forEach(box => box.classList.remove('spinning'));
-        
-        for (let i = 0; i < slotsCount; i++) {
-            boxes[i].innerText = resultArr[i];
-        }
-        
-        let currentWord = resultArr.join("");
-        let resultDisplay = document.getElementById("result-display");
-        
-        if (currentWord.includes(target)) {
-            let winAmount = bet * 50n;
-            balance += winAmount;
-            totalWon += winAmount;
-            winsCount++;
-            loseStreak = 0;
-            
-            if (!belarusMode) {
-                unpaidWinsCount++;
-            }
-            
-            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
-            
-            if (winAmount >= 1000000n) unlockAchievement('big_winner');
-            
-            if (unpaidWinsCount >= 15 && !belarusMode) {
-                setTimeout(() => triggerTaxPhone(), 1500);
-            }
-        } else {
-            lossesCount++;
-            loseStreak++;
-            resultDisplay.innerText = "мимо! крути еще!";
-            
-            if (loseStreak >= 10) unlockAchievement('unlucky_streak');
-        }
-        
-        checkAchievements();
-        saveGame();
-        updateUI();
-    }, 300);
-}
-
-function checkAchievements() {
-    if (balance >= 1000n) unlockAchievement('first_thousand');
-    if (balance >= 1000000n) unlockAchievement('first_million');
-    if (balance >= 1000000000n) unlockAchievement('billionaire');
-    if (balance >= 1000000000000n) unlockAchievement('trillionaire');
-    if (balance >= 1000000000000000n) unlockAchievement('quadrillionaire');
-    if (spinsCount >= 100) unlockAchievement('hundred_spins');
-    if (balance === 1337n) unlockAchievement('leet_balance');
-    if (spinsCount >= 50 && getWinrate() >= 50) unlockAchievement('winrate_master');
-}
-
-// ФУНКЦИИ SUKAGRAM
-function triggerTaxPhone() {
-    let frame = document.getElementById('phone-frame');
-    let notch = document.getElementById('phone-notch');
-    
-    if (balance >= 10000000n) {
-        frame.className = 'phone-frame phone-iphone';
-        notch.style.display = 'block';
-    } else {
-        frame.className = 'phone-frame phone-xiaomi';
-        notch.style.display = 'none';
-    }
-    
-    document.getElementById('sukagram-chat').innerHTML = `
-        <div class="message message-received">
-            <div>Добрый день! Это инспектор СУКАбанка. Вы не платили налоги уже 15 выигрышей подряд.</div>
-            <div class="message-time">12:34</div>
-        </div>
-        <div class="message message-received">
-            <div>Назовите ваш текущий баланс для расчета налога. Но учтите - если сумма будет сильно занижена, мы это увидим в базе.</div>
-            <div class="message-time">12:34</div>
-        </div>
-    `;
-    
-    document.getElementById('tax-phone-overlay').style.display = 'flex';
-    document.getElementById('sukagram-input').focus();
-    
-    setTimeout(() => {
-        addTaxMessage('received', 'Ну так что? Какой у вас баланс? Не тяните, я жду.');
-    }, 2000);
-}
-
-function closeTaxPhone() {
-    document.getElementById('tax-phone-overlay').style.display = 'none';
-}
-
-function sendTaxMessage() {
-    let input = document.getElementById('sukagram-input');
-    let message = input.value.trim();
-    
-    if (!message) return;
-    
-    let amount = message.replace(/[^0-9]/g, '');
-    if (!amount) {
-        addTaxMessage('sent', message);
-        addTaxMessage('received', 'Я не понял, назовите сумму цифрами. Сколько у вас на балансе?');
-        input.value = '';
-        return;
-    }
-    
-    declaredBalance = BigInt(amount);
-    let realBalance = balance;
-    let minAllowed = realBalance * 10n / 100n;
-    
-    addTaxMessage('sent', formatBigNumber(declaredBalance) + ' руб.');
-    input.value = '';
-    
-    if (declaredBalance < minAllowed) {
-        setTimeout(() => {
-            addTaxMessage('received', '🚨 ТАК! Я ПРОВЕРИЛ ПО БАЗЕ! У ВАС НАМНОГО БОЛЬШЕ! ЭТО УКЛОНЕНИЕ ОТ НАЛОГОВ!');
-        }, 1000);
-        
-        setTimeout(() => {
-            addTaxMessage('received', 'ВАША КАРТА ЗАБЛОКИРОВАНА. ВСЕ СРЕДСТВА КОНФИСКОВАНЫ.');
-        }, 2500);
-        
-        setTimeout(() => {
-            closeTaxPhone();
-            unpaidWinsCount = 0;
-            blockSukabank();
-        }, 3500);
-        return;
-    }
-    
-    let tax = declaredBalance * 15n / 100n;
-    balance -= tax;
-    taxesPaid = true;
-    unpaidWinsCount = 0;
-    lastTaxPayment = Date.now();
-    
-    if (declaredBalance < realBalance) {
-        setTimeout(() => {
-            addTaxMessage('received', `😏 Хм, ладно. Поверю вам на слово. Списываю ${formatBigNumber(tax)} руб. налогов.`);
-        }, 1000);
-        setTimeout(() => {
-            addTaxMessage('received', 'Но я за вами слежу! Следующая проверка будет строже.');
-        }, 2500);
-    } else {
-        setTimeout(() => {
-            addTaxMessage('received', `👍 Отлично! Честность - лучшая политика. Списываю ${formatBigNumber(tax)} руб. налогов.`);
-        }, 1000);
-        setTimeout(() => {
-            addTaxMessage('received', 'Всего доброго! Не забывайте платить налоги вовремя.');
-        }, 2500);
-    }
-    
-    saveGame();
-    updateUI();
-    
-    setTimeout(() => closeTaxPhone(), 4500);
-}
-
-function addTaxMessage(type, text) {
-    let chat = document.getElementById('sukagram-chat');
-    let msgDiv = document.createElement('div');
-    msgDiv.className = `message message-${type}`;
-    
-    let now = new Date();
-    let time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    
-    msgDiv.innerHTML = `
-        <div>${text}</div>
-        <div class="message-time">${time}</div>
-    `;
-    
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
-}
+function getWinrate() { if(spinsCount===0)return 0; return Math.round((winsCount/spinsCount)*100); }
+function unlockAchievement(key) { if(achievements[key]&&!achievements[key].unlocked){achievements[key].unlocked=true; achievements[key].date=new Date().toLocaleDateString(); saveAchievements(); showAchievementPopup(achievements[key]);} }
+function showAchievementPopup(a) { let p=document.createElement('div'); p.className='achievement-popup'; p.innerHTML=`<div style="font-size:24px;">${a.icon}</div><div style="color:#000;">🏆 ДОСТИЖЕНИЕ РАЗБЛОКИРОВАНО!</div><div style="color:#000; font-size:12px;">${a.name}</div><div style="color:#000; font-size:10px;">${a.desc}</div>`; document.body.appendChild(p); setTimeout(()=>p.remove(),3000); }
+function saveAchievements() { localStorage.setItem('ghetto_achievements_encrypted', encryptData(JSON.stringify(achievements))); }
+function openAchievements() { let l=document.getElementById('achievements-list'); l.innerHTML=''; Object.values(achievements).forEach(a=>{ let c=document.createElement('div'); c.className=`achievement-card ${a.unlocked?'unlocked':'locked'}`; c.innerHTML=`<div class="achievement-icon">${a.icon}</div><div class="achievement-info"><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc}</div>${a.unlocked?`<div class="achievement-date">Разблокировано: ${a.date}</div>`:'<div class="achievement-date" style="color:#666;">🔒 ЗАБЛОКИРОВАНО</div>'}</div>`; l.appendChild(c); }); document.getElementById('achievements-overlay').style.display='flex'; }
+function closeAchievements() { document.getElementById('achievements-overlay').style.display='none'; }
+function handleTargetChange() { let t=document.getElementById("target-select").value, s=document.getElementById("slots-select"); if(t==="ХУЙ"){s.value="3"; buildSlots(3);} else {s.value="5"; buildSlots(5);} }
+function buildSlots(count) { let c=document.getElementById("slots-container"); c.innerHTML=""; for(let i=0;i<count;i++){let b=document.createElement("div"); b.className="slot-box"; b.innerText="—"; c.appendChild(b);} }
+function formatBigNumber(value) { let n=BigInt(value); if(n<0n)return"0 руб."; if(n===0n)return"0 руб."; let s=n.toString(), l=s.length; if(l<=3)return`${s} руб.`; let g=Math.floor((l-1)/3); if(g>=shortNames.length)return"дохерархи миллиардов"; let m=l%3===0?3:l%3, p=s.slice(0,m), f=s.slice(m,m+2); if(f==="00"||f==="")f=""; else if(f[1]==="0")f="."+f[0]; else f="."+f; return`${p}${f} ${shortNames[g]}`; }
+function updateUI() { document.getElementById("balance-display").innerText=`баланс: ${balance.toString()} руб.`; let tf=formatBigNumber(balance), dt=""; if(balance>=maxJsNumber)dt="ты превзошел лимиты вселенной"; else {let r=maxJsNumber-balance; dt=formatBigNumber(r);} document.getElementById("balance-letters-display").innerHTML=`прописью: <span style="color: #ccc;">${tf} руб.</span><br>до бесконечности: <span style="color: #ccc;">${dt} руб.</span>`; let ts=document.getElementById('tax-status'); if(belarusMode)ts.innerHTML='<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Жизнь: -1.5M/мин</span>'; else if(taxesPaid)ts.innerHTML='<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/10сек</span>'; else ts.innerHTML='<span class="tax-unpaid">⚠️ Налоги не уплачены!</span>'; let wr=getWinrate(); document.getElementById('winrate-percent').innerText=wr+'%'; document.getElementById('bar-winrate').style.width=wr+'%'; document.getElementById('wins-count').innerText=winsCount; document.getElementById('losses-count').innerText=lossesCount; document.getElementById('total-spins').innerText=spinsCount; let lc=document.querySelector('.lever-container'); if(!canSpin||isPullingLever)lc.classList.add('disabled'); else lc.classList.remove('disabled'); }
+function saveGame() { let d={balance:balance.toString(),taxesPaid:taxesPaid,lastTaxPayment:lastTaxPayment,spinsCount:spinsCount,winsCount:winsCount,lossesCount:lossesCount,totalWon:totalWon.toString(),f12Count:f12Count,f12Blocked:cheatDetected,unpaidWinsCount:unpaidWinsCount}; let j=JSON.stringify(d), h=generateHash(j+SECRET_KEY); localStorage.setItem('ghetto_data_encrypted',encryptData(j)); localStorage.setItem('ghetto_hash',h); }
+function startCooldown() { canSpin=false; let tl=SPIN_COOLDOWN/1000, ind=document.getElementById('cooldown-indicator'); updateUI(); ind.innerText=`⏳ Перезарядка: ${tl.toFixed(1)}с`; let iv=setInterval(()=>{tl-=0.1; if(tl<=0){clearInterval(iv); canSpin=true; ind.innerText=''; updateUI();} else ind.innerText=`⏳ Перезарядка: ${tl.toFixed(1)}с`;},100); }
+function spin() { if(!canSpin)return; let bi=document.getElementById("bet-input").value, bet=100n; try{bi=bi.replace(/[^0-9]/g,''); if(!bi)bi="100"; bet=BigInt(bi);}catch(e){bet=100n;} if(bet<=0n){alert("нормальную ставку поставь");return;} if(balance<bet){alert("не хватает бабок");return;} startCooldown(); balance-=bet; spinsCount++; if(!belarusMode)taxesPaid=false; let target=document.getElementById("target-select").value, slotsCount=parseInt(document.getElementById("slots-select").value), boxes=document.querySelectorAll(".slot-box"); boxes.forEach(b=>b.classList.add('spinning')); let resultArr=[], isLucky=Math.random()<0.25; if(isLucky){let ta=target.split(""); while(ta.length<slotsCount)ta.push(alphabet[Math.floor(Math.random()*alphabet.length)]); resultArr=ta;} else {for(let i=0;i<slotsCount;i++)resultArr.push(alphabet[Math.floor(Math.random()*alphabet.length)]);} setTimeout(()=>{boxes.forEach(b=>b.classList.remove('spinning')); for(let i=0;i<slotsCount;i++)boxes[i].innerText=resultArr[i]; let cw=resultArr.join(""), rd=document.getElementById("result-display"); if(cw.includes(target)){let wa=bet*50n; balance+=wa; totalWon+=wa; winsCount++; loseStreak=0; if(!belarusMode)unpaidWinsCount++; rd.innerHTML=`🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${wa.toString()} руб.)`; if(wa>=1000000n)unlockAchievement('big_winner'); if(unpaidWinsCount>=15&&!belarusMode)setTimeout(()=>triggerTaxPhone(),1500);} else {lossesCount++; loseStreak++; rd.innerText="мимо! крути еще!"; if(loseStreak>=10)unlockAchievement('unlucky_streak');} checkAchievements(); saveGame(); updateUI();},300); }
+function checkAchievements() { if(balance>=1000n)unlockAchievement('first_thousand'); if(balance>=1000000n)unlockAchievement('first_million'); if(balance>=1000000000n)unlockAchievement('billionaire'); if(balance>=1000000000000n)unlockAchievement('trillionaire'); if(balance>=1000000000000000n)unlockAchievement('quadrillionaire'); if(spinsCount>=100)unlockAchievement('hundred_spins'); if(balance===1337n)unlockAchievement('leet_balance'); if(spinsCount>=50&&getWinrate()>=50)unlockAchievement('winrate_master'); }
+function triggerTaxPhone() { let f=document.getElementById('phone-frame'), n=document.getElementById('phone-notch'); if(balance>=10000000n){f.className='phone-frame phone-iphone'; n.style.display='block';} else {f.className='phone-frame phone-xiaomi'; n.style.display='none';} document.getElementById('sukagram-chat').innerHTML=`<div class="message message-received"><div>Добрый день! Это инспектор СУКАбанка. Вы не платили налоги уже 15 выигрышей подряд.</div><div class="message-time">12:34</div></div><div class="message message-received"><div>Назовите ваш текущий баланс для расчета налога.</div><div class="message-time">12:34</div></div>`; document.getElementById('tax-phone-overlay').style.display='flex'; document.getElementById('sukagram-input').value=''; document.getElementById('sukagram-input').focus(); setTimeout(()=>{addTaxMessage('received','Ну так что? Какой у вас баланс? Не тяните, я жду.');},2000); }
+function closeTaxPhone() { document.getElementById('tax-phone-overlay').style.display='none'; }
+function sendTaxMessage() { let inp=document.getElementById('sukagram-input'), msg=inp.value.trim(); if(!msg)return; let amt=msg.replace(/[^0-9]/g,''); if(!amt){addTaxMessage('sent',msg); addTaxMessage('received','Я не понял, назовите сумму цифрами.'); inp.value=''; return;} declaredBalance=BigInt(amt); let rb=balance, minA=rb*10n/100n; addTaxMessage('sent',formatBigNumber(declaredBalance)+' руб.'); inp.value=''; if(declaredBalance<minA){setTimeout(()=>{addTaxMessage('received','🚨 ТАК! Я ПРОВЕРИЛ ПО БАЗЕ! У ВАС НАМНОГО БОЛЬШЕ!');},1000); setTimeout(()=>{addTaxMessage('received','ВАША КАРТА ЗАБЛОКИРОВАНА.');},2500); setTimeout(()=>{closeTaxPhone(); unpaidWinsCount=0; blockSukabank();},3500); return;} let tax=declaredBalance*15n/100n; balance-=tax; taxesPaid=true; unpaidWinsCount=0; lastTaxPayment=Date.now(); if(declaredBalance<rb){setTimeout(()=>{addTaxMessage('received',`😏 Ладно, поверю. Списываю ${formatBigNumber(tax)} руб.`);},1000);} else {setTimeout(()=>{addTaxMessage('received',`👍 Отлично! Списываю ${formatBigNumber(tax)} руб.`);},1000);} saveGame(); updateUI(); setTimeout(()=>closeTaxPhone(),4500); }
+function addTaxMessage(type, text) { let chat=document.getElementById('sukagram-chat'), md=document.createElement('div'); md.className=`message message-${type}`; let n=new Date(), t=`${n.getHours().toString().padStart(2,'0')}:${n.getMinutes().toString().padStart(2,'0')}`; md.innerHTML=`<div>${text}</div><div class="message-time">${t}</div>`; chat.appendChild(md); chat.scrollTop=chat.scrollHeight; }
