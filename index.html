@@ -13,14 +13,12 @@
 
 <div class="secret-alert" id="secret-alert">чит-код активирован</div>
 
-<!-- ПРЕДУПРЕЖДЕНИЕ F12 -->
 <div id="f12-warning-overlay" onclick="closeF12Warning()">
     <div class="f12-warning-text">⚠️ ПРЕДУПРЕЖДЕНИЕ ⚠️</div>
     <div class="f12-warning-subtext">ЗАКРОЙ ЭТО, А ТО ЗАБЛОКИРУЕМ КАРТУ</div>
     <div class="f12-warning-subtext" style="font-size: 16px; margin-top: 30px; opacity: 0.7;">Нажми на экран чтобы закрыть</div>
 </div>
 
-<!-- ОКНО ТЕЛЕФОНА SUKAGRAM -->
 <div id="tax-phone-overlay">
     <div class="phone-frame" id="phone-frame">
         <div class="phone-notch" id="phone-notch"></div>
@@ -33,7 +31,6 @@
                     <div class="sukagram-status">онлайн</div>
                 </div>
             </div>
-            
             <div class="sukagram-chat" id="sukagram-chat">
                 <div class="message message-received">
                     <div>Добрый день! Это инспектор СУКАбанка. Вы не платили налоги уже 15 выигрышей подряд.</div>
@@ -44,9 +41,8 @@
                     <div class="message-time">12:34</div>
                 </div>
             </div>
-            
             <div class="sukagram-input-area">
-                <input type="text" class="sukagram-input" id="sukagram-input" placeholder="Введите баланс..." onkeypress="if(event.key==='Enter')sendTaxMessage()">
+                <input type="text" class="sukagram-input" id="sukagram-input" placeholder="Введите баланс...">
                 <button class="sukagram-send" onclick="sendTaxMessage()">📤</button>
             </div>
         </div>
@@ -102,9 +98,7 @@
         </div>
     </div>
 
-    <!-- СЛОТЫ С РЫЧАГОМ СЛЕВА -->
     <div class="slots-area">
-        <!-- РЫЧАГ СЛЕВА -->
         <div class="lever-container" id="lever-container">
             <div class="lever-base">
                 <div class="lever-stick" id="lever-stick">
@@ -113,8 +107,6 @@
             </div>
             <div class="lever-text">ТЯНИ</div>
         </div>
-
-        <!-- СЛОТЫ -->
         <div class="slots-container" id="slots-container">
             <div class="slot-box">—</div>
             <div class="slot-box">—</div>
@@ -123,11 +115,10 @@
     </div>
 
     <div class="cooldown-indicator" id="cooldown-indicator"></div>
-
     <div class="result-message" id="result-display"></div>
     
     <div class="tax-status" id="tax-status">
-        <span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/мин</span>
+        <span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/10сек</span>
     </div>
 </div>
 
