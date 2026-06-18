@@ -61,6 +61,7 @@ let declaredBalance = 0n;
 let isPullingLever = false;
 let belarusMode = false;
 let belarusTimer = null;
+let belarusMinutesLeft = 0;
 
 // Переменные для рычага
 let leverDragging = false;
@@ -74,4 +75,4 @@ let achievements = {
     "trillionaire": { name: "👑 Триллионер", desc: "Накопить 1 000 000 000 000 рублей", unlocked: false, icon: "👑", date: null },
     "quadrillionaire": { name: "🌟 Квадриллионер", desc: "Накопить 1 000 000 000 000 000 рублей", unlocked: false, icon: "🌟", date: null },
     "sukabank_victim": { name: "🚫 Жертва СУКАбанка", desc: "Получить блокировку карты", unlocked: false, icon: "💳", date: null },
-    "big_winner": { name: "🎰 Крупный выигрыш", desc: "Выиграть больше 1 000 000
+    "big_winner": { name: "🎰 Крупный выи
