@@ -66,6 +66,14 @@ document.getElementById('lever-stick').addEventListener('click', function(e) {
     }
 });
 
+// Крутить по ПРОБЕЛУ
+document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' && canSpin && !isPullingLever) {
+        e.preventDefault();
+        pullLeverDown();
+    }
+});
+
 function pullLeverDown() { 
     if(isPullingLever||!canSpin)return; 
     isPullingLever=true; 
