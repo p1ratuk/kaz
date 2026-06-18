@@ -91,7 +91,7 @@ document.addEventListener('contextmenu', function(e) { e.preventDefault(); handl
 function handleF12Detection() { f12Count++; saveGame(); unlockAchievement('f12_detected'); if(f12Count===1) document.getElementById('f12-warning-overlay').style.display='flex'; if(f12Count>=2) blockSukabank(); }
 function closeF12Warning() { document.getElementById('f12-warning-overlay').style.display='none'; }
 
-// Пособие
+// Пособие раз в минуту
 setInterval(() => {
     if (!belarusMode) {
         balance += 10000n;
@@ -99,16 +99,41 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
+// Стипендия 5к каждую минуту
+setInterval(() => {
+    if (!belarusMode) {
+        balance += 5000n;
+        saveGame();
+        updateUI();
+    }
+}, 60000);
+
+// Оплата учёбы 500к каждые 12 минут
+setInterval(() => {
+    if (!belarusMode && balance >= 500000n) {
+        balance -= 500000n;
+        alert("📚 Списание 500 000 руб. за учёбу!");
+        saveGame();
+        updateUI();
+    } else if (!belarusMode && balance < 500000n) {
+        alert("📚 Не хватает денег на учёбу! СУКАбанк начисляет пени!");
+        balance = 0n;
+        saveGame();
+        updateUI();
+    }
+}, 720000);
+
+// Списание в Безналогии
 setInterval(() => {
     if (belarusMode) {
-        balance -= 250000n;
+        balance -= 1500000n;
         if (balance < 0n) balance = 0n;
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
 // Чит-коды
 window.addEventListener("keydown", function(e) { let k=e.key.toLowerCase(), a=document.getElementById("secret-alert"); if(k==="l"||k==="д"){balance+=SECRET_PLUS_AMOUNT; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: +${SECRET_PLUS_AMOUNT.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} if(k==="k"||k==="л"){balance=balance*SECRET_MULTIPLY_BY; taxesPaid=false; saveGame(); updateUI(); a.innerText=`чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`; a.style.opacity="1"; setTimeout(()=>{a.style.opacity="0";},1000);} });
@@ -129,7 +154,7 @@ function closeAchievements() { document.getElementById('achievements-overlay').s
 function handleTargetChange() { let t=document.getElementById("target-select").value, s=document.getElementById("slots-select"); if(t==="ХУЙ"){s.value="3"; buildSlots(3);} else {s.value="5"; buildSlots(5);} }
 function buildSlots(count) { let c=document.getElementById("slots-container"); c.innerHTML=""; for(let i=0;i<count;i++){let b=document.createElement("div"); b.className="slot-box"; b.innerText="—"; c.appendChild(b);} }
 function formatBigNumber(value) { let n=BigInt(value); if(n<0n)return"0 руб."; if(n===0n)return"0 руб."; let s=n.toString(), l=s.length; if(l<=3)return`${s} руб.`; let g=Math.floor((l-1)/3); if(g>=shortNames.length)return"дохерархи миллиардов"; let m=l%3===0?3:l%3, p=s.slice(0,m), f=s.slice(m,m+2); if(f==="00"||f==="")f=""; else if(f[1]==="0")f="."+f[0]; else f="."+f; return`${p}${f} ${shortNames[g]}`; }
-function updateUI() { document.getElementById("balance-display").innerText=`баланс: ${balance.toString()} руб.`; let tf=formatBigNumber(balance), dt=""; if(balance>=maxJsNumber)dt="ты превзошел лимиты вселенной"; else {let r=maxJsNumber-balance; dt=formatBigNumber(r);} document.getElementById("balance-letters-display").innerHTML=`прописью: <span style="color: #ccc;">${tf} руб.</span><br>до бесконечности: <span style="color: #ccc;">${dt} руб.</span>`; let ts=document.getElementById('tax-status'); if(belarusMode)ts.innerHTML='<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Жизнь: -1.5M/мин</span>'; else if(taxesPaid)ts.innerHTML='<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/10сек</span>'; else ts.innerHTML='<span class="tax-unpaid">⚠️ Налоги не уплачены!</span>'; let wr=getWinrate(); document.getElementById('winrate-percent').innerText=wr+'%'; document.getElementById('bar-winrate').style.width=wr+'%'; document.getElementById('wins-count').innerText=winsCount; document.getElementById('losses-count').innerText=lossesCount; document.getElementById('total-spins').innerText=spinsCount; let lc=document.querySelector('.lever-container'); if(!canSpin||isPullingLever)lc.classList.add('disabled'); else lc.classList.remove('disabled'); }
+function updateUI() { document.getElementById("balance-display").innerText=`баланс: ${balance.toString()} руб.`; let tf=formatBigNumber(balance), dt=""; if(balance>=maxJsNumber)dt="ты превзошел лимиты вселенной"; else {let r=maxJsNumber-balance; dt=formatBigNumber(r);} document.getElementById("balance-letters-display").innerHTML=`прописью: <span style="color: #ccc;">${tf} руб.</span><br>до бесконечности: <span style="color: #ccc;">${dt} руб.</span>`; let ts=document.getElementById('tax-status'); if(belarusMode)ts.innerHTML='<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Жизнь: -1.5M/мин</span>'; else if(taxesPaid)ts.innerHTML='<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/мин | Стипендия: +5 000/мин</span>'; else ts.innerHTML='<span class="tax-unpaid">⚠️ Налоги не уплачены!</span>'; let wr=getWinrate(); document.getElementById('winrate-percent').innerText=wr+'%'; document.getElementById('bar-winrate').style.width=wr+'%'; document.getElementById('wins-count').innerText=winsCount; document.getElementById('losses-count').innerText=lossesCount; document.getElementById('total-spins').innerText=spinsCount; let lc=document.querySelector('.lever-container'); if(!canSpin||isPullingLever)lc.classList.add('disabled'); else lc.classList.remove('disabled'); }
 function saveGame() { let d={balance:balance.toString(),taxesPaid:taxesPaid,lastTaxPayment:lastTaxPayment,spinsCount:spinsCount,winsCount:winsCount,lossesCount:lossesCount,totalWon:totalWon.toString(),f12Count:f12Count,f12Blocked:cheatDetected,unpaidWinsCount:unpaidWinsCount}; let j=JSON.stringify(d), h=generateHash(j+SECRET_KEY); localStorage.setItem('ghetto_data_encrypted',encryptData(j)); localStorage.setItem('ghetto_hash',h); }
 function startCooldown() { canSpin=false; let tl=SPIN_COOLDOWN/1000, ind=document.getElementById('cooldown-indicator'); updateUI(); ind.innerText=`⏳ Перезарядка: ${tl.toFixed(1)}с`; let iv=setInterval(()=>{tl-=0.1; if(tl<=0){clearInterval(iv); canSpin=true; ind.innerText=''; updateUI();} else ind.innerText=`⏳ Перезарядка: ${tl.toFixed(1)}с`;},100); }
 function spin() { if(!canSpin)return; let bi=document.getElementById("bet-input").value, bet=100n; try{bi=bi.replace(/[^0-9]/g,''); if(!bi)bi="100"; bet=BigInt(bi);}catch(e){bet=100n;} if(bet<=0n){alert("нормальную ставку поставь");return;} if(balance<bet){alert("не хватает бабок");return;} startCooldown(); balance-=bet; spinsCount++; if(!belarusMode)taxesPaid=false; let target=document.getElementById("target-select").value, slotsCount=parseInt(document.getElementById("slots-select").value), boxes=document.querySelectorAll(".slot-box"); boxes.forEach(b=>b.classList.add('spinning')); let resultArr=[], isLucky=Math.random()<0.25; if(isLucky){let ta=target.split(""); while(ta.length<slotsCount)ta.push(alphabet[Math.floor(Math.random()*alphabet.length)]); resultArr=ta;} else {for(let i=0;i<slotsCount;i++)resultArr.push(alphabet[Math.floor(Math.random()*alphabet.length)]);} setTimeout(()=>{boxes.forEach(b=>b.classList.remove('spinning')); for(let i=0;i<slotsCount;i++)boxes[i].innerText=resultArr[i]; let cw=resultArr.join(""), rd=document.getElementById("result-display"); if(cw.includes(target)){let wa=bet*50n; balance+=wa; totalWon+=wa; winsCount++; loseStreak=0; if(!belarusMode)unpaidWinsCount++; rd.innerHTML=`🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${wa.toString()} руб.)`; if(wa>=1000000n)unlockAchievement('big_winner'); if(unpaidWinsCount>=15&&!belarusMode)setTimeout(()=>triggerTaxPhone(),1500);} else {lossesCount++; loseStreak++; rd.innerText="мимо! крути еще!"; if(loseStreak>=10)unlockAchievement('unlucky_streak');} checkAchievements(); saveGame(); updateUI();},300); }
