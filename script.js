@@ -246,7 +246,7 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 60000);
+}, 10000);
 
 // Стипендия 5к каждую минуту
 setInterval(() => {
@@ -255,7 +255,7 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 60000);
+}, 10000);
 
 // Оплата учёбы 500к каждые 12 минут
 setInterval(() => {
