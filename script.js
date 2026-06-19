@@ -41,7 +41,8 @@ const shortNames = [
     "", "тыс.", "млн.", "млрд.", "трил.", "квадр.", "квинт.", 
     "секстил.", "септили.", "октил.", "нонил.", "децил.", 
     "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
-    "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил."
+    "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил.",
+    "инцелдилион", "имбециллион"
 ];
 
 const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
@@ -77,7 +78,9 @@ let achievements = {
     "winrate_master": { name: "🎯 Мастер винрейта", desc: "Достигнуть винрейта 50% при 50+ спинах", unlocked: false, icon: "🎯", date: null },
     "unlucky_streak": { name: "😢 Лузстрик", desc: "Проиграть 10 раз подряд", unlocked: false, icon: "😢", date: null },
     "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null },
-    "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null }
+    "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null },
+    "pidoras_combo": { name: "🌈 ПИДОРАС", desc: "Собрать комбинацию ПИДОРАС", unlocked: false, icon: "🌈", date: null },
+    "huyhuy_combo": { name: "💀 ХУЙХУЙ", desc: "Собрать комбинацию ХУЙХУЙ", unlocked: false, icon: "💀", date: null }
 };
 
 function loadGame() {
@@ -246,7 +249,7 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
 // Стипендия 5к каждую минуту
 setInterval(() => {
@@ -255,7 +258,7 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
 // Оплата учёбы 500к каждые 12 минут
 setInterval(() => {
@@ -457,14 +460,9 @@ function closeAchievements() {
 function handleTargetChange() {
     const target = document.getElementById("target-select").value;
     const slotsSelect = document.getElementById("slots-select");
-    
-    if (target === "ХУЙ") {
-        slotsSelect.value = "3";
-        buildSlots(3);
-    } else {
-        slotsSelect.value = "5";
-        buildSlots(5);
-    }
+    // Всегда 7 слотов
+    slotsSelect.value = "7";
+    buildSlots(7);
 }
 
 function buildSlots(count) {
@@ -627,8 +625,8 @@ function spin() {
     }
     
     const target = document.getElementById("target-select").value;
-    const slotsCount = parseInt(document.getElementById("slots-select").value);
     const boxes = document.querySelectorAll(".slot-box");
+    const slotsCount = 7;
     
     boxes.forEach(box => box.classList.add('spinning'));
     
@@ -657,19 +655,50 @@ function spin() {
         
         let currentWord = resultArr.join("");
         let resultDisplay = document.getElementById("result-display");
+        let multiplier = 0n;
+        let winAmount = 0n;
         
-        if (currentWord.includes(target)) {
-            let winAmount = bet * 50n;
+        // Проверка комбинаций
+        if (currentWord === "ПИДОРАС") {
+            multiplier = 100n;
+            winAmount = bet * multiplier;
             balance += winAmount;
             totalWon += winAmount;
             winsCount++;
             loseStreak = 0;
-            
+            unlockAchievement('pidoras_combo');
+            resultDisplay.innerHTML = `🌈 ПИДОРАС! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.substring(0, 6) === "ХУЙХУЙ" || currentWord.includes("ХУЙХУЙ")) {
+            multiplier = 100n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            unlockAchievement('huyhuy_combo');
+            resultDisplay.innerHTML = `💀 ХУЙХУЙ! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.includes(target)) {
+            multiplier = 200n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x200! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.includes("ХУЙ") || currentWord.includes("ПИДОР") || currentWord.includes("ЕБЛАН")) {
+            multiplier = 50n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            resultDisplay.innerHTML = `🎉 ТРОИЦА! x50! (+${winAmount.toString()} руб.)`;
+        }
+        
+        if (multiplier > 0n) {
             if (!belarusMode) {
                 unpaidWinsCount++;
             }
-            
-            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x50! 🎉 (+${winAmount.toString()} руб.)`;
             
             if (winAmount >= 1000000n) unlockAchievement('big_winner');
             
@@ -833,7 +862,6 @@ function runAway() {
     btn.style.bottom = 'auto';
 }
 
-// Ждем загрузки DOM перед добавлением обработчика
 setTimeout(() => {
     let btnLudomania = document.getElementById('btn-ludomania');
     if (btnLudomania) {
