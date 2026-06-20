@@ -25,6 +25,7 @@ function applyReferral(code) {
         balance += bonus;
         saveGame();
         updateUI();
+        updateReferralUI();
         alert(`🎉 Реферальный код ${code} применён!\nТы получил бонус: ${formatBigNumber(bonus)}`);
     }
 }
@@ -32,7 +33,7 @@ function applyReferral(code) {
 function copyReferral() {
     let link = window.location.href.split('?')[0] + '?ref=' + referralCode;
     navigator.clipboard.writeText(link).then(() => {
-        alert('🔗 Реферальная ссылка скопирована!\n\nОтправь другу и получай 10% от его проигрышей!');
+        alert('🔗 Реферальная ссылка скопирована!\n\n📋 ' + link + '\n\n💰 Отправь другу и получай 10% от его проигрышей!');
     }).catch(() => {
         prompt('🔗 Скопируй ссылку вручную:', link);
     });
@@ -47,10 +48,22 @@ function claimReferralBonus() {
         localStorage.setItem('ghetto_total_ref_earn', totalReferralEarnings.toString());
         saveGame();
         updateUI();
+        updateReferralUI();
         alert(`💰 Реферальный бонус зачислен!`);
     } else {
         alert('😢 Пока нет бонусов. Жди когда друзья проиграют!');
     }
+}
+
+function updateReferralUI() {
+    let refCount = document.getElementById('ref-count');
+    let refBonus = document.getElementById('ref-bonus');
+    let refCode = document.getElementById('ref-code-display');
+    let refTotal = document.getElementById('ref-total');
+    if (refCount) refCount.innerText = referrals.length;
+    if (refBonus) refBonus.innerText = formatBigNumber(referralBonus);
+    if (refCode) refCode.innerText = referralCode;
+    if (refTotal) refTotal.innerText = formatBigNumber(totalReferralEarnings);
 }
 
 function checkReferralOnLoad() {
@@ -64,7 +77,6 @@ function checkReferralOnLoad() {
 
 checkReferralOnLoad();
 
-// Шифрование
 function encryptData(data) {
     let encrypted = '';
     for (let i = 0; i < data.length; i++) {
@@ -261,23 +273,26 @@ function pullLeverDown() {
     },400); 
 }
 
-// Защита от F12
+// Защита от F12 и DevTools
 window.addEventListener("keydown", function(event) {
     if (event.key === "F12" || event.keyCode === 123) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
+    
     if (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "i" || event.keyCode === 73)) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
+    
     if (event.ctrlKey && event.shiftKey && (event.key === "J" || event.key === "j" || event.keyCode === 74)) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
+    
     if (event.ctrlKey && (event.key === "U" || event.key === "u" || event.keyCode === 85)) {
         event.preventDefault();
         handleF12Detection();
@@ -294,10 +309,13 @@ document.addEventListener('contextmenu', function(event) {
 function handleF12Detection() {
     f12Count++;
     saveGame();
+    
     unlockAchievement('f12_detected');
+    
     if (f12Count === 1) {
         document.getElementById('f12-warning-overlay').style.display = 'flex';
     }
+    
     if (f12Count >= 2) {
         blockSukabank();
     }
@@ -307,7 +325,7 @@ function closeF12Warning() {
     document.getElementById('f12-warning-overlay').style.display = 'none';
 }
 
-// Пособие раз в МИНУТУ (ИСПРАВЛЕНО)
+// Пособие раз в МИНУТУ (60000 мс)
 setInterval(() => {
     if (!belarusMode) {
         balance += 10000n;
@@ -317,7 +335,7 @@ setInterval(() => {
     }
 }, 60000);
 
-// Стипендия 5к каждую МИНУТУ (ИСПРАВЛЕНО)
+// Стипендия 5к каждую МИНУТУ (60000 мс)
 setInterval(() => {
     if (!belarusMode) {
         balance += 5000n;
@@ -326,7 +344,7 @@ setInterval(() => {
     }
 }, 60000);
 
-// Оплата учёбы 500к каждые 12 минут
+// Оплата учёбы 500к каждые 12 минут (720000 мс)
 setInterval(() => {
     if (!belarusMode && balance >= 500000n) {
         balance -= 500000n;
@@ -339,7 +357,7 @@ setInterval(() => {
     }
 }, 720000);
 
-// Списание в Безналогии
+// Списание в Безналогии каждую МИНУТУ
 setInterval(() => {
     if (belarusMode) {
         balance -= 1500000n;
@@ -359,6 +377,7 @@ window.addEventListener("keydown", function(event) {
         taxesPaid = false;
         saveGame();
         updateUI();
+        
         alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
         alertBox.style.opacity = "1";
         setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
@@ -369,6 +388,7 @@ window.addEventListener("keydown", function(event) {
         taxesPaid = false;
         saveGame();
         updateUI();
+        
         alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
         alertBox.style.opacity = "1";
         setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
@@ -400,19 +420,23 @@ function payTaxes() {
         alert("🚜 Ты в Безналогии! Налоги 0%!");
         return;
     }
+    
     if (taxesPaid) {
         alert("✅ Налоги уже уплачены!");
         return;
     }
+    
     if (balance <= 0n) {
         alert("💰 Баланс пуст.");
         return;
     }
+    
     let tax = balance * 15n / 100n;
     if (tax <= 0n) {
         alert("💰 Сумма налога слишком мала.");
         return;
     }
+    
     balance -= tax;
     taxesPaid = true;
     unpaidWinsCount = 0;
@@ -427,22 +451,29 @@ function escapeToBelarus() {
         alert("🚜 Ты уже в Безналогии!");
         return;
     }
+    
     if (balance < 10000000n) {
         alert("💰 Нужно 10 000 000 рублей для въезда!");
         return;
     }
+    
     balance -= 10000000n;
     belarusMode = true;
     taxesPaid = true;
     let btn = document.getElementById('btn-belarus');
     btn.disabled = true;
+    
     unlockAchievement('belarus_escape');
+    
     alert("🚜 ТЫ УЕХАЛ В БЕЗНАЛОГИЮ! Въезд: 10 млн. Жизнь: 1.5 млн/мин. Виза на 5 мин.");
+    
     let timeLeft = 300;
     btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
+    
     belarusTimer = setInterval(() => {
         timeLeft--;
         btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
+        
         if (timeLeft <= 0) {
             clearInterval(belarusTimer);
             belarusMode = false;
@@ -453,6 +484,7 @@ function escapeToBelarus() {
             updateUI();
         }
     }, 1000);
+    
     saveGame();
     updateUI();
 }
@@ -508,6 +540,7 @@ function closeAchievements() {
 }
 
 function handleTargetChange() {
+    const target = document.getElementById("target-select").value;
     const slotsSelect = document.getElementById("slots-select");
     slotsSelect.value = "7";
     buildSlots(7);
@@ -524,7 +557,6 @@ function buildSlots(count) {
     }
 }
 
-// ФИКС: formatBigNumber для огромных чисел
 function formatBigNumber(value) {
     let num;
     try {
@@ -547,8 +579,6 @@ function formatBigNumber(value) {
         if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
         if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
         if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
-        if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
-        if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
         if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
         return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
     }
@@ -568,7 +598,36 @@ function formatBigNumber(value) {
     return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
 }
 
-// ФИКС: updateUI с защитой от отрицательных чисел
+function getNextLevelInfo(num) {
+    let str = num.toString();
+    let length = str.length;
+    let currentIndex = Math.floor((length - 1) / 3);
+    
+    if (currentIndex < 24) {
+        let nextIndex = currentIndex + 1;
+        let nextLevelValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextLevelValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    if (currentIndex >= 24 && currentIndex < shortNames.length - 1) {
+        let nextIndex = currentIndex + 1;
+        let nextValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    if (currentIndex >= shortNames.length - 1) {
+        return "♾️ Ты достиг бесконечности!";
+    }
+    
+    return "🎉 Ты на максимальном уровне!";
+}
+
 function updateUI() {
     document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
     
@@ -615,36 +674,8 @@ function updateUI() {
     } else {
         leverContainer.classList.remove('disabled');
     }
-}
-
-function getNextLevelInfo(num) {
-    let str = num.toString();
-    let length = str.length;
-    let currentIndex = Math.floor((length - 1) / 3);
     
-    if (currentIndex < 24) {
-        let nextIndex = currentIndex + 1;
-        let nextLevelValue = BigInt('1' + '0'.repeat(nextIndex * 3));
-        let diff = nextLevelValue - num;
-        if (diff > 0n) {
-            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
-        }
-    }
-    
-    if (currentIndex >= 24 && currentIndex < shortNames.length - 1) {
-        let nextIndex = currentIndex + 1;
-        let nextValue = BigInt('1' + '0'.repeat(nextIndex * 3));
-        let diff = nextValue - num;
-        if (diff > 0n) {
-            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
-        }
-    }
-    
-    if (currentIndex >= shortNames.length - 1) {
-        return "♾️ Ты достиг бесконечности!";
-    }
-    
-    return "🎉 Ты на максимальном уровне!";
+    updateReferralUI();
 }
 
 function saveGame() {
@@ -672,8 +703,11 @@ function startCooldown() {
     canSpin = false;
     let timeLeft = SPIN_COOLDOWN / 1000;
     let indicator = document.getElementById('cooldown-indicator');
+    
     updateUI();
+    
     indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
+    
     let interval = setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) {
@@ -726,12 +760,10 @@ function spin() {
     boxes.forEach(box => box.classList.add('spinning'));
     
     let resultArr = [];
-    // Увеличенный шанс для ПИДОРАС и ХУЙХУЙ (ФИКС)
+    let isSpecial = Math.random() < 0.05;
     let isLucky = Math.random() < 0.25;
-    let isSpecial = Math.random() < 0.05; // 5% шанс на спец-комбинацию
     
     if (isSpecial) {
-        // Спец-комбинации
         if (Math.random() < 0.5) {
             resultArr = "ПИДОРАС".split("");
         } else {
@@ -766,23 +798,23 @@ function spin() {
         let winAmount = 0n;
         
         if (currentWord === "ПИДОРАС") {
-            multiplier = 100n;
+            multiplier = 1000n;
             winAmount = bet * multiplier;
             balance += winAmount;
             totalWon += winAmount;
             winsCount++;
             loseStreak = 0;
             unlockAchievement('pidoras_combo');
-            resultDisplay.innerHTML = `🔥 ПИДОРАС! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
+            resultDisplay.innerHTML = `🔥 ПИДОРАС! МЕГА-КОМБО x1000! (+${winAmount.toString()} руб.)`;
         } else if (currentWord.substring(0, 6) === "ХУЙХУЙ" || currentWord.includes("ХУЙХУЙ")) {
-            multiplier = 100n;
+            multiplier = 1000n;
             winAmount = bet * multiplier;
             balance += winAmount;
             totalWon += winAmount;
             winsCount++;
             loseStreak = 0;
             unlockAchievement('huyhuy_combo');
-            resultDisplay.innerHTML = `💀 ХУЙХУЙ! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
+            resultDisplay.innerHTML = `💀 ХУЙХУЙ! МЕГА-КОМБО x1000! (+${winAmount.toString()} руб.)`;
         } else if (currentWord.includes(target)) {
             multiplier = 200n;
             winAmount = bet * multiplier;
@@ -816,7 +848,6 @@ function spin() {
             loseStreak++;
             resultDisplay.innerText = "мимо! крути еще!";
             
-            // Реферальный бонус: 10% от проигрыша
             if (referrals.length > 0) {
                 let refBonus = bet * 10n / 100n;
                 referralBonus += refBonus;
@@ -904,9 +935,11 @@ function sendTaxMessage() {
         setTimeout(() => {
             addTaxMessage('received', '🚨 ТАК! Я ПРОВЕРИЛ ПО БАЗЕ! У ВАС НАМНОГО БОЛЬШЕ! ЭТО УКЛОНЕНИЕ ОТ НАЛОГОВ!');
         }, 1000);
+        
         setTimeout(() => {
             addTaxMessage('received', 'ВАША КАРТА ЗАБЛОКИРОВАНА. ВСЕ СРЕДСТВА КОНФИСКОВАНЫ.');
         }, 2500);
+        
         setTimeout(() => {
             closeTaxPhone();
             unpaidWinsCount = 0;
@@ -939,6 +972,7 @@ function sendTaxMessage() {
     
     saveGame();
     updateUI();
+    
     setTimeout(() => closeTaxPhone(), 4500);
 }
 
@@ -946,9 +980,15 @@ function addTaxMessage(type, text) {
     let chat = document.getElementById('sukagram-chat');
     let msgDiv = document.createElement('div');
     msgDiv.className = `message message-${type}`;
+    
     let now = new Date();
     let time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    msgDiv.innerHTML = `<div>${text}</div><div class="message-time">${time}</div>`;
+    
+    msgDiv.innerHTML = `
+        <div>${text}</div>
+        <div class="message-time">${time}</div>
+    `;
+    
     chat.appendChild(msgDiv);
     chat.scrollTop = chat.scrollHeight;
 }
@@ -958,8 +998,10 @@ function runAway() {
     if (!btn) return;
     let maxX = window.innerWidth - btn.offsetWidth - 20;
     let maxY = window.innerHeight - btn.offsetHeight - 20;
-    btn.style.left = Math.floor(Math.random() * maxX) + 'px';
-    btn.style.top = Math.floor(Math.random() * maxY) + 'px';
+    let randomX = Math.floor(Math.random() * maxX);
+    let randomY = Math.floor(Math.random() * maxY);
+    btn.style.left = randomX + 'px';
+    btn.style.top = randomY + 'px';
     btn.style.bottom = 'auto';
 }
 
@@ -976,19 +1018,32 @@ setTimeout(() => {
     }
 }, 500);
 
-// Гипно-рычаг
+// ГИПНО-РЫЧАГ (качается каждые 2 минуты)
 setInterval(() => {
     let stick = document.getElementById('lever-stick');
+    if (!stick) return;
     let ball = stick.querySelector('.lever-ball');
+    
     stick.style.transition = 'transform 1.5s ease-in-out';
     stick.style.transform = 'rotate(15deg)';
+    
     if (ball) {
         ball.style.boxShadow = '0 0 30px rgba(255,0,255,1), 0 0 60px rgba(255,0,255,0.8)';
         ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #990099)';
     }
-    setTimeout(() => { stick.style.transform = 'rotate(-15deg)'; }, 1500);
-    setTimeout(() => { stick.style.transform = 'rotate(10deg)'; }, 3000);
-    setTimeout(() => { stick.style.transform = 'rotate(-10deg)'; }, 4500);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(-15deg)';
+    }, 1500);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(10deg)';
+    }, 3000);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(-10deg)';
+    }, 4500);
+    
     setTimeout(() => {
         stick.style.transform = 'rotate(0deg)';
         if (ball) {
@@ -998,27 +1053,46 @@ setInterval(() => {
     }, 6000);
 }, 120000);
 
-// Иллюзия
+// ИЛЛЮЗИОНИРОВАНИЕ НА ПОЛНЫЙ ЭКРАН
 let illusionActive = false;
+
 function startIllusion() {
     if (illusionActive) return;
     illusionActive = true;
+    
     let stick = document.getElementById('lever-stick');
+    if (!stick) return;
     let ball = stick.querySelector('.lever-ball');
+    
     let overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,transparent 50%,rgba(255,0,255,0.3) 100%);z-index:9999;pointer-events:none;animation:illusionPulse 2s infinite;';
+    overlay.id = 'illusion-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%);
+        z-index: 9999; pointer-events: none;
+        animation: illusionPulse 2s infinite;
+    `;
     document.body.appendChild(overlay);
+    
     let text = document.createElement('div');
-    text.style.cssText = 'position:fixed;bottom:50px;left:50%;transform:translateX(-50%);color:#ff00ff;font-size:24px;z-index:10000;animation:textGlow 1s infinite;pointer-events:none;font-weight:700;';
+    text.id = 'illusion-text';
+    text.style.cssText = `
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+        color: #ff00ff; font-size: 24px; z-index: 10000;
+        animation: textGlow 1s infinite; pointer-events: none;
+        font-family: 'Inter', sans-serif; font-weight: 700;
+    `;
     text.innerText = 'НАЖМИ F11...';
     document.body.appendChild(text);
+    
     if (ball) {
         ball.style.boxShadow = '0 0 50px rgba(255,0,255,1), 0 0 100px rgba(255,0,255,0.8)';
         ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #660066)';
     }
+    
     setTimeout(() => {
-        overlay.remove();
-        text.remove();
+        if (overlay) overlay.remove();
+        if (text) text.remove();
         if (ball) {
             ball.style.boxShadow = '0 4px 12px rgba(255,0,0,0.6)';
             ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
@@ -1026,20 +1100,16 @@ function startIllusion() {
         illusionActive = false;
     }, 5000);
 }
-setInterval(() => { startIllusion(); }, 180000);
-setTimeout(() => { startIllusion(); }, 60000);
 
-// Обновление реферального UI
-function updateReferralUI() {
-    let refCount = document.getElementById('ref-count');
-    let refBonus = document.getElementById('ref-bonus');
-    let refCode = document.getElementById('ref-code-display');
-    let refTotal = document.getElementById('ref-total');
-    if (refCount) refCount.innerText = referrals.length;
-    if (refBonus) refBonus.innerText = formatBigNumber(referralBonus);
-    if (refCode) refCode.innerText = referralCode;
-    if (refTotal) refTotal.innerText = formatBigNumber(totalReferralEarnings);
-}
+setInterval(() => {
+    startIllusion();
+}, 180000);
 
-// Инициализация реферального UI
-setTimeout(() => { updateReferralUI(); }, 1000);
+setTimeout(() => {
+    startIllusion();
+}, 60000);
+
+// Инициализация реферального UI при загрузке
+setTimeout(() => {
+    updateReferralUI();
+}, 1000);
