@@ -1,6 +1,6 @@
 // ================= НАСТРОЙКА =================
 const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
-const SECRET_MULTIPLY_BY = 2n;
+const SECRET_MULTIPLY_BY = 200000n;
 const SPIN_COOLDOWN = 500;
 const SECRET_KEY = "sukabank_dep_1488_zaebis_2024_huy_tebe_v_console_pidor";
 // =============================================
@@ -499,35 +499,7 @@ function formatBigNumber(value) {
     if (length <= 3) return `${str} руб.`;
     
     let groupIndex = Math.floor((length - 1) / 3);
-    
-if (groupIndex >= shortNames.length) {
-    let infinityLevel = groupIndex - shortNames.length + 1;
-    if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
-    if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
-    if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
-    if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
-    if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
-    if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
-    return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
-}
-    
-    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
-    let mainPart = str.slice(0, mainPartLength);
-    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-    
-    if (fractionalPart === "00" || fractionalPart === "") {
-        fractionalPart = "";
-    } else if (fractionalPart[1] === "0") {
-        fractionalPart = "." + fractionalPart[0];
-    } else {
-        fractionalPart = "." + fractionalPart;
-    }
-    
-    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
-}
-
-function updateUI() {
-    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
+    ocument.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
     
     let textForm = formatBigNumber(balance);
     let distanceText = "";
@@ -760,6 +732,34 @@ function triggerTaxPhone() {
         frame.className = 'phone-frame phone-xiaomi';
         notch.style.display = 'none';
     }
+if (groupIndex >= shortNames.length) {
+    let infinityLevel = groupIndex - shortNames.length + 1;
+    if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
+    if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
+    if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
+    if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
+    if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
+    if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
+    return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
+}
+    
+    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
+    let mainPart = str.slice(0, mainPartLength);
+    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
+    
+    if (fractionalPart === "00" || fractionalPart === "") {
+        fractionalPart = "";
+    } else if (fractionalPart[1] === "0") {
+        fractionalPart = "." + fractionalPart[0];
+    } else {
+        fractionalPart = "." + fractionalPart;
+    }
+    
+    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
+}
+
+function updateUI() {
+    d
     
     document.getElementById('sukagram-chat').innerHTML = `
         <div class="message message-received">
