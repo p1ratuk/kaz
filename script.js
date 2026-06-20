@@ -5,6 +5,66 @@ const SPIN_COOLDOWN = 500;
 const SECRET_KEY = "sukabank_dep_1488_zaebis_2024_huy_tebe_v_console_pidor";
 // =============================================
 
+// Реферальная система
+let referralCode = localStorage.getItem('ghetto_referral') || generateReferral();
+let referrals = JSON.parse(localStorage.getItem('ghetto_referrals') || '[]');
+let referralBonus = BigInt(localStorage.getItem('ghetto_referral_bonus') || '0');
+let totalReferralEarnings = BigInt(localStorage.getItem('ghetto_total_ref_earn') || '0');
+
+function generateReferral() {
+    let code = 'DEP' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    localStorage.setItem('ghetto_referral', code);
+    return code;
+}
+
+function applyReferral(code) {
+    if (code && code !== referralCode && !referrals.includes(code)) {
+        referrals.push(code);
+        localStorage.setItem('ghetto_referrals', JSON.stringify(referrals));
+        let bonus = 100000n;
+        balance += bonus;
+        saveGame();
+        updateUI();
+        alert(`🎉 Реферальный код ${code} применён!\nТы получил бонус: ${formatBigNumber(bonus)}`);
+    }
+}
+
+function copyReferral() {
+    let link = window.location.href.split('?')[0] + '?ref=' + referralCode;
+    navigator.clipboard.writeText(link).then(() => {
+        alert('🔗 Реферальная ссылка скопирована!\n\nОтправь другу и получай 10% от его проигрышей!');
+    }).catch(() => {
+        prompt('🔗 Скопируй ссылку вручную:', link);
+    });
+}
+
+function claimReferralBonus() {
+    if (referralBonus > 0n) {
+        balance += referralBonus;
+        totalReferralEarnings += referralBonus;
+        referralBonus = 0n;
+        localStorage.setItem('ghetto_referral_bonus', '0');
+        localStorage.setItem('ghetto_total_ref_earn', totalReferralEarnings.toString());
+        saveGame();
+        updateUI();
+        alert(`💰 Реферальный бонус зачислен!`);
+    } else {
+        alert('😢 Пока нет бонусов. Жди когда друзья проиграют!');
+    }
+}
+
+function checkReferralOnLoad() {
+    let params = new URLSearchParams(window.location.search);
+    let ref = params.get('ref');
+    if (ref) {
+        applyReferral(ref);
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
+checkReferralOnLoad();
+
+// Шифрование
 function encryptData(data) {
     let encrypted = '';
     for (let i = 0; i < data.length; i++) {
@@ -91,7 +151,7 @@ let achievements = {
     "unlucky_streak": { name: "😢 Лузстрик", desc: "Проиграть 10 раз подряд", unlocked: false, icon: "😢", date: null },
     "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null },
     "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null },
-    "pidoras_combo": { name: "🌈 ПИДОРАС", desc: "Собрать комбинацию ПИДОРАС", unlocked: false, icon: "🌈", date: null },
+    "pidoras_combo": { name: "🔥 ПИДОРАС", desc: "Собрать комбинацию ПИДОРАС", unlocked: false, icon: "🔥", date: null },
     "huyhuy_combo": { name: "💀 ХУЙХУЙ", desc: "Собрать комбинацию ХУЙХУЙ", unlocked: false, icon: "💀", date: null }
 };
 
@@ -201,26 +261,23 @@ function pullLeverDown() {
     },400); 
 }
 
-// Защита от F12 и DevTools
+// Защита от F12
 window.addEventListener("keydown", function(event) {
     if (event.key === "F12" || event.keyCode === 123) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
-    
     if (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "i" || event.keyCode === 73)) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
-    
     if (event.ctrlKey && event.shiftKey && (event.key === "J" || event.key === "j" || event.keyCode === 74)) {
         event.preventDefault();
         handleF12Detection();
         return false;
     }
-    
     if (event.ctrlKey && (event.key === "U" || event.key === "u" || event.keyCode === 85)) {
         event.preventDefault();
         handleF12Detection();
@@ -237,13 +294,10 @@ document.addEventListener('contextmenu', function(event) {
 function handleF12Detection() {
     f12Count++;
     saveGame();
-    
     unlockAchievement('f12_detected');
-    
     if (f12Count === 1) {
         document.getElementById('f12-warning-overlay').style.display = 'flex';
     }
-    
     if (f12Count >= 2) {
         blockSukabank();
     }
@@ -253,7 +307,7 @@ function closeF12Warning() {
     document.getElementById('f12-warning-overlay').style.display = 'none';
 }
 
-// Пособие раз в минуту
+// Пособие раз в МИНУТУ (ИСПРАВЛЕНО)
 setInterval(() => {
     if (!belarusMode) {
         balance += 10000n;
@@ -261,26 +315,24 @@ setInterval(() => {
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
-// Стипендия 5к каждую минуту
+// Стипендия 5к каждую МИНУТУ (ИСПРАВЛЕНО)
 setInterval(() => {
     if (!belarusMode) {
         balance += 5000n;
         saveGame();
         updateUI();
     }
-}, 10000);
+}, 60000);
 
 // Оплата учёбы 500к каждые 12 минут
 setInterval(() => {
     if (!belarusMode && balance >= 500000n) {
         balance -= 500000n;
-        alert("📚 Списание 500 000 руб. за учёбу!");
         saveGame();
         updateUI();
     } else if (!belarusMode && balance < 500000n && balance > 0n) {
-        alert("📚 Не хватает денег на учёбу! СУКАбанк начисляет пени!");
         balance = 0n;
         saveGame();
         updateUI();
@@ -307,7 +359,6 @@ window.addEventListener("keydown", function(event) {
         taxesPaid = false;
         saveGame();
         updateUI();
-        
         alertBox.innerText = `чит-код: +${SECRET_PLUS_AMOUNT.toString()}`;
         alertBox.style.opacity = "1";
         setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
@@ -318,7 +369,6 @@ window.addEventListener("keydown", function(event) {
         taxesPaid = false;
         saveGame();
         updateUI();
-        
         alertBox.innerText = `чит-код: умножено на ${SECRET_MULTIPLY_BY.toString()}`;
         alertBox.style.opacity = "1";
         setTimeout(() => { alertBox.style.opacity = "0"; }, 1000);
@@ -350,23 +400,19 @@ function payTaxes() {
         alert("🚜 Ты в Безналогии! Налоги 0%!");
         return;
     }
-    
     if (taxesPaid) {
         alert("✅ Налоги уже уплачены!");
         return;
     }
-    
     if (balance <= 0n) {
         alert("💰 Баланс пуст.");
         return;
     }
-    
     let tax = balance * 15n / 100n;
     if (tax <= 0n) {
         alert("💰 Сумма налога слишком мала.");
         return;
     }
-    
     balance -= tax;
     taxesPaid = true;
     unpaidWinsCount = 0;
@@ -381,29 +427,22 @@ function escapeToBelarus() {
         alert("🚜 Ты уже в Безналогии!");
         return;
     }
-    
     if (balance < 10000000n) {
         alert("💰 Нужно 10 000 000 рублей для въезда!");
         return;
     }
-    
     balance -= 10000000n;
     belarusMode = true;
     taxesPaid = true;
     let btn = document.getElementById('btn-belarus');
     btn.disabled = true;
-    
     unlockAchievement('belarus_escape');
-    
     alert("🚜 ТЫ УЕХАЛ В БЕЗНАЛОГИЮ! Въезд: 10 млн. Жизнь: 1.5 млн/мин. Виза на 5 мин.");
-    
     let timeLeft = 300;
     btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
-    
     belarusTimer = setInterval(() => {
         timeLeft--;
         btn.innerText = `🚜 БЕЗНАЛОГИЯ: ${Math.floor(timeLeft/60)}:${(timeLeft%60).toString().padStart(2,'0')}`;
-        
         if (timeLeft <= 0) {
             clearInterval(belarusTimer);
             belarusMode = false;
@@ -414,7 +453,6 @@ function escapeToBelarus() {
             updateUI();
         }
     }, 1000);
-    
     saveGame();
     updateUI();
 }
@@ -470,9 +508,7 @@ function closeAchievements() {
 }
 
 function handleTargetChange() {
-    const target = document.getElementById("target-select").value;
     const slotsSelect = document.getElementById("slots-select");
-    // Всегда 7 слотов
     slotsSelect.value = "7";
     buildSlots(7);
 }
@@ -488,9 +524,15 @@ function buildSlots(count) {
     }
 }
 
+// ФИКС: formatBigNumber для огромных чисел
 function formatBigNumber(value) {
-    let num = BigInt(value);
-    if (num < 0n) return "0 руб.";
+    let num;
+    try {
+        num = BigInt(value);
+    } catch(e) {
+        return "♾️ СЛИШКОМ МНОГО ♾️";
+    }
+    if (num < 0n) return "♾️ БЕСКОНЕЧНОСТЬ+ ♾️";
     if (num === 0n) return "0 руб.";
     
     let str = num.toString();
@@ -499,21 +541,56 @@ function formatBigNumber(value) {
     if (length <= 3) return `${str} руб.`;
     
     let groupIndex = Math.floor((length - 1) / 3);
-    ocument.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
+    
+    if (groupIndex >= shortNames.length) {
+        let infinityLevel = groupIndex - shortNames.length + 1;
+        if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
+        if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
+        if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
+        if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
+        if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
+        if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
+        return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
+    }
+    
+    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
+    let mainPart = str.slice(0, mainPartLength);
+    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
+    
+    if (fractionalPart === "00" || fractionalPart === "") {
+        fractionalPart = "";
+    } else if (fractionalPart[1] === "0") {
+        fractionalPart = "." + fractionalPart[0];
+    } else {
+        fractionalPart = "." + fractionalPart;
+    }
+    
+    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
+}
+
+// ФИКС: updateUI с защитой от отрицательных чисел
+function updateUI() {
+    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
     
     let textForm = formatBigNumber(balance);
     let distanceText = "";
+    let nextLevelText = getNextLevelInfo(balance);
     
     if (balance >= maxJsNumber) {
-        distanceText = "ты превзошел лимиты вселенной";
+        distanceText = "♾️ ТЫ ПРЕВЗОШЁЛ ВСЁ ♾️";
     } else {
         let remaining = maxJsNumber - balance;
-        distanceText = formatBigNumber(remaining);
+        if (remaining < 0n) {
+            distanceText = "♾️ БЕСКОНЕЧНОСТЬ+ ♾️";
+        } else {
+            distanceText = formatBigNumber(remaining);
+        }
     }
     
     document.getElementById("balance-letters-display").innerHTML = `
         прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
-        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span>
+        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span><br>
+        <span style="color: #ffd700; font-size: 12px;">${nextLevelText}</span>
     `;
     
     let taxStatus = document.getElementById('tax-status');
@@ -538,6 +615,36 @@ function formatBigNumber(value) {
     } else {
         leverContainer.classList.remove('disabled');
     }
+}
+
+function getNextLevelInfo(num) {
+    let str = num.toString();
+    let length = str.length;
+    let currentIndex = Math.floor((length - 1) / 3);
+    
+    if (currentIndex < 24) {
+        let nextIndex = currentIndex + 1;
+        let nextLevelValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextLevelValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    if (currentIndex >= 24 && currentIndex < shortNames.length - 1) {
+        let nextIndex = currentIndex + 1;
+        let nextValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    if (currentIndex >= shortNames.length - 1) {
+        return "♾️ Ты достиг бесконечности!";
+    }
+    
+    return "🎉 Ты на максимальном уровне!";
 }
 
 function saveGame() {
@@ -565,11 +672,8 @@ function startCooldown() {
     canSpin = false;
     let timeLeft = SPIN_COOLDOWN / 1000;
     let indicator = document.getElementById('cooldown-indicator');
-    
     updateUI();
-    
     indicator.innerText = `⏳ Перезарядка: ${timeLeft.toFixed(1)}с`;
-    
     let interval = setInterval(() => {
         timeLeft -= 0.1;
         if (timeLeft <= 0) {
@@ -622,9 +726,21 @@ function spin() {
     boxes.forEach(box => box.classList.add('spinning'));
     
     let resultArr = [];
+    // Увеличенный шанс для ПИДОРАС и ХУЙХУЙ (ФИКС)
     let isLucky = Math.random() < 0.25;
+    let isSpecial = Math.random() < 0.05; // 5% шанс на спец-комбинацию
     
-    if (isLucky) {
+    if (isSpecial) {
+        // Спец-комбинации
+        if (Math.random() < 0.5) {
+            resultArr = "ПИДОРАС".split("");
+        } else {
+            resultArr = "ХУЙХУЙ".split("");
+            while (resultArr.length < slotsCount) {
+                resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+            }
+        }
+    } else if (isLucky) {
         let targetArr = target.split("");
         while (targetArr.length < slotsCount) {
             targetArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
@@ -649,7 +765,6 @@ function spin() {
         let multiplier = 0n;
         let winAmount = 0n;
         
-        // Проверка комбинаций
         if (currentWord === "ПИДОРАС") {
             multiplier = 100n;
             winAmount = bet * multiplier;
@@ -658,7 +773,7 @@ function spin() {
             winsCount++;
             loseStreak = 0;
             unlockAchievement('pidoras_combo');
-            resultDisplay.innerHTML = `🌈 ПИДОРАС! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
+            resultDisplay.innerHTML = `🔥 ПИДОРАС! МЕГА-КОМБО x100! (+${winAmount.toString()} руб.)`;
         } else if (currentWord.substring(0, 6) === "ХУЙХУЙ" || currentWord.includes("ХУЙХУЙ")) {
             multiplier = 100n;
             winAmount = bet * multiplier;
@@ -701,6 +816,13 @@ function spin() {
             loseStreak++;
             resultDisplay.innerText = "мимо! крути еще!";
             
+            // Реферальный бонус: 10% от проигрыша
+            if (referrals.length > 0) {
+                let refBonus = bet * 10n / 100n;
+                referralBonus += refBonus;
+                localStorage.setItem('ghetto_referral_bonus', referralBonus.toString());
+            }
+            
             if (loseStreak >= 10) unlockAchievement('unlucky_streak');
         }
         
@@ -732,34 +854,6 @@ function triggerTaxPhone() {
         frame.className = 'phone-frame phone-xiaomi';
         notch.style.display = 'none';
     }
-if (groupIndex >= shortNames.length) {
-    let infinityLevel = groupIndex - shortNames.length + 1;
-    if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
-    if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
-    if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
-    if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
-    if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
-    if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
-    return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
-}
-    
-    let mainPartLength = length % 3 === 0 ? 3 : length % 3;
-    let mainPart = str.slice(0, mainPartLength);
-    let fractionalPart = str.slice(mainPartLength, mainPartLength + 2);
-    
-    if (fractionalPart === "00" || fractionalPart === "") {
-        fractionalPart = "";
-    } else if (fractionalPart[1] === "0") {
-        fractionalPart = "." + fractionalPart[0];
-    } else {
-        fractionalPart = "." + fractionalPart;
-    }
-    
-    return `${mainPart}${fractionalPart} ${shortNames[groupIndex]}`;
-}
-
-function updateUI() {
-    d
     
     document.getElementById('sukagram-chat').innerHTML = `
         <div class="message message-received">
@@ -810,11 +904,9 @@ function sendTaxMessage() {
         setTimeout(() => {
             addTaxMessage('received', '🚨 ТАК! Я ПРОВЕРИЛ ПО БАЗЕ! У ВАС НАМНОГО БОЛЬШЕ! ЭТО УКЛОНЕНИЕ ОТ НАЛОГОВ!');
         }, 1000);
-        
         setTimeout(() => {
             addTaxMessage('received', 'ВАША КАРТА ЗАБЛОКИРОВАНА. ВСЕ СРЕДСТВА КОНФИСКОВАНЫ.');
         }, 2500);
-        
         setTimeout(() => {
             closeTaxPhone();
             unpaidWinsCount = 0;
@@ -847,7 +939,6 @@ function sendTaxMessage() {
     
     saveGame();
     updateUI();
-    
     setTimeout(() => closeTaxPhone(), 4500);
 }
 
@@ -855,29 +946,20 @@ function addTaxMessage(type, text) {
     let chat = document.getElementById('sukagram-chat');
     let msgDiv = document.createElement('div');
     msgDiv.className = `message message-${type}`;
-    
     let now = new Date();
     let time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    
-    msgDiv.innerHTML = `
-        <div>${text}</div>
-        <div class="message-time">${time}</div>
-    `;
-    
+    msgDiv.innerHTML = `<div>${text}</div><div class="message-time">${time}</div>`;
     chat.appendChild(msgDiv);
     chat.scrollTop = chat.scrollHeight;
 }
 
-// Кнопка вылечить лудоманию (уворачивается)
 function runAway() {
     let btn = document.getElementById('btn-ludomania');
     if (!btn) return;
     let maxX = window.innerWidth - btn.offsetWidth - 20;
     let maxY = window.innerHeight - btn.offsetHeight - 20;
-    let randomX = Math.floor(Math.random() * maxX);
-    let randomY = Math.floor(Math.random() * maxY);
-    btn.style.left = randomX + 'px';
-    btn.style.top = randomY + 'px';
+    btn.style.left = Math.floor(Math.random() * maxX) + 'px';
+    btn.style.top = Math.floor(Math.random() * maxY) + 'px';
     btn.style.bottom = 'auto';
 }
 
@@ -894,32 +976,19 @@ setTimeout(() => {
     }
 }, 500);
 
-// ГИПНО-РЫЧАГ (качается каждые 2 минуты)
+// Гипно-рычаг
 setInterval(() => {
     let stick = document.getElementById('lever-stick');
     let ball = stick.querySelector('.lever-ball');
-    
-    // Гипно-качание
     stick.style.transition = 'transform 1.5s ease-in-out';
     stick.style.transform = 'rotate(15deg)';
-    
     if (ball) {
         ball.style.boxShadow = '0 0 30px rgba(255,0,255,1), 0 0 60px rgba(255,0,255,0.8)';
         ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #990099)';
     }
-    
-    setTimeout(() => {
-        stick.style.transform = 'rotate(-15deg)';
-    }, 1500);
-    
-    setTimeout(() => {
-        stick.style.transform = 'rotate(10deg)';
-    }, 3000);
-    
-    setTimeout(() => {
-        stick.style.transform = 'rotate(-10deg)';
-    }, 4500);
-    
+    setTimeout(() => { stick.style.transform = 'rotate(-15deg)'; }, 1500);
+    setTimeout(() => { stick.style.transform = 'rotate(10deg)'; }, 3000);
+    setTimeout(() => { stick.style.transform = 'rotate(-10deg)'; }, 4500);
     setTimeout(() => {
         stick.style.transform = 'rotate(0deg)';
         if (ball) {
@@ -927,134 +996,29 @@ setInterval(() => {
             ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
         }
     }, 6000);
-}, 120000); // Каждые 2 минуты
+}, 120000);
 
-function updateUI() {
-    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
-    
-    let textForm = formatBigNumber(balance);
-    let distanceText = "";
-    
-    // Считаем сколько до следующего уровня
-    let nextLevelText = getNextLevelInfo(balance);
-    
-    if (balance >= maxJsNumber) {
-        distanceText = "ты превзошел лимиты вселенной";
-    } else {
-        let remaining = maxJsNumber - balance;
-        distanceText = formatBigNumber(remaining);
-    }
-    
-    document.getElementById("balance-letters-display").innerHTML = `
-        прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
-        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span><br>
-        <span style="color: #ffd700; font-size: 12px;">${nextLevelText}</span>
-    `;
-    
-    let taxStatus = document.getElementById('tax-status');
-    if (belarusMode) {
-        taxStatus.innerHTML = '<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Жизнь: -1.5M/мин</span>';
-    } else if (taxesPaid) {
-        taxStatus.innerHTML = '<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/мин | Стипендия: +5 000/мин</span>';
-    } else {
-        taxStatus.innerHTML = '<span class="tax-unpaid">⚠️ Налоги не уплачены!</span>';
-    }
-    
-    let winrate = getWinrate();
-    document.getElementById('winrate-percent').innerText = winrate + '%';
-    document.getElementById('bar-winrate').style.width = winrate + '%';
-    document.getElementById('wins-count').innerText = winsCount;
-    document.getElementById('losses-count').innerText = lossesCount;
-    document.getElementById('total-spins').innerText = spinsCount;
-    
-    let leverContainer = document.querySelector('.lever-container');
-    if (!canSpin || isPullingLever) {
-        leverContainer.classList.add('disabled');
-    } else {
-        leverContainer.classList.remove('disabled');
-    }
-}
-
-// Получить информацию о следующем уровне
-function getNextLevelInfo(num) {
-    let str = num.toString();
-    let length = str.length;
-    let currentIndex = Math.floor((length - 1) / 3);
-    
-    // Если мы в обычных числах (до дохерархи)
-    if (currentIndex < 24) {
-        let nextIndex = currentIndex + 1;
-        let nextLevelValue = BigInt('1' + '0'.repeat(nextIndex * 3));
-        let diff = nextLevelValue - num;
-        if (diff > 0n) {
-            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
-        }
-    }
-    
-    // Если мы в дохерархи и выше
-    if (currentIndex >= 24 && currentIndex < shortNames.length - 1) {
-        let nextIndex = currentIndex + 1;
-        let currentValue = BigInt('1' + '0'.repeat(currentIndex * 3));
-        let nextValue = BigInt('1' + '0'.repeat(nextIndex * 3));
-        let diff = nextValue - num;
-        if (diff > 0n) {
-            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
-        }
-    }
-    
-    // Если мы на БЕСКОНЕЧНОСТИ
-    if (currentIndex >= shortNames.length - 1) {
-        return "♾️ Ты достиг бесконечности!";
-    }
-    
-    // Если дальше некуда
-    return "🎉 Ты на максимальном уровне!";
-}
-
-// ИЛЛЮЗИОНИРОВАНИЕ НА ПОЛНЫЙ ЭКРАН
+// Иллюзия
 let illusionActive = false;
-let illusionInterval = null;
-
 function startIllusion() {
     if (illusionActive) return;
     illusionActive = true;
-    
     let stick = document.getElementById('lever-stick');
     let ball = stick.querySelector('.lever-ball');
-    
-    // Мерцание экрана
     let overlay = document.createElement('div');
-    overlay.id = 'illusion-overlay';
-    overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%);
-        z-index: 9999; pointer-events: none;
-        animation: illusionPulse 2s infinite;
-    `;
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,transparent 50%,rgba(255,0,255,0.3) 100%);z-index:9999;pointer-events:none;animation:illusionPulse 2s infinite;';
     document.body.appendChild(overlay);
-    
-    // Текст "НАЖМИ F11"
     let text = document.createElement('div');
-    text.id = 'illusion-text';
-    text.style.cssText = `
-        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-        color: #ff00ff; font-size: 24px; z-index: 10000;
-        animation: textGlow 1s infinite; pointer-events: none;
-        font-family: 'Inter', sans-serif; font-weight: 700;
-    `;
+    text.style.cssText = 'position:fixed;bottom:50px;left:50%;transform:translateX(-50%);color:#ff00ff;font-size:24px;z-index:10000;animation:textGlow 1s infinite;pointer-events:none;font-weight:700;';
     text.innerText = 'НАЖМИ F11...';
     document.body.appendChild(text);
-    
-    // Рычаг светится
     if (ball) {
         ball.style.boxShadow = '0 0 50px rgba(255,0,255,1), 0 0 100px rgba(255,0,255,0.8)';
         ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #660066)';
     }
-    
-    // Убираем через 5 секунд
     setTimeout(() => {
-        if (overlay) overlay.remove();
-        if (text) text.remove();
+        overlay.remove();
+        text.remove();
         if (ball) {
             ball.style.boxShadow = '0 4px 12px rgba(255,0,0,0.6)';
             ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
@@ -1062,13 +1026,20 @@ function startIllusion() {
         illusionActive = false;
     }, 5000);
 }
+setInterval(() => { startIllusion(); }, 180000);
+setTimeout(() => { startIllusion(); }, 60000);
 
-// Запускаем иллюзию каждые 3 минуты
-setInterval(() => {
-    startIllusion();
-}, 180000);
+// Обновление реферального UI
+function updateReferralUI() {
+    let refCount = document.getElementById('ref-count');
+    let refBonus = document.getElementById('ref-bonus');
+    let refCode = document.getElementById('ref-code-display');
+    let refTotal = document.getElementById('ref-total');
+    if (refCount) refCount.innerText = referrals.length;
+    if (refBonus) refBonus.innerText = formatBigNumber(referralBonus);
+    if (refCode) refCode.innerText = referralCode;
+    if (refTotal) refTotal.innerText = formatBigNumber(totalReferralEarnings);
+}
 
-// Первый запуск через минуту
-setTimeout(() => {
-    startIllusion();
-}, 60000);
+// Инициализация реферального UI
+setTimeout(() => { updateReferralUI(); }, 1000);
