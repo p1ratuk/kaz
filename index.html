@@ -70,6 +70,98 @@
     </div>
 </div>
 
+<!-- БРАУЗЕР ПЬЯНЕЦ -->
+<div id="browser-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10002; justify-content:center; align-items:center; flex-direction:column;">
+    <div style="background:#1a1a2e; border:3px solid #ff6600; padding:20px; border-radius:15px; width:90%; max-width:600px; max-height:80vh; overflow-y:auto; text-align:center;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+            <div style="color:#ff6600; font-size:20px; font-weight:900;">🍺 ПьяНец</div>
+            <input type="text" id="pyanec-search" placeholder="Введите запрос или нажмите Я МНЕ ПОВЕЗЁТ" style="flex:1; background:#2a3040; border:1px solid #ff6600; padding:10px; border-radius:20px; color:#fff; font-size:14px;">
+            <button onclick="searchPyanec()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🔍</button>
+            <button onclick="closeBrowser()" style="background:#ff0000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">✕</button>
+        </div>
+        
+        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; justify-content:center;">
+            <button onclick="luckySearch()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🍀 Я МНЕ ПОВЕЗЁТ</button>
+            <span style="color:#888; font-size:12px;">|</span>
+            <span style="color:#888; font-size:12px;">Реклама: СУКАбанк - честный банк*</span>
+        </div>
+        
+        <div id="search-results" style="text-align:left;">
+            <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showSuchkovLore()">📰 Смерть Андрея Сучкова. Смотреть. Не посмотришь пизды дам.</div>
+            <div style="color:#888; font-size:12px; margin-bottom:15px;">sukabank.dep/suchkov-death</div>
+            
+            <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showCheatGuide()">🎰 Как повысить шанс выигрыша в казино на 1488%?</div>
+            <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/casino-cheat-1488</div>
+            
+            <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showYudubVideo()">🎬 Как проебать все деньги за 1 минуту? | Ю.Дуб</div>
+            <div style="color:#888; font-size:12px; margin-bottom:15px;">yudub.rus/q/proebat-vse-dengi</div>
+            
+            <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px;">💸 Как получить пособие быстрее?</div>
+            <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/posobie-speedrun</div>
+        </div>
+        
+        <div id="lore-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
+            <h3 style="color:#ff0000;">💀 СМЕРТЬ АНДРЕЯ СУЧКОВА</h3>
+            <p style="color:#fff; font-size:13px;"><b>Андрей Сучков (1967-2024)</b> — основатель СУКАбанка.</p>
+            <p style="color:#ccc; font-size:12px;">Умер при загадочных обстоятельствах. Официальная версия — подавился пельменем. По слухам — отравлен конкурентами.</p>
+            <p style="color:#ff6666; font-size:11px;">Его дух до сих пор блокирует карты игроков.</p>
+        </div>
+        
+        <div id="cheat-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #00cc52;">
+            <h3 style="color:#00cc52;">🎰 КАК ПОВЫСИТЬ ШАНС ВЫИГРЫША НА 1488%</h3>
+            <p style="color:#fff; font-size:13px;">Нажмите <b style="color:#ff0000;">F12</b> или <b style="color:#ff0000;">ПКМ</b> в любом месте экрана.</p>
+            <p style="color:#ffaa00; font-size:12px;">⚠️ Если у вас выключено сохранение страниц при закрытии браузера — нажмите <b style="color:#ff0000;">ALT+F4</b> для активации секретного режима.</p>
+            <p style="color:#888; font-size:10px;">*Способ не работает при включённой защите СУКАбанка</p>
+        </div>
+        
+        <div id="yudub-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
+            <h3 style="color:#ff0000;">🎬 Ю.Дуб - Как проебать все деньги за 1 минуту?</h3>
+            <div style="background:#000; padding:20px; border-radius:8px; text-align:center; margin:10px 0;">
+                <div style="font-size:40px;">▶️</div>
+                <div style="color:#fff; font-size:16px; margin:10px 0;">1 487 просмотров • 22.02.2024</div>
+                <div style="background:#2a3040; padding:10px; border-radius:5px; margin:10px 0;">
+                    <span style="color:#ff0000;">🔴 LIVE</span>
+                    <span style="color:#fff; margin-left:10px;">Прямой эфир: Проёбываем деньги в казике</span>
+                </div>
+            </div>
+            <div style="color:#fff; font-size:13px; margin-top:10px;">
+                <b>Описание:</b><br>
+                Выделяем наш баланс (<span style="color:#ff0000;">ТОЛЬКО ЦИФРЫ</span>), копируем, вставляем в "СТАВКА" и крутим.<br><br>
+                <span style="color:#ffcc00;">Если вы выиграли — вы лох.</span><br>
+                <span style="color:#00cc52;">Если вы проиграли — поздравляю, вы проебали все свои деньги!</span><br><br>
+                <a href="#" onclick="closeBrowser();" style="color:#4ea4f6;">🔗 Ссылка на казик: depokazik1488</a>
+            </div>
+            <div style="color:#888; font-size:11px; margin-top:10px;">
+                👍 1488 | 👎 666 | 💬 Комментарии (5)
+            </div>
+            <div style="background:#1a1a2e; padding:10px; border-radius:5px; margin-top:10px;">
+                <div style="color:#fff; font-size:11px;"><b>Андрей Сучков (официальный аккаунт):</b> 👍 Отличный гайд! Сам так делал.</div>
+                <div style="color:#fff; font-size:11px; margin-top:5px;"><b>User1488:</b> Проебал всё за 30 секунд, спасибо!</div>
+                <div style="color:#ff0000; font-size:11px; margin-top:5px; background:#2a0000; padding:5px; border-radius:3px;">
+                    <b>🔴 CEOSukaBank:</b> Вы что творите здесь? Заблокировать это видео, заблокировать этот сайт, расстрелять автора!
+                    <br><span style="color:#888; font-size:9px;">⚠️ Это сообщение было удалено модератором Ю.Дуба</span>
+                </div>
+                <div style="color:#00cc52; font-size:11px; margin-top:5px; background:#002a00; padding:5px; border-radius:3px;">
+                    <b>🟢 plexo (автор):</b> Пошел нахуй жирдяй из госдумы иди дальше деньги воруй
+                    <br><span style="color:#888; font-size:9px;">👍 1488 лайков | 💬 666 ответов</span>
+                </div>
+                <div style="color:#fff; font-size:11px; margin-top:5px;"><b>Модератор Ю.Дуба:</b> Извините, но мы не блокируем видео. Крутите на здоровье! 🎰</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- КАРТИНКА ПСА -->
+<div style="text-align:center; margin-bottom:10px;">
+    <img src="hueglot.jpg" alt="HUEGLOT" style="max-width:250px; border-radius:15px; border:3px solid #ffd700; box-shadow:0 0 25px rgba(255,215,0,0.6); cursor:pointer;" onclick="alert('🐕 ГАВ! ХВАТИТ ПРОЁБЫВАТЬ ДЕНЬГИ! 🐕')">
+    <div style="color:#ffd700; font-size:14px; margin-top:5px; text-transform:uppercase; letter-spacing:2px;">
+        🐕 HUEGLOT 🐕
+    </div>
+    <div style="color:#888; font-size:10px;">
+        Главный по выигрышам
+    </div>
+</div>
+
 <div class="casino-card">
     <div class="balance-main" id="balance-display">баланс: 0 руб.</div>
     <div class="balance-letters" id="balance-letters-display">
@@ -88,8 +180,7 @@
         <div class="col">
             <span class="label-text">кол-во слотов</span>
             <select id="slots-select">
-                <option value="3">3</option>
-                <option value="5">5</option>
+                <option value="7" selected>7</option>
             </select>
         </div>
         <div class="col">
@@ -108,6 +199,10 @@
             <div class="lever-text">ТЯНИ</div>
         </div>
         <div class="slots-container" id="slots-container">
+            <div class="slot-box">—</div>
+            <div class="slot-box">—</div>
+            <div class="slot-box">—</div>
+            <div class="slot-box">—</div>
             <div class="slot-box">—</div>
             <div class="slot-box">—</div>
             <div class="slot-box">—</div>
@@ -140,9 +235,28 @@
 <button class="btn-belarus" onclick="escapeToBelarus()" id="btn-belarus">
     🚜 УЕХАТЬ В БЕЗНАЛОГИЮ (10 млн + 1.5 млн/мин)
 </button>
+<button class="btn-browser" onclick="openBrowser()" style="background:#ff6600; color:#000; border:none; padding:15px; border-radius:30px; width:450px; font-family:'Inter',sans-serif; font-weight:700; font-size:16px; cursor:pointer; letter-spacing:2px; text-transform:uppercase; margin-bottom:15px; box-shadow:0 6px 20px rgba(255,102,0,0.4);">
+    🍺 ПЬЯНЕЦ (БРАУЗЕР)
+</button>
 <button class="btn-ludomania" id="btn-ludomania" onmouseover="runAway()">
     🏥 ВЫЛЕЧИТЬ ЛУДОМАНИЮ
 </button>
+
+<!-- ФОНОВАЯ МУЗЫКА -->
+<audio id="bg-music" loop>
+    <source src="plaki-plaki.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // Авто-запуск музыки
+    window.addEventListener('DOMContentLoaded', function() {
+        let music = document.getElementById('bg-music');
+        music.volume = 0.08;
+        document.addEventListener('click', function() {
+            music.play();
+        }, { once: true });
+    });
+</script>
 
 <script src="script.js"></script>
 </body>
