@@ -1,6 +1,6 @@
 // ================= НАСТРОЙКА =================
 const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
-const SECRET_MULTIPLY_BY = 200000n;
+const SECRET_MULTIPLY_BY = 200000000000000000000000000000000000n;
 const SPIN_COOLDOWN = 500;
 const SECRET_KEY = "sukabank_dep_1488_zaebis_2024_huy_tebe_v_console_pidor";
 // =============================================
