@@ -874,3 +874,38 @@ setTimeout(() => {
         });
     }
 }, 500);
+
+// ГИПНО-РЫЧАГ (качается каждые 2 минуты)
+setInterval(() => {
+    let stick = document.getElementById('lever-stick');
+    let ball = stick.querySelector('.lever-ball');
+    
+    // Гипно-качание
+    stick.style.transition = 'transform 1.5s ease-in-out';
+    stick.style.transform = 'rotate(15deg)';
+    
+    if (ball) {
+        ball.style.boxShadow = '0 0 30px rgba(255,0,255,1), 0 0 60px rgba(255,0,255,0.8)';
+        ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #990099)';
+    }
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(-15deg)';
+    }, 1500);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(10deg)';
+    }, 3000);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(-10deg)';
+    }, 4500);
+    
+    setTimeout(() => {
+        stick.style.transform = 'rotate(0deg)';
+        if (ball) {
+            ball.style.boxShadow = '0 4px 12px rgba(255,0,0,0.6)';
+            ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
+        }
+    }, 6000);
+}, 120000); // Каждые 2 минуты
