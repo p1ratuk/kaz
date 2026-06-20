@@ -197,3 +197,8 @@ select, input {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
 }
+
+@keyframes hypnoPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,0,255,1); }
+    50% { box-shadow: 0 0 60px rgba(255,0,255,1), 0 0 100px rgba(255,0,255,0.8); }
+}
