@@ -202,3 +202,13 @@ select, input {
     0%, 100% { box-shadow: 0 0 30px rgba(255,0,255,1); }
     50% { box-shadow: 0 0 60px rgba(255,0,255,1), 0 0 100px rgba(255,0,255,0.8); }
 }
+
+@keyframes illusionPulse {
+    0%, 100% { background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%); }
+    50% { background: radial-gradient(circle, transparent 30%, rgba(255,0,255,0.5) 100%); }
+}
+
+@keyframes textGlow {
+    0%, 100% { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; opacity: 1; }
+    50% { text-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff; opacity: 0.5; }
+}
