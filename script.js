@@ -500,9 +500,16 @@ function formatBigNumber(value) {
     
     let groupIndex = Math.floor((length - 1) / 3);
     
-    if (groupIndex >= shortNames.length) {
-        return "дохерархи миллиардов";
-    }
+if (groupIndex >= shortNames.length) {
+    let infinityLevel = groupIndex - shortNames.length + 1;
+    if (infinityLevel === 1) return "♾️ БЕСКОНЕЧНОСТЬ";
+    if (infinityLevel === 2) return "♾️♾️ ДВЕ БЕСКОНЕЧНОСТИ";
+    if (infinityLevel === 3) return "♾️♾️♾️ ТРИ БЕСКОНЕЧНОСТИ";
+    if (infinityLevel === 1000) return "♾️×1000 ТЫСЯЧА БЕСКОНЕЧНОСТЕЙ";
+    if (infinityLevel === 1000000) return "♾️×1M МИЛЛИОН БЕСКОНЕЧНОСТЕЙ";
+    if (infinityLevel >= 1000000000) return "♾️ БЕСКОНЕЧНОСТЬ БЕСКОНЕЧНОСТИ ♾️";
+    return `♾️×${infinityLevel} БЕСКОНЕЧНОСТЕЙ`;
+}
     
     let mainPartLength = length % 3 === 0 ? 3 : length % 3;
     let mainPart = str.slice(0, mainPartLength);
