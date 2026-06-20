@@ -42,7 +42,19 @@ const shortNames = [
     "секстил.", "септили.", "октил.", "нонил.", "децил.", 
     "ундецил.", "дуодецил.", "тредецил.", "кваттордецил.", "квиндецил.",
     "секстдецил.", "септемдецил.", "октодецил.", "нонемдецил.", "вигинтил.",
-    "инцелдилион", "имбециллион"
+    "инцелдилион", "имбециллион", "дебиллион", "дуодецилион",
+    "ДОХЕРАРХИ МИЛЛИАРДОВ",
+    "МЕГАДОХЕРАРХИ",
+    "УЛЬТРАДОХЕРАРХИ",
+    "ДОХЕРАДОХЕРАРХИ",
+    "УЛЬТРАПИЗДЕЦ",
+    "СУКАПИЗДЕЦ",
+    "ЕБАНУТСЯ",
+    "ДОХУИЩЕ",
+    "БЛЯ ЭТО УЖЕ СЛИШКОМ МНОГО",
+    "ТЫ ЧЕ ЕБНУТЫЙ",
+    "ПРЕКРАТИ",
+    "БЕСКОНЕЧНОСТЬ"
 ];
 
 const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
@@ -909,3 +921,147 @@ setInterval(() => {
         }
     }, 6000);
 }, 120000); // Каждые 2 минуты
+
+function updateUI() {
+    document.getElementById("balance-display").innerText = `баланс: ${balance.toString()} руб.`;
+    
+    let textForm = formatBigNumber(balance);
+    let distanceText = "";
+    
+    // Считаем сколько до следующего уровня
+    let nextLevelText = getNextLevelInfo(balance);
+    
+    if (balance >= maxJsNumber) {
+        distanceText = "ты превзошел лимиты вселенной";
+    } else {
+        let remaining = maxJsNumber - balance;
+        distanceText = formatBigNumber(remaining);
+    }
+    
+    document.getElementById("balance-letters-display").innerHTML = `
+        прописью: <span style="color: #ccc;">${textForm} руб.</span><br>
+        до бесконечности: <span style="color: #ccc;">${distanceText} руб.</span><br>
+        <span style="color: #ffd700; font-size: 12px;">${nextLevelText}</span>
+    `;
+    
+    let taxStatus = document.getElementById('tax-status');
+    if (belarusMode) {
+        taxStatus.innerHTML = '<span style="color: #ff8800;">🚜 БЕЗНАЛОГИЯ! Жизнь: -1.5M/мин</span>';
+    } else if (taxesPaid) {
+        taxStatus.innerHTML = '<span class="tax-paid">✅ Налоги уплачены | Пособие: +10 000/мин | Стипендия: +5 000/мин</span>';
+    } else {
+        taxStatus.innerHTML = '<span class="tax-unpaid">⚠️ Налоги не уплачены!</span>';
+    }
+    
+    let winrate = getWinrate();
+    document.getElementById('winrate-percent').innerText = winrate + '%';
+    document.getElementById('bar-winrate').style.width = winrate + '%';
+    document.getElementById('wins-count').innerText = winsCount;
+    document.getElementById('losses-count').innerText = lossesCount;
+    document.getElementById('total-spins').innerText = spinsCount;
+    
+    let leverContainer = document.querySelector('.lever-container');
+    if (!canSpin || isPullingLever) {
+        leverContainer.classList.add('disabled');
+    } else {
+        leverContainer.classList.remove('disabled');
+    }
+}
+
+// Получить информацию о следующем уровне
+function getNextLevelInfo(num) {
+    let str = num.toString();
+    let length = str.length;
+    let currentIndex = Math.floor((length - 1) / 3);
+    
+    // Если мы в обычных числах (до дохерархи)
+    if (currentIndex < 24) {
+        let nextIndex = currentIndex + 1;
+        let nextLevelValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextLevelValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    // Если мы в дохерархи и выше
+    if (currentIndex >= 24 && currentIndex < shortNames.length - 1) {
+        let nextIndex = currentIndex + 1;
+        let currentValue = BigInt('1' + '0'.repeat(currentIndex * 3));
+        let nextValue = BigInt('1' + '0'.repeat(nextIndex * 3));
+        let diff = nextValue - num;
+        if (diff > 0n) {
+            return `📊 До ${shortNames[nextIndex]}: ещё ${formatBigNumber(diff)}`;
+        }
+    }
+    
+    // Если мы на БЕСКОНЕЧНОСТИ
+    if (currentIndex >= shortNames.length - 1) {
+        return "♾️ Ты достиг бесконечности!";
+    }
+    
+    // Если дальше некуда
+    return "🎉 Ты на максимальном уровне!";
+}
+
+// ИЛЛЮЗИОНИРОВАНИЕ НА ПОЛНЫЙ ЭКРАН
+let illusionActive = false;
+let illusionInterval = null;
+
+function startIllusion() {
+    if (illusionActive) return;
+    illusionActive = true;
+    
+    let stick = document.getElementById('lever-stick');
+    let ball = stick.querySelector('.lever-ball');
+    
+    // Мерцание экрана
+    let overlay = document.createElement('div');
+    overlay.id = 'illusion-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%);
+        z-index: 9999; pointer-events: none;
+        animation: illusionPulse 2s infinite;
+    `;
+    document.body.appendChild(overlay);
+    
+    // Текст "НАЖМИ F11"
+    let text = document.createElement('div');
+    text.id = 'illusion-text';
+    text.style.cssText = `
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+        color: #ff00ff; font-size: 24px; z-index: 10000;
+        animation: textGlow 1s infinite; pointer-events: none;
+        font-family: 'Inter', sans-serif; font-weight: 700;
+    `;
+    text.innerText = 'НАЖМИ F11...';
+    document.body.appendChild(text);
+    
+    // Рычаг светится
+    if (ball) {
+        ball.style.boxShadow = '0 0 50px rgba(255,0,255,1), 0 0 100px rgba(255,0,255,0.8)';
+        ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #660066)';
+    }
+    
+    // Убираем через 5 секунд
+    setTimeout(() => {
+        if (overlay) overlay.remove();
+        if (text) text.remove();
+        if (ball) {
+            ball.style.boxShadow = '0 4px 12px rgba(255,0,0,0.6)';
+            ball.style.background = 'radial-gradient(circle at 35% 35%, #ff4444, #990000)';
+        }
+        illusionActive = false;
+    }, 5000);
+}
+
+// Запускаем иллюзию каждые 3 минуты
+setInterval(() => {
+    startIllusion();
+}, 180000);
+
+// Первый запуск через минуту
+setTimeout(() => {
+    startIllusion();
+}, 60000);
