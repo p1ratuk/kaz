@@ -1710,3 +1710,144 @@ function placeBanner() {
 }
 
 console.log('✅ Птич.ТВ загружен! 🎥');
+
+// ==================== УПРАВЛЕНИЕ БАННЕРАМИ ====================
+let bannerVisibility = {
+    banner1: true,
+    banner2: true,
+    banner3: true,
+    banner4: true
+};
+
+function toggleBannerVisibility(bannerNum) {
+    if (streamerStats.banners < bannerNum) {
+        alert(`📢 У тебя только ${streamerStats.banners} баннеров! Сначала поставь баннер!`);
+        return;
+    }
+    
+    bannerVisibility['banner' + bannerNum] = !bannerVisibility['banner' + bannerNum];
+    let status = bannerVisibility['banner' + bannerNum] ? '✅ ВИДЕН' : '❌ СКРЫТ';
+    alert(`📢 Баннер #${bannerNum}: ${status}`);
+    updateBannerDisplay();
+}
+
+function updateBannerDisplay() {
+    // Обновляем отображение баннеров на стриме
+    let activeBanners = 0;
+    for (let i = 1; i <= 4; i++) {
+        if (bannerVisibility['banner' + i] && streamerStats.banners >= i) {
+            activeBanners++;
+        }
+    }
+    streamerStats.activeBanners = activeBanners;
+    saveStreamerStats();
+}
+
+function showBannerSettings() {
+    let menu = document.createElement('div');
+    menu.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;';
+    
+    let html = '<div style="color:#ff00ff;font-size:30px;margin-bottom:20px;">📢 УПРАВЛЕНИЕ БАННЕРАМИ</div>';
+    
+    let bannerNames = [
+        "🔥 14XBET88 — СТАВКИ НА СПОРТ!",
+        "🎰 ДЕПОКАЗИК 1488 — КРУТИ СЕЙЧАС!",
+        "🐕 ХУЕГЛОТ ОДОБРЯЕТ ЭТОТ СТРИМ",
+        "💸 ЗАРАБОТАЙ ДОХЕРАРХИ ЗА 3 МИНУТЫ!"
+    ];
+    
+    for (let i = 1; i <= 4; i++) {
+        let isSet = streamerStats.banners >= i;
+        let isVisible = bannerVisibility['banner' + i];
+        let status = !isSet ? '🚫 Не установлен' : (isVisible ? '✅ Виден' : '❌ Скрыт');
+        let buttonText = isVisible ? '❌ СКРЫТЬ' : '✅ ПОКАЗАТЬ';
+        
+        html += `
+            <div style="background:#1a1f2e;padding:10px;margin:5px;border-radius:8px;width:400px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="color:#fff;font-size:12px;">Баннер #${i}</div>
+                    <div style="color:#888;font-size:10px;">${bannerNames[i-1]}</div>
+                    <div style="color:#ffd700;font-size:10px;">${status}</div>
+                </div>
+                ${isSet ? `<button onclick="this.parentElement.parentElement.remove();toggleBannerVisibility(${i});showBannerSettings();" style="background:${isVisible ? '#ff0000' : '#00cc52'};color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;">${buttonText}</button>` : '<span style="color:#888;">🚫</span>'}
+            </div>
+        `;
+    }
+    
+    html += '<button onclick="this.parentElement.remove();" style="background:#555;color:#fff;border:none;padding:10px 30px;border-radius:5px;cursor:pointer;margin-top:15px;">❌ ЗАКРЫТЬ</button>';
+    
+    menu.innerHTML = html;
+    document.body.appendChild(menu);
+}
+
+// Модифицированная функция startStream с учётом видимости баннеров
+function startStreamWithBanners() {
+    if (streamerStats.isStreaming) {
+        alert("🎥 Стрим уже идёт!");
+        return;
+    }
+    
+    streamerStats.isStreaming = true;
+    streamerStats.streamCount++;
+    streamerStats.viewers += Math.floor(Math.random() * 20) + 5;
+    let activeViewers = Math.floor(streamerStats.viewers * 0.8);
+    
+    let multiplier = 1n;
+    if (activeViewers >= 100) multiplier = 2n;
+    if (activeViewers >= 200) multiplier = 4n;
+    if (activeViewers >= 500) multiplier = 8n;
+    if (activeViewers >= 1000) multiplier = 10n;
+    
+    // Считаем только ВИДИМЫЕ баннеры
+    let visibleBanners = 0;
+    for (let i = 1; i <= 4; i++) {
+        if (bannerVisibility['banner' + i] && streamerStats.banners >= i) {
+            visibleBanners++;
+        }
+    }
+    
+    for (let i = 0; i < visibleBanners; i++) {
+        multiplier *= 2n;
+    }
+    
+    alert(`🎥 СТРИМ ЗАПУЩЕН!\n👥 Зрителей: ${activeViewers}\n📢 Видимых баннеров: ${visibleBanners}/${streamerStats.banners}\n📊 Множитель: x${multiplier}\n⏰ Жди 10 секунд...`);
+    
+    setTimeout(() => {
+        streamerStats.isStreaming = false;
+        let reward = balance * multiplier - balance;
+        if (reward < 0n) reward = 0n;
+        balance = balance * multiplier;
+        streamerStats.totalEarned += reward;
+        
+        alert(`🎥 СТРИМ ЗАВЕРШЁН!\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
+        
+        saveStreamerStats();
+        saveGame();
+        updateUI();
+    }, 10000);
+}
+
+// Добавь кнопку в меню Птич.ТВ
+function startWorkAsStreamer() {
+    if (balance < 0n) {
+        alert("😭 У тебя отрицательный баланс!\n🎥 Придётся идти работать стримером на Птич.тв!");
+    }
+    
+    let menu = document.createElement('div');
+    menu.id = 'streamer-menu';
+    menu.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;';
+    menu.innerHTML = `
+        <div style="color:#ff00ff;font-size:40px;font-weight:900;margin-bottom:20px;">🎥 ПТИЧ.ТВ</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">👥 Зрителей: ${streamerStats.viewers}</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">📢 Баннеров: ${streamerStats.banners}/4</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">🎥 Стримов: ${streamerStats.streamCount}</div>
+        <div style="color:#ffd700;font-size:14px;margin-bottom:20px;">💰 Заработано: ${formatBigNumber(streamerStats.totalEarned)}</div>
+        
+        <button onclick="document.getElementById('streamer-menu').remove();startStreamWithBanners();" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">🎥 ЗАПУСТИТЬ СТРИМ</button>
+        <button onclick="document.getElementById('streamer-menu').remove();startAfkStream();" style="background:#8800ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">😴 АФК-СТРИМ</button>
+        <button onclick="document.getElementById('streamer-menu').remove();placeBanner();" style="background:#ff6600;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">📢 ПОСТАВИТЬ БАННЕР</button>
+        <button onclick="document.getElementById('streamer-menu').remove();showBannerSettings();" style="background:#ffd700;color:#000;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">👁️ ВИДИМОСТЬ БАННЕРОВ</button>
+        <button onclick="document.getElementById('streamer-menu').remove();" style="background:#555;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;">❌ ЗАКРЫТЬ</button>
+    `;
+    document.body.appendChild(menu);
+}
