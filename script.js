@@ -168,7 +168,8 @@ let achievements = {
     "huyhuy_combo": { name: "💀 ХУЙХУЙ", desc: "Собрать комбинацию ХУЙХУЙ", unlocked: false, icon: "💀", date: null },
     "huesos_combo": { name: "🍆 ХУЕСОС", desc: "Собрать комбинацию ХУЕСОС", unlocked: false, icon: "🍆", date: null },
     "shluha_combo": { name: "💋 ШЛЮХА", desc: "Собрать комбинацию ШЛЮХА", unlocked: false, icon: "💋", date: null },
-    "chlen_combo": { name: "🍆 ЧЛЕН", desc: "Собрать комбинацию с ЧЛЕН", unlocked: false, icon: "🍆", date: null }
+    "chlen_combo": { name: "🍆 ЧЛЕН", desc: "Собрать комбинацию с ЧЛЕН", unlocked: false, icon: "🍆", date: null },
+    "hueglot_combo": { name: "🐕 ХУЕГЛОТ", desc: "Собрать комбинацию ХУЕГЛОТ", unlocked: false, icon: "🐕", date: null }
 };
 
 function loadGame() {
@@ -765,24 +766,30 @@ function spin() {
     
     let resultArr = [];
     
-    // ШАНСЫ: 19% выигрыш, 2% спец-комбо, 79% проигрыш
     let rand = Math.random();
-    let isSpecial = rand < 0.02;    // 2% шанс на спец-комбинацию
-    let isLucky = rand < 0.19;      // 19% шанс на любой выигрыш
+    let isSpecial = rand < 0.02;
+    let isLucky = rand < 0.19;
     
     if (isSpecial) {
         let specialRand = Math.random();
-        if (specialRand < 0.25) {
+        if (specialRand < 0.142) {
             resultArr = "ПИДОРАС".split("");
-        } else if (specialRand < 0.50) {
+        } else if (specialRand < 0.284) {
             resultArr = "ХУЙХУЙ".split("");
             while (resultArr.length < slotsCount) {
                 resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
             }
-        } else if (specialRand < 0.75) {
+        } else if (specialRand < 0.426) {
             resultArr = "ХУЕСОС".split("");
-        } else {
+        } else if (specialRand < 0.568) {
             resultArr = "ШЛЮХА".split("");
+            while (resultArr.length < slotsCount) {
+                resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+            }
+        } else if (specialRand < 0.71) {
+            resultArr = "ХУЕГЛОТ".split("");
+        } else {
+            resultArr = "ЧЛЕН".split("");
             while (resultArr.length < slotsCount) {
                 resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
             }
@@ -848,6 +855,15 @@ function spin() {
             loseStreak = 0;
             unlockAchievement('shluha_combo');
             resultDisplay.innerHTML = `💋 ШЛЮХА! МЕГА-КОМБО x50! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord === "ХУЕГЛОТ") {
+            multiplier = 65n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            unlockAchievement('hueglot_combo');
+            resultDisplay.innerHTML = `🐕 ХУЕГЛОТ! МЕГА-КОМБО x65! (+${winAmount.toString()} руб.)`;
         } else if (currentWord.includes(target)) {
             multiplier = 15n;
             winAmount = bet * multiplier;
@@ -1052,7 +1068,7 @@ setTimeout(() => {
     }
 }, 500);
 
-// ГИПНО-РЫЧАГ
+// Гипно-рычаг
 setInterval(() => {
     let stick = document.getElementById('lever-stick');
     if (!stick) return;
@@ -1078,7 +1094,7 @@ setInterval(() => {
     }, 6000);
 }, 120000);
 
-// ИЛЛЮЗИЯ F11
+// Иллюзия F11
 let illusionActive = false;
 
 function startIllusion() {
@@ -1091,12 +1107,22 @@ function startIllusion() {
     
     let overlay = document.createElement('div');
     overlay.id = 'illusion-overlay';
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,transparent 50%,rgba(255,0,255,0.3) 100%);z-index:9999;pointer-events:none;animation:illusionPulse 2s infinite;';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%);
+        z-index: 9999; pointer-events: none;
+        animation: illusionPulse 2s infinite;
+    `;
     document.body.appendChild(overlay);
     
     let text = document.createElement('div');
     text.id = 'illusion-text';
-    text.style.cssText = 'position:fixed;bottom:50px;left:50%;transform:translateX(-50%);color:#ff00ff;font-size:24px;z-index:10000;animation:textGlow 1s infinite;pointer-events:none;font-family:Inter,sans-serif;font-weight:700;';
+    text.style.cssText = `
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+        color: #ff00ff; font-size: 24px; z-index: 10000;
+        animation: textGlow 1s infinite; pointer-events: none;
+        font-family: 'Inter', sans-serif; font-weight: 700;
+    `;
     text.innerText = 'НАЖМИ F11...';
     document.body.appendChild(text);
     
@@ -1119,14 +1145,11 @@ function startIllusion() {
 setInterval(() => { startIllusion(); }, 180000);
 setTimeout(() => { startIllusion(); }, 60000);
 
-setTimeout(() => { updateReferralUI(); }, 1000);
-
 // ==================== ПЬЯНЕЦ БРАУЗЕР ====================
 
 function openBrowser() {
     let overlay = document.getElementById('browser-overlay');
     if (!overlay) {
-        // Создаём браузер если его нет
         overlay = document.createElement('div');
         overlay.id = 'browser-overlay';
         overlay.style.cssText = `
@@ -1140,7 +1163,7 @@ function openBrowser() {
             <div style="background:#1a1a2e; border:3px solid #ff6600; padding:20px; border-radius:15px; width:90%; max-width:600px; max-height:80vh; overflow-y:auto; text-align:center;">
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
                     <div style="color:#ff6600; font-size:20px; font-weight:900;">🍺 ПьяНец</div>
-                    <input type="text" id="pyanec-search" placeholder="Введите запрос или нажмите Я МНЕ ПОВЕЗЁТ" style="flex:1; background:#2a3040; border:1px solid #ff6600; padding:10px; border-radius:20px; color:#fff; font-size:14px;" onkeypress="if(event.key==='Enter')searchPyanec()">
+                    <input type="text" id="pyanec-search" placeholder="Поиск..." style="flex:1; background:#2a3040; border:1px solid #ff6600; padding:10px; border-radius:20px; color:#fff; font-size:14px;" onkeypress="if(event.key==='Enter')searchPyanec()">
                     <button onclick="searchPyanec()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🔍</button>
                     <button onclick="closeBrowser()" style="background:#ff0000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">✕</button>
                 </div>
@@ -1161,8 +1184,11 @@ function openBrowser() {
                     <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showYudubVideo()">🎬 Как проебать все деньги за 1 минуту? | Ю.Дуб</div>
                     <div style="color:#888; font-size:12px; margin-bottom:15px;">yudub.rus/q/proebat-vse-dengi</div>
                     
-                    <div style="color:#ff0000; font-size:22px; margin-bottom:5px; cursor:pointer; font-weight:900; animation: betBlink 0.5s infinite;" onclick="open14xbet()">🔥 14XBET88 — СТАВКИ НА СПОРТ! 🔥</div>
+                    <div style="color:#ff0000; font-size:22px; margin-bottom:5px; cursor:pointer; font-weight:900; animation:betBlink 0.5s infinite;" onclick="open14xbet()">🔥 14XBET88 — СТАВКИ НА СПОРТ! 🔥</div>
                     <div style="color:#ff6600; font-size:12px; margin-bottom:15px;">14xbet88.com/stavki-na-sport</div>
+                    
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showRefSys()">👥 Реферальная система (refsys)</div>
+                    <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/refsys</div>
                 </div>
                 
                 <div id="lore-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
@@ -1204,6 +1230,16 @@ function openBrowser() {
                         </div>
                     </div>
                 </div>
+                
+                <div id="refsys-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ffd700;">
+                    <h3 style="color:#ffd700;">👥 РЕФЕРАЛЬНАЯ СИСТЕМА</h3>
+                    <p style="color:#fff;">Твой код: <b id="ref-code-display" style="color:#ffd700;"></b></p>
+                    <p style="color:#fff;">Друзей приведено: <b id="ref-count-display">0</b></p>
+                    <p style="color:#fff;">Бонус от проигрышей: <b id="ref-bonus-display">0 руб.</b></p>
+                    <p style="color:#fff;">Всего заработано: <b id="ref-total-display">0 руб.</b></p>
+                    <button onclick="copyReferral()" style="background:#ffd700; color:#000; border:none; padding:10px; border-radius:5px; cursor:pointer; margin-top:10px;">📋 Скопировать ссылку</button>
+                    <button onclick="claimReferralBonus()" style="background:#00cc52; color:#000; border:none; padding:10px; border-radius:5px; cursor:pointer; margin-top:5px;">💰 Забрать бонус</button>
+                </div>
             </div>
         `;
     }
@@ -1212,6 +1248,12 @@ function openBrowser() {
     document.getElementById('lore-content').style.display = 'none';
     document.getElementById('cheat-content').style.display = 'none';
     document.getElementById('yudub-content').style.display = 'none';
+    document.getElementById('refsys-content').style.display = 'none';
+    
+    document.getElementById('ref-code-display').innerText = referralCode;
+    document.getElementById('ref-count-display').innerText = referrals.length;
+    document.getElementById('ref-bonus-display').innerText = formatBigNumber(referralBonus);
+    document.getElementById('ref-total-display').innerText = formatBigNumber(totalReferralEarnings);
 }
 
 function closeBrowser() {
@@ -1229,6 +1271,8 @@ function searchPyanec() {
         open14xbet();
     } else if (query.includes('проебать') || query.includes('юдуб')) {
         showYudubVideo();
+    } else if (query.includes('реф') || query.includes('refsys')) {
+        showRefSys();
     } else {
         alert("🍺 ПьяНец не нашёл результатов. Попробуйте 'Я МНЕ ПОВЕЗЁТ'!");
     }
@@ -1245,6 +1289,12 @@ function luckySearch() {
     let msg = messages[Math.floor(Math.random() * messages.length)];
     if (msg.includes('14XBET88')) {
         if (confirm(msg)) open14xbet();
+    } else if (msg.includes('ALT+F4')) {
+        alert(msg);
+        balance += 1488n;
+        saveGame();
+        updateUI();
+        alert('✅ +1488 рублей! (За любую клавишу, не только ALT+F4 😂)');
     } else {
         alert(msg);
     }
@@ -1254,18 +1304,32 @@ function showSuchkovLore() {
     document.getElementById('lore-content').style.display = 'block';
     document.getElementById('cheat-content').style.display = 'none';
     document.getElementById('yudub-content').style.display = 'none';
+    document.getElementById('refsys-content').style.display = 'none';
 }
 
 function showCheatGuide() {
     document.getElementById('cheat-content').style.display = 'block';
     document.getElementById('lore-content').style.display = 'none';
     document.getElementById('yudub-content').style.display = 'none';
+    document.getElementById('refsys-content').style.display = 'none';
 }
 
 function showYudubVideo() {
     document.getElementById('yudub-content').style.display = 'block';
     document.getElementById('lore-content').style.display = 'none';
     document.getElementById('cheat-content').style.display = 'none';
+    document.getElementById('refsys-content').style.display = 'none';
+}
+
+function showRefSys() {
+    document.getElementById('refsys-content').style.display = 'block';
+    document.getElementById('lore-content').style.display = 'none';
+    document.getElementById('cheat-content').style.display = 'none';
+    document.getElementById('yudub-content').style.display = 'none';
+    document.getElementById('ref-code-display').innerText = referralCode;
+    document.getElementById('ref-count-display').innerText = referrals.length;
+    document.getElementById('ref-bonus-display').innerText = formatBigNumber(referralBonus);
+    document.getElementById('ref-total-display').innerText = formatBigNumber(totalReferralEarnings);
 }
 
 // ==================== 14XBET88 ====================
@@ -1279,6 +1343,7 @@ function open14xbet() {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.95); z-index: 99999;
         display: flex; justify-content: center; align-items: center; flex-direction: column;
+        overflow-y: auto;
     `;
     menu.innerHTML = `
         <div style="color:#ff0000; font-size:50px; font-weight:900; text-shadow: 0 0 20px red; animation: betPulse 0.3s infinite; margin-bottom:10px;">
@@ -1296,6 +1361,11 @@ function open14xbet() {
         <button onclick="document.getElementById('bet-menu').remove(); footballMatch();" 
                 style="background:#00aa00; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
             ⚽ ФУТБОЛ (x2 / x5)
+        </button>
+        
+        <button onclick="document.getElementById('bet-menu').remove(); basketballMatch();" 
+                style="background:#ff8800; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
+            🏀 БАСКЕТБОЛ (x2 / x3)
         </button>
         
         <button onclick="document.getElementById('bet-menu').remove(); cockFight();" 
@@ -1317,18 +1387,21 @@ function open14xbet() {
     `;
     document.body.appendChild(menu);
     
-    let style = document.createElement('style');
-    style.textContent = `
-        @keyframes betPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes betBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-    `;
-    document.head.appendChild(style);
+    if (!document.getElementById('bet-style')) {
+        let style = document.createElement('style');
+        style.id = 'bet-style';
+        style.textContent = `
+            @keyframes betPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            @keyframes betBlink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 function horseRace() {
@@ -1365,6 +1438,16 @@ function horseRace() {
 }
 
 function footballMatch() {
+    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls"];
+    let team1 = teams[Math.floor(Math.random() * teams.length)];
+    let team2 = teams[Math.floor(Math.random() * teams.length)];
+    while (team1 === team2) {
+        team2 = teams[Math.floor(Math.random() * teams.length)];
+    }
+    
+    let score1 = Math.floor(Math.random() * 5);
+    let score2 = Math.floor(Math.random() * 5);
+    
     let bet = prompt("💰 Сумма ставки:", "1000");
     if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
     bet = BigInt(bet);
@@ -1372,17 +1455,48 @@ function footballMatch() {
     
     balance -= bet;
     
-    let team1 = Math.floor(Math.random() * 5);
-    let team2 = Math.floor(Math.random() * 5);
+    let choice = prompt(`⚽ ФУТБОЛ\n\n${team1} vs ${team2}\nСчёт: ${score1}:${score2}\n\nСтавка на:\n1. Победа ${team1} (x2)\n2. Ничья (x5)\n3. Победа ${team2} (x2)`);
     
-    let choice = prompt(`⚽ Счёт: ${team1}:${team2}\n\nСтавка на:\n1. Победа 1 (x2)\n2. Ничья (x5)\n3. Победа 2 (x2)`);
-    
-    let result = team1 > team2 ? 1 : team1 < team2 ? 3 : 2;
+    let result = score1 > score2 ? 1 : score1 < score2 ? 3 : 2;
     
     if (parseInt(choice) === result) {
         let multiplier = result === 2 ? 5n : 2n;
         balance += bet * multiplier;
         alert(`⚽ УГАДАЛ! x${multiplier}! Выигрыш: ${formatBigNumber(bet * multiplier)}`);
+    } else {
+        alert(`💀 МИМО! Проебал ${formatBigNumber(bet)}!`);
+    }
+    
+    saveGame();
+    updateUI();
+}
+
+function basketballMatch() {
+    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls"];
+    let team1 = teams[Math.floor(Math.random() * teams.length)];
+    let team2 = teams[Math.floor(Math.random() * teams.length)];
+    while (team1 === team2) {
+        team2 = teams[Math.floor(Math.random() * teams.length)];
+    }
+    
+    let score1 = Math.floor(Math.random() * 120);
+    let score2 = Math.floor(Math.random() * 120);
+    
+    let bet = prompt("💰 Сумма ставки:", "1000");
+    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    bet = BigInt(bet);
+    if (balance < bet) return alert("❌ Не хватает денег!");
+    
+    balance -= bet;
+    
+    let choice = prompt(`🏀 БАСКЕТБОЛ\n\n${team1} vs ${team2}\nСчёт: ${score1}:${score2}\n\nСтавка на:\n1. Победа ${team1} (x2)\n2. Ничья (x3)\n3. Победа ${team2} (x2)`);
+    
+    let result = score1 > score2 ? 1 : score1 < score2 ? 3 : 2;
+    
+    if (parseInt(choice) === result) {
+        let multiplier = result === 2 ? 3n : 2n;
+        balance += bet * multiplier;
+        alert(`🏀 УГАДАЛ! x${multiplier}! Выигрыш: ${formatBigNumber(bet * multiplier)}`);
     } else {
         alert(`💀 МИМО! Проебал ${formatBigNumber(bet)}!`);
     }
@@ -1418,3 +1532,32 @@ function cockFight() {
     saveGame();
     updateUI();
 }
+
+// Бинд ALT на 1488 рублей
+let altPressed = false;
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Alt' && !altPressed) {
+        e.preventDefault();
+        altPressed = true;
+        
+        balance += 1488n;
+        saveGame();
+        updateUI();
+        
+        let div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:10px;right:10px;background:#00cc52;color:#000;padding:10px;border-radius:5px;z-index:9999;font-weight:bold;';
+        div.innerText = '🍀 +1488 руб.! (ALT)';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 1500);
+        
+        setTimeout(() => {
+            altPressed = false;
+        }, 5000);
+    }
+});
+
+// Инициализация реферального UI
+setTimeout(() => {
+    updateReferralUI();
+}, 1000);
