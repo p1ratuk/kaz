@@ -1120,3 +1120,301 @@ setInterval(() => { startIllusion(); }, 180000);
 setTimeout(() => { startIllusion(); }, 60000);
 
 setTimeout(() => { updateReferralUI(); }, 1000);
+
+// ==================== ПЬЯНЕЦ БРАУЗЕР ====================
+
+function openBrowser() {
+    let overlay = document.getElementById('browser-overlay');
+    if (!overlay) {
+        // Создаём браузер если его нет
+        overlay = document.createElement('div');
+        overlay.id = 'browser-overlay';
+        overlay.style.cssText = `
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 10002;
+            justify-content: center; align-items: center; flex-direction: column;
+        `;
+        document.body.appendChild(overlay);
+        
+        overlay.innerHTML = `
+            <div style="background:#1a1a2e; border:3px solid #ff6600; padding:20px; border-radius:15px; width:90%; max-width:600px; max-height:80vh; overflow-y:auto; text-align:center;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <div style="color:#ff6600; font-size:20px; font-weight:900;">🍺 ПьяНец</div>
+                    <input type="text" id="pyanec-search" placeholder="Введите запрос или нажмите Я МНЕ ПОВЕЗЁТ" style="flex:1; background:#2a3040; border:1px solid #ff6600; padding:10px; border-radius:20px; color:#fff; font-size:14px;" onkeypress="if(event.key==='Enter')searchPyanec()">
+                    <button onclick="searchPyanec()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🔍</button>
+                    <button onclick="closeBrowser()" style="background:#ff0000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">✕</button>
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; justify-content:center;">
+                    <button onclick="luckySearch()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🍀 Я МНЕ ПОВЕЗЁТ</button>
+                    <span style="color:#888; font-size:12px;">|</span>
+                    <span style="color:#888; font-size:12px;">Реклама: СУКАбанк - честный банк*</span>
+                </div>
+                
+                <div id="search-results" style="text-align:left;">
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showSuchkovLore()">📰 Смерть Андрея Сучкова. Смотреть. Не посмотришь пизды дам.</div>
+                    <div style="color:#888; font-size:12px; margin-bottom:15px;">sukabank.dep/suchkov-death</div>
+                    
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showCheatGuide()">🎰 Как повысить шанс выигрыша в казино на 1488%?</div>
+                    <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/casino-cheat-1488</div>
+                    
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showYudubVideo()">🎬 Как проебать все деньги за 1 минуту? | Ю.Дуб</div>
+                    <div style="color:#888; font-size:12px; margin-bottom:15px;">yudub.rus/q/proebat-vse-dengi</div>
+                    
+                    <div style="color:#ff0000; font-size:22px; margin-bottom:5px; cursor:pointer; font-weight:900; animation: betBlink 0.5s infinite;" onclick="open14xbet()">🔥 14XBET88 — СТАВКИ НА СПОРТ! 🔥</div>
+                    <div style="color:#ff6600; font-size:12px; margin-bottom:15px;">14xbet88.com/stavki-na-sport</div>
+                </div>
+                
+                <div id="lore-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
+                    <h3 style="color:#ff0000;">💀 СМЕРТЬ АНДРЕЯ СУЧКОВА</h3>
+                    <p style="color:#fff; font-size:13px;"><b>Андрей Сучков (1967-2024)</b> — основатель СУКАбанка.</p>
+                    <p style="color:#ccc; font-size:12px;">Умер при загадочных обстоятельствах. Официальная версия — подавился пельменем. По слухам — отравлен конкурентами.</p>
+                    <p style="color:#ff6666; font-size:11px;">Его дух до сих пор блокирует карты игроков.</p>
+                </div>
+                
+                <div id="cheat-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #00cc52;">
+                    <h3 style="color:#00cc52;">🎰 КАК ПОВЫСИТЬ ШАНС ВЫИГРЫША НА 1488%</h3>
+                    <p style="color:#fff; font-size:13px;">Нажмите <b style="color:#ff0000;">F12</b> или <b style="color:#ff0000;">ПКМ</b> в любом месте экрана.</p>
+                    <p style="color:#ffaa00; font-size:12px;">⚠️ Если у вас выключено сохранение страниц при закрытии браузера — нажмите <b style="color:#ff0000;">ALT+F4</b> для активации секретного режима.</p>
+                    <p style="color:#888; font-size:10px;">*Способ не работает при включённой защите СУКАбанка</p>
+                </div>
+                
+                <div id="yudub-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
+                    <h3 style="color:#ff0000;">🎬 Ю.Дуб - Как проебать все деньги за 1 минуту?</h3>
+                    <div style="background:#000; padding:20px; border-radius:8px; text-align:center; margin:10px 0;">
+                        <div style="font-size:40px;">▶️</div>
+                        <div style="color:#fff; font-size:16px; margin:10px 0;">1 487 просмотров • 22.02.2024</div>
+                    </div>
+                    <div style="color:#fff; font-size:13px; margin-top:10px;">
+                        <b>Описание:</b><br>
+                        Выделяем наш баланс (<span style="color:#ff0000;">ТОЛЬКО ЦИФРЫ</span>), копируем, вставляем в "СТАВКА" и крутим.<br><br>
+                        <span style="color:#ffcc00;">Если вы выиграли — вы лох.</span><br>
+                        <span style="color:#00cc52;">Если вы проиграли — поздравляю, вы проебали все свои деньги!</span>
+                    </div>
+                    <div style="background:#1a1a2e; padding:10px; border-radius:5px; margin-top:10px;">
+                        <div style="color:#fff; font-size:11px;"><b>Андрей Сучков:</b> 👍 Отличный гайд!</div>
+                        <div style="color:#fff; font-size:11px; margin-top:5px;"><b>User1488:</b> Проебал всё за 30 секунд!</div>
+                        <div style="color:#ff0000; font-size:11px; margin-top:5px; background:#2a0000; padding:5px; border-radius:3px;">
+                            <b>🔴 CEOSukaBank:</b> Заблокировать это видео! Расстрелять автора!
+                            <br><span style="color:#888; font-size:9px;">⚠️ Удалено модератором</span>
+                        </div>
+                        <div style="color:#00cc52; font-size:11px; margin-top:5px; background:#002a00; padding:5px; border-radius:3px;">
+                            <b>🟢 plexo (автор):</b> Пошел нахуй жирдяй из госдумы иди дальше деньги воруй
+                            <br><span style="color:#888; font-size:9px;">👍 1488 лайков</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    overlay.style.display = 'flex';
+    document.getElementById('lore-content').style.display = 'none';
+    document.getElementById('cheat-content').style.display = 'none';
+    document.getElementById('yudub-content').style.display = 'none';
+}
+
+function closeBrowser() {
+    let overlay = document.getElementById('browser-overlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+function searchPyanec() {
+    let query = document.getElementById('pyanec-search').value.toLowerCase();
+    if (query.includes('сучков') || query.includes('смерть')) {
+        showSuchkovLore();
+    } else if (query.includes('чит') || query.includes('выигрыш')) {
+        showCheatGuide();
+    } else if (query.includes('ставки') || query.includes('14xbet') || query.includes('спорт')) {
+        open14xbet();
+    } else if (query.includes('проебать') || query.includes('юдуб')) {
+        showYudubVideo();
+    } else {
+        alert("🍺 ПьяНец не нашёл результатов. Попробуйте 'Я МНЕ ПОВЕЗЁТ'!");
+    }
+}
+
+function luckySearch() {
+    let messages = [
+        "🍺 Вам повезло! Вы выиграли бесплатный просмотр рекламы СУКАбанка!",
+        "🍀 Удача рядом! Нажмите ALT+F4 для получения 1488 рублей!",
+        "💀 Вы нашли секретную страницу: 'Как проебать все деньги за 5 минут'",
+        "🎰 Сегодня ваш счастливый день! Идите в казино и поставьте всё на ХУЙ!",
+        "🔥 14XBET88 — СТАВКИ НА СПОРТ! Перейти на сайт?"
+    ];
+    let msg = messages[Math.floor(Math.random() * messages.length)];
+    if (msg.includes('14XBET88')) {
+        if (confirm(msg)) open14xbet();
+    } else {
+        alert(msg);
+    }
+}
+
+function showSuchkovLore() {
+    document.getElementById('lore-content').style.display = 'block';
+    document.getElementById('cheat-content').style.display = 'none';
+    document.getElementById('yudub-content').style.display = 'none';
+}
+
+function showCheatGuide() {
+    document.getElementById('cheat-content').style.display = 'block';
+    document.getElementById('lore-content').style.display = 'none';
+    document.getElementById('yudub-content').style.display = 'none';
+}
+
+function showYudubVideo() {
+    document.getElementById('yudub-content').style.display = 'block';
+    document.getElementById('lore-content').style.display = 'none';
+    document.getElementById('cheat-content').style.display = 'none';
+}
+
+// ==================== 14XBET88 ====================
+
+function open14xbet() {
+    closeBrowser();
+    
+    let menu = document.createElement('div');
+    menu.id = 'bet-menu';
+    menu.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95); z-index: 99999;
+        display: flex; justify-content: center; align-items: center; flex-direction: column;
+    `;
+    menu.innerHTML = `
+        <div style="color:#ff0000; font-size:50px; font-weight:900; text-shadow: 0 0 20px red; animation: betPulse 0.3s infinite; margin-bottom:10px;">
+            14XBET88
+        </div>
+        <div style="color:#ffd700; font-size:16px; margin-bottom:30px; animation: betPulse 0.5s infinite;">
+            СТАВКИ НА СПОРТ! СТАВКИ НА СПОРТ! СТАВКИ НА СПОРТ!
+        </div>
+        
+        <button onclick="document.getElementById('bet-menu').remove(); horseRace();" 
+                style="background:#8B4513; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
+            🐴 КОННЫЕ СКАЧКИ (x5)
+        </button>
+        
+        <button onclick="document.getElementById('bet-menu').remove(); footballMatch();" 
+                style="background:#00aa00; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
+            ⚽ ФУТБОЛ (x2 / x5)
+        </button>
+        
+        <button onclick="document.getElementById('bet-menu').remove(); cockFight();" 
+                style="background:#ff0000; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
+            👊 БОИ БЕЗ ПРАВИЛ (x3)
+        </button>
+        
+        <button onclick="document.getElementById('bet-menu').remove();" 
+                style="background:#555; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; font-size:18px;">
+            ❌ ЗАКРЫТЬ
+        </button>
+        
+        <div style="color:#888; font-size:10px; margin-top:20px;">
+            *14xbet88 не несёт ответственности за проёбанные деньги
+        </div>
+        <div style="color:#888; font-size:10px;">
+            *Все ставки принимаются в дохерархи по курсу 1 к 1488
+        </div>
+    `;
+    document.body.appendChild(menu);
+    
+    let style = document.createElement('style');
+    style.textContent = `
+        @keyframes betPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes betBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function horseRace() {
+    let bet = prompt("💰 Сумма ставки:", "1000");
+    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    bet = BigInt(bet);
+    if (balance < bet) return alert("❌ Не хватает денег!");
+    
+    balance -= bet;
+    
+    let horses = [
+        { name: "🐴 Хуеглот", speed: Math.random() * 10 },
+        { name: "🐴 Пидорас", speed: Math.random() * 10 },
+        { name: "🐴 Шлюха", speed: Math.random() * 10 },
+        { name: "🐴 Хуесос", speed: Math.random() * 10 },
+        { name: "🐴 Член", speed: Math.random() * 10 }
+    ];
+    
+    let choice = prompt("На какую лошадь?\n" + 
+        horses.map((h, i) => `${i+1}. ${h.name}`).join('\n'));
+    
+    let horse = horses[parseInt(choice) - 1];
+    let winner = horses.sort((a, b) => b.speed - a.speed)[0];
+    
+    if (horse === winner) {
+        balance += bet * 5n;
+        alert(`🏆 ${winner.name} ПРИШЛА ПЕРВОЙ! x5! Выигрыш: ${formatBigNumber(bet * 5n)}`);
+    } else {
+        alert(`💀 ${winner.name} выиграла! Ты проебал ${formatBigNumber(bet)}!`);
+    }
+    
+    saveGame();
+    updateUI();
+}
+
+function footballMatch() {
+    let bet = prompt("💰 Сумма ставки:", "1000");
+    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    bet = BigInt(bet);
+    if (balance < bet) return alert("❌ Не хватает денег!");
+    
+    balance -= bet;
+    
+    let team1 = Math.floor(Math.random() * 5);
+    let team2 = Math.floor(Math.random() * 5);
+    
+    let choice = prompt(`⚽ Счёт: ${team1}:${team2}\n\nСтавка на:\n1. Победа 1 (x2)\n2. Ничья (x5)\n3. Победа 2 (x2)`);
+    
+    let result = team1 > team2 ? 1 : team1 < team2 ? 3 : 2;
+    
+    if (parseInt(choice) === result) {
+        let multiplier = result === 2 ? 5n : 2n;
+        balance += bet * multiplier;
+        alert(`⚽ УГАДАЛ! x${multiplier}! Выигрыш: ${formatBigNumber(bet * multiplier)}`);
+    } else {
+        alert(`💀 МИМО! Проебал ${formatBigNumber(bet)}!`);
+    }
+    
+    saveGame();
+    updateUI();
+}
+
+function cockFight() {
+    let bet = prompt("💰 Сумма ставки:", "1000");
+    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    bet = BigInt(bet);
+    if (balance < bet) return alert("❌ Не хватает денег!");
+    
+    balance -= bet;
+    
+    let fighters = [
+        { name: "👊 ПЛЕКСО", power: Math.random() * 100 },
+        { name: "👊 ХЕЛОРОВ", power: Math.random() * 100 }
+    ];
+    
+    let choice = prompt("На кого ставишь?\n1. ПЛЕКСО\n2. ХЕЛОРОВ");
+    let fighter = fighters[parseInt(choice) - 1];
+    let winner = fighters.sort((a, b) => b.power - a.power)[0];
+    
+    if (fighter === winner) {
+        balance += bet * 3n;
+        alert(`🏆 ${winner.name} ВЫИГРАЛ! x3! Выигрыш: ${formatBigNumber(bet * 3n)}`);
+    } else {
+        alert(`💀 ${winner.name} выиграл! Ты проебал ${formatBigNumber(bet)}!`);
+    }
+    
+    saveGame();
+    updateUI();
+}
