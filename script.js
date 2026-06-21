@@ -165,7 +165,10 @@ let achievements = {
     "f12_detected": { name: "🕵️ Подозрительная активность", desc: "Нажать F12 и получить предупреждение", unlocked: false, icon: "⚠️", date: null },
     "belarus_escape": { name: "🚜 Побег в Безналогию", desc: "Уехать из Казии и не платить налоги", unlocked: false, icon: "🚜", date: null },
     "pidoras_combo": { name: "🔥 ПИДОРАС", desc: "Собрать комбинацию ПИДОРАС", unlocked: false, icon: "🔥", date: null },
-    "huyhuy_combo": { name: "💀 ХУЙХУЙ", desc: "Собрать комбинацию ХУЙХУЙ", unlocked: false, icon: "💀", date: null }
+    "huyhuy_combo": { name: "💀 ХУЙХУЙ", desc: "Собрать комбинацию ХУЙХУЙ", unlocked: false, icon: "💀", date: null },
+    "huesos_combo": { name: "🍆 ХУЕСОС", desc: "Собрать комбинацию ХУЕСОС", unlocked: false, icon: "🍆", date: null },
+    "shluha_combo": { name: "💋 ШЛЮХА", desc: "Собрать комбинацию ШЛЮХА", unlocked: false, icon: "💋", date: null },
+    "chlen_combo": { name: "🍆 ЧЛЕН", desc: "Собрать комбинацию с ЧЛЕН", unlocked: false, icon: "🍆", date: null }
 };
 
 function loadGame() {
@@ -762,16 +765,24 @@ function spin() {
     
     let resultArr = [];
     
-    // НОВЫЕ ШАНСЫ: 19% выигрыш, 1% спец-комбо, 80% проигрыш
+    // ШАНСЫ: 19% выигрыш, 2% спец-комбо, 79% проигрыш
     let rand = Math.random();
-    let isSpecial = rand < 0.01;    // 1% шанс на ПИДОРАС/ХУЙХУЙ
+    let isSpecial = rand < 0.02;    // 2% шанс на спец-комбинацию
     let isLucky = rand < 0.19;      // 19% шанс на любой выигрыш
     
     if (isSpecial) {
-        if (Math.random() < 0.5) {
+        let specialRand = Math.random();
+        if (specialRand < 0.25) {
             resultArr = "ПИДОРАС".split("");
-        } else {
+        } else if (specialRand < 0.50) {
             resultArr = "ХУЙХУЙ".split("");
+            while (resultArr.length < slotsCount) {
+                resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+            }
+        } else if (specialRand < 0.75) {
+            resultArr = "ХУЕСОС".split("");
+        } else {
+            resultArr = "ШЛЮХА".split("");
             while (resultArr.length < slotsCount) {
                 resultArr.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
             }
@@ -802,39 +813,58 @@ function spin() {
         let winAmount = 0n;
         
         if (currentWord === "ПИДОРАС") {
-            multiplier = 1000n;
-            winAmount = bet * multiplier;
-            balance += winAmount;
-            totalWon += winAmount;
-            winsCount++;
-            loseStreak = 0;
-            unlockAchievement('pidoras_combo');
-            resultDisplay.innerHTML = `🔥 ПИДОРАС! МЕГА-КОМБО x1000! (+${winAmount.toString()} руб.)`;
-        } else if (currentWord.substring(0, 6) === "ХУЙХУЙ" || currentWord.includes("ХУЙХУЙ")) {
-            multiplier = 1000n;
-            winAmount = bet * multiplier;
-            balance += winAmount;
-            totalWon += winAmount;
-            winsCount++;
-            loseStreak = 0;
-            unlockAchievement('huyhuy_combo');
-            resultDisplay.innerHTML = `💀 ХУЙХУЙ! МЕГА-КОМБО x1000! (+${winAmount.toString()} руб.)`;
-        } else if (currentWord.includes(target)) {
-            multiplier = 200n;
-            winAmount = bet * multiplier;
-            balance += winAmount;
-            totalWon += winAmount;
-            winsCount++;
-            loseStreak = 0;
-            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x200! (+${winAmount.toString()} руб.)`;
-        } else if (currentWord.includes("ХУЙ") || currentWord.includes("ПИДОР") || currentWord.includes("ЕБЛАН")) {
             multiplier = 50n;
             winAmount = bet * multiplier;
             balance += winAmount;
             totalWon += winAmount;
             winsCount++;
             loseStreak = 0;
-            resultDisplay.innerHTML = `🎉 ТРОИЦА! x50! (+${winAmount.toString()} руб.)`;
+            unlockAchievement('pidoras_combo');
+            resultDisplay.innerHTML = `🔥 ПИДОРАС! МЕГА-КОМБО x50! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.substring(0, 6) === "ХУЙХУЙ" || currentWord.includes("ХУЙХУЙ")) {
+            multiplier = 50n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            unlockAchievement('huyhuy_combo');
+            resultDisplay.innerHTML = `💀 ХУЙХУЙ! МЕГА-КОМБО x50! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord === "ХУЕСОС") {
+            multiplier = 50n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            unlockAchievement('huesos_combo');
+            resultDisplay.innerHTML = `🍆 ХУЕСОС! МЕГА-КОМБО x50! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.includes("ШЛЮХА") || currentWord === "ШЛЮХА") {
+            multiplier = 50n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            unlockAchievement('shluha_combo');
+            resultDisplay.innerHTML = `💋 ШЛЮХА! МЕГА-КОМБО x50! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.includes(target)) {
+            multiplier = 15n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            resultDisplay.innerHTML = `🎉 ЦЕЛЬ ЖИЗНИ ДОСТИГНУТА! ты собрал ${target}! МЕГА-ИКС x15! (+${winAmount.toString()} руб.)`;
+        } else if (currentWord.includes("ХУЙ") || currentWord.includes("ПИДОР") || currentWord.includes("ЕБЛАН") || currentWord.includes("ЧЛЕН")) {
+            multiplier = 5n;
+            winAmount = bet * multiplier;
+            balance += winAmount;
+            totalWon += winAmount;
+            winsCount++;
+            loseStreak = 0;
+            if (currentWord.includes("ЧЛЕН")) unlockAchievement('chlen_combo');
+            resultDisplay.innerHTML = `🎉 ТРОИЦА! x5! (+${winAmount.toString()} руб.)`;
         }
         
         if (multiplier > 0n) {
@@ -1022,7 +1052,7 @@ setTimeout(() => {
     }
 }, 500);
 
-// ГИПНО-РЫЧАГ (качается каждые 2 минуты)
+// ГИПНО-РЫЧАГ
 setInterval(() => {
     let stick = document.getElementById('lever-stick');
     if (!stick) return;
@@ -1036,18 +1066,9 @@ setInterval(() => {
         ball.style.background = 'radial-gradient(circle at 35% 35%, #ff00ff, #990099)';
     }
     
-    setTimeout(() => {
-        stick.style.transform = 'rotate(-15deg)';
-    }, 1500);
-    
-    setTimeout(() => {
-        stick.style.transform = 'rotate(10deg)';
-    }, 3000);
-    
-    setTimeout(() => {
-        stick.style.transform = 'rotate(-10deg)';
-    }, 4500);
-    
+    setTimeout(() => { stick.style.transform = 'rotate(-15deg)'; }, 1500);
+    setTimeout(() => { stick.style.transform = 'rotate(10deg)'; }, 3000);
+    setTimeout(() => { stick.style.transform = 'rotate(-10deg)'; }, 4500);
     setTimeout(() => {
         stick.style.transform = 'rotate(0deg)';
         if (ball) {
@@ -1057,7 +1078,7 @@ setInterval(() => {
     }, 6000);
 }, 120000);
 
-// ИЛЛЮЗИОНИРОВАНИЕ НА ПОЛНЫЙ ЭКРАН
+// ИЛЛЮЗИЯ F11
 let illusionActive = false;
 
 function startIllusion() {
@@ -1070,22 +1091,12 @@ function startIllusion() {
     
     let overlay = document.createElement('div');
     overlay.id = 'illusion-overlay';
-    overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle, transparent 50%, rgba(255,0,255,0.3) 100%);
-        z-index: 9999; pointer-events: none;
-        animation: illusionPulse 2s infinite;
-    `;
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,transparent 50%,rgba(255,0,255,0.3) 100%);z-index:9999;pointer-events:none;animation:illusionPulse 2s infinite;';
     document.body.appendChild(overlay);
     
     let text = document.createElement('div');
     text.id = 'illusion-text';
-    text.style.cssText = `
-        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-        color: #ff00ff; font-size: 24px; z-index: 10000;
-        animation: textGlow 1s infinite; pointer-events: none;
-        font-family: 'Inter', sans-serif; font-weight: 700;
-    `;
+    text.style.cssText = 'position:fixed;bottom:50px;left:50%;transform:translateX(-50%);color:#ff00ff;font-size:24px;z-index:10000;animation:textGlow 1s infinite;pointer-events:none;font-family:Inter,sans-serif;font-weight:700;';
     text.innerText = 'НАЖМИ F11...';
     document.body.appendChild(text);
     
@@ -1105,15 +1116,7 @@ function startIllusion() {
     }, 5000);
 }
 
-setInterval(() => {
-    startIllusion();
-}, 180000);
+setInterval(() => { startIllusion(); }, 180000);
+setTimeout(() => { startIllusion(); }, 60000);
 
-setTimeout(() => {
-    startIllusion();
-}, 60000);
-
-// Инициализация реферального UI при загрузке
-setTimeout(() => {
-    updateReferralUI();
-}, 1000);
+setTimeout(() => { updateReferralUI(); }, 1000);
