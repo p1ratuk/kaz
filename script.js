@@ -1,6 +1,6 @@
 // ================= НАСТРОЙКА =================
 const SECRET_PLUS_AMOUNT = 10000000000000000000000000n; 
-const SECRET_MULTIPLY_BY = 200000000000000000000000000000000000n;
+const SECRET_MULTIPLY_BY = 200000n;
 const SPIN_COOLDOWN = 500;
 const SECRET_KEY = "sukabank_dep_1488_zaebis_2024_huy_tebe_v_console_pidor";
 // =============================================
@@ -77,6 +77,7 @@ function checkReferralOnLoad() {
 
 checkReferralOnLoad();
 
+// Шифрование
 function encryptData(data) {
     let encrypted = '';
     for (let i = 0; i < data.length; i++) {
@@ -760,8 +761,11 @@ function spin() {
     boxes.forEach(box => box.classList.add('spinning'));
     
     let resultArr = [];
-    let isSpecial = Math.random() < 0.05;
-    let isLucky = Math.random() < 0.25;
+    
+    // НОВЫЕ ШАНСЫ: 19% выигрыш, 1% спец-комбо, 80% проигрыш
+    let rand = Math.random();
+    let isSpecial = rand < 0.01;    // 1% шанс на ПИДОРАС/ХУЙХУЙ
+    let isLucky = rand < 0.19;      // 19% шанс на любой выигрыш
     
     if (isSpecial) {
         if (Math.random() < 0.5) {
