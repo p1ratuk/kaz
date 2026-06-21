@@ -1561,3 +1561,152 @@ document.addEventListener('keydown', function(e) {
 setTimeout(() => {
     updateReferralUI();
 }, 1000);
+
+// ==================== ПТИЧ.ТВ СТРИМЕР ====================
+let streamerStats = JSON.parse(localStorage.getItem('ghetto_streamer') || '{"viewers":15,"streamCount":0,"banners":0,"donations":0,"totalEarned":"0","isStreaming":false,"afkMode":false}');
+streamerStats.totalEarned = BigInt(streamerStats.totalEarned);
+
+function saveStreamerStats() {
+    let save = {...streamerStats, totalEarned: streamerStats.totalEarned.toString()};
+    localStorage.setItem('ghetto_streamer', JSON.stringify(save));
+}
+
+function startWorkAsStreamer() {
+    if (balance < 0n) {
+        alert("😭 У тебя отрицательный баланс!\n🎥 Придётся идти работать стримером на Птич.тв!");
+    }
+    
+    let menu = document.createElement('div');
+    menu.id = 'streamer-menu';
+    menu.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;';
+    menu.innerHTML = `
+        <div style="color:#ff00ff;font-size:40px;font-weight:900;margin-bottom:20px;">🎥 ПТИЧ.ТВ</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">👥 Зрителей: ${streamerStats.viewers}</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">📢 Баннеров: ${streamerStats.banners}/4</div>
+        <div style="color:#fff;font-size:14px;margin-bottom:5px;">🎥 Стримов: ${streamerStats.streamCount}</div>
+        <div style="color:#ffd700;font-size:14px;margin-bottom:20px;">💰 Заработано: ${formatBigNumber(streamerStats.totalEarned)}</div>
+        
+        <button onclick="document.getElementById('streamer-menu').remove();startStream();" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">🎥 ЗАПУСТИТЬ СТРИМ (3 мин)</button>
+        <button onclick="document.getElementById('streamer-menu').remove();startAfkStream();" style="background:#8800ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">😴 АФК-СТРИМ (5 мин)</button>
+        <button onclick="document.getElementById('streamer-menu').remove();placeBanner();" style="background:#ff6600;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">📢 ПОСТАВИТЬ БАННЕР</button>
+        <button onclick="document.getElementById('streamer-menu').remove();" style="background:#555;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;">❌ ЗАКРЫТЬ</button>
+    `;
+    document.body.appendChild(menu);
+}
+
+function startStream() {
+    if (streamerStats.isStreaming) {
+        alert("🎥 Стрим уже идёт!");
+        return;
+    }
+    
+    streamerStats.isStreaming = true;
+    streamerStats.streamCount++;
+    streamerStats.viewers += Math.floor(Math.random() * 20) + 5;
+    let activeViewers = Math.floor(streamerStats.viewers * 0.8);
+    
+    let multiplier = 1n;
+    if (activeViewers >= 100) multiplier = 2n;
+    if (activeViewers >= 200) multiplier = 4n;
+    if (activeViewers >= 500) multiplier = 8n;
+    if (activeViewers >= 1000) multiplier = 10n;
+    
+    for (let i = 0; i < streamerStats.banners; i++) {
+        multiplier *= 2n;
+    }
+    
+    alert(`🎥 СТРИМ ЗАПУЩЕН!\n👥 Зрителей: ${activeViewers}\n📊 Множитель: x${multiplier}\n⏰ Жди 10 секунд...`);
+    
+    setTimeout(() => {
+        streamerStats.isStreaming = false;
+        let reward = balance * multiplier - balance;
+        if (reward < 0n) reward = 0n;
+        balance = balance * multiplier;
+        streamerStats.totalEarned += reward;
+        
+        alert(`🎥 СТРИМ ЗАВЕРШЁН!\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
+        
+        saveStreamerStats();
+        saveGame();
+        updateUI();
+    }, 10000);
+}
+
+function startAfkStream() {
+    if (streamerStats.isStreaming) {
+        alert("🎥 Стрим уже идёт!");
+        return;
+    }
+    
+    streamerStats.isStreaming = true;
+    streamerStats.afkMode = true;
+    
+    alert("😴 АФК-СТРИМ ЗАПУЩЕН!\nТы просто сидишь и пьёшь живчик.\nЗрители смотрят и донатят.");
+    
+    let afkInterval = setInterval(() => {
+        if (!streamerStats.isStreaming) {
+            clearInterval(afkInterval);
+            return;
+        }
+        let newViewers = Math.floor(Math.random() * 500) + 50;
+        streamerStats.viewers += newViewers;
+        streamerStats.donations += Math.floor(Math.random() * 3);
+        alert(`👥 +${newViewers} зрителей на АФК! Всего: ${streamerStats.viewers}\n💸 Донатов: ${streamerStats.donations}`);
+    }, 30000);
+    
+    setTimeout(() => {
+        clearInterval(afkInterval);
+        if (!streamerStats.isStreaming) return;
+        streamerStats.isStreaming = false;
+        streamerStats.afkMode = false;
+        streamerStats.streamCount++;
+        
+        let activeViewers = Math.floor(streamerStats.viewers * 0.8);
+        let multiplier = 1n;
+        if (activeViewers >= 100) multiplier = 2n;
+        if (activeViewers >= 200) multiplier = 4n;
+        if (activeViewers >= 500) multiplier = 8n;
+        for (let i = 0; i < streamerStats.banners; i++) { multiplier *= 2n; }
+        if (streamerStats.donations > 0) { multiplier *= BigInt(streamerStats.donations + 1); }
+        
+        let reward = balance * multiplier - balance;
+        if (reward < 0n) reward = 0n;
+        balance = balance * multiplier;
+        streamerStats.totalEarned += reward;
+        streamerStats.donations = 0;
+        
+        alert(`😴 АФК-СТРИМ ЗАВЕРШЁН!\n👥 Зрителей: ${activeViewers}\n📊 Множитель: x${multiplier}\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
+        
+        saveStreamerStats();
+        saveGame();
+        updateUI();
+    }, 30000);
+}
+
+function placeBanner() {
+    if (streamerStats.banners >= 4) {
+        alert("📢 Максимум 4 баннера!");
+        return;
+    }
+    
+    if (streamerStats.isStreaming) {
+        alert("📢 Нельзя ставить баннеры во время стрима!");
+        return;
+    }
+    
+    let bannerTypes = [
+        "🔥 14XBET88 — СТАВКИ НА СПОРТ!",
+        "🎰 ДЕПОКАЗИК 1488 — КРУТИ СЕЙЧАС!",
+        "🐕 ХУЕГЛОТ ОДОБРЯЕТ ЭТОТ СТРИМ",
+        "💸 ЗАРАБОТАЙ ДОХЕРАРХИ ЗА 3 МИНУТЫ!"
+    ];
+    
+    let choice = prompt(`Выбери баннер:\n1. ${bannerTypes[0]}\n2. ${bannerTypes[1]}\n3. ${bannerTypes[2]}\n4. ${bannerTypes[3]}`);
+    if (!choice || isNaN(choice) || choice < 1 || choice > 4) return;
+    
+    streamerStats.banners++;
+    alert(`📢 Баннер установлен! (${streamerStats.banners}/4)\n"${bannerTypes[choice-1]}"`);
+    saveStreamerStats();
+}
+
+console.log('✅ Птич.ТВ загружен! 🎥');
