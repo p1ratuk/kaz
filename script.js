@@ -5,6 +5,19 @@ const SPIN_COOLDOWN = 500;
 const SECRET_KEY = "sukabank_dep_1488_zaebis_2024_huy_tebe_v_console_pidor";
 // =============================================
 
+// ==================== ВЕРСИИ ФАЙЛОВ ====================
+const HTML_VERSION = "11.07.26 16:18:37";
+const CSS_VERSION = "11.07.26 16:18:15";
+const JS_VERSION = "11.07.26 16:17:43";
+
+function checkVersions() {
+    document.getElementById('html-version').innerText = HTML_VERSION;
+    document.getElementById('css-version').innerText = CSS_VERSION;
+    document.getElementById('js-version').innerText = JS_VERSION;
+}
+
+checkVersions();
+
 // Реферальная система
 let referralCode = localStorage.getItem('ghetto_referral') || generateReferral();
 let referrals = JSON.parse(localStorage.getItem('ghetto_referrals') || '[]');
@@ -1333,7 +1346,7 @@ function open14xbet() {
 
 function horseRace() {
     let bet = prompt("💰 Сумма ставки:", "1000");
-    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    if (!bet || isNaN(bet)) return;
     bet = BigInt(bet);
     if (balance < bet) return alert("❌ Не хватает денег!");
     
@@ -1348,6 +1361,13 @@ function horseRace() {
     ];
     
     let choice = prompt("На какую лошадь?\n" + horses.map((h, i) => `${i+1}. ${h.name}`).join('\n'));
+    
+    if (!choice || isNaN(choice) || choice < 1 || choice > 5) {
+        balance += bet;
+        saveGame();
+        updateUI();
+        return;
+    }
     
     let horse = horses[parseInt(choice) - 1];
     let winner = horses.sort((a, b) => b.speed - a.speed)[0];
@@ -1370,14 +1390,19 @@ function footballMatch() {
     while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
     
     let bet = prompt("💰 Сумма ставки:", "1000");
-    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    if (!bet || isNaN(bet)) return;
     bet = BigInt(bet);
     if (balance < bet) return alert("❌ Не хватает денег!");
     
     balance -= bet;
     
     let choice = prompt(`⚽ ФУТБОЛ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x5)\n3. ${team2} (x2)`);
-    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) {
+        balance += bet;
+        saveGame();
+        updateUI();
+        return;
+    }
     
     let score1 = Math.floor(Math.random() * 5);
     let score2 = Math.floor(Math.random() * 5);
@@ -1405,14 +1430,19 @@ function basketballMatch() {
     while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
     
     let bet = prompt("💰 Сумма ставки:", "1000");
-    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    if (!bet || isNaN(bet)) return;
     bet = BigInt(bet);
     if (balance < bet) return alert("❌ Не хватает денег!");
     
     balance -= bet;
     
     let choice = prompt(`🏀 БАСКЕТБОЛ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x3)\n3. ${team2} (x2)`);
-    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) {
+        balance += bet;
+        saveGame();
+        updateUI();
+        return;
+    }
     
     let score1 = Math.floor(Math.random() * 120);
     let score2 = Math.floor(Math.random() * 120);
@@ -1440,14 +1470,19 @@ function hockeyMatch() {
     while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
     
     let bet = prompt("💰 Сумма ставки:", "1000");
-    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    if (!bet || isNaN(bet)) return;
     bet = BigInt(bet);
     if (balance < bet) return alert("❌ Не хватает денег!");
     
     balance -= bet;
     
     let choice = prompt(`🏒 ХОККЕЙ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x5)\n3. ${team2} (x2)`);
-    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) {
+        balance += bet;
+        saveGame();
+        updateUI();
+        return;
+    }
     
     let score1 = Math.floor(Math.random() * 10);
     let score2 = Math.floor(Math.random() * 10);
@@ -1470,7 +1505,7 @@ function hockeyMatch() {
 
 function cockFight() {
     let bet = prompt("💰 Сумма ставки:", "1000");
-    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    if (!bet || isNaN(bet)) return;
     bet = BigInt(bet);
     if (balance < bet) return alert("❌ Не хватает денег!");
     
@@ -1482,6 +1517,13 @@ function cockFight() {
     ];
     
     let choice = prompt("На кого ставишь?\n1. ПЛЕКСО\n2. ХЕЛОРОВ");
+    if (!choice || isNaN(choice) || choice < 1 || choice > 2) {
+        balance += bet;
+        saveGame();
+        updateUI();
+        return;
+    }
+    
     let fighter = fighters[parseInt(choice) - 1];
     let winner = fighters.sort((a, b) => b.power - a.power)[0];
     
@@ -2063,6 +2105,25 @@ function spawnWinParticles(multiplier) {
     requestAnimationFrame(animate);
 }
 
+// ==================== РЕЖИМЫ СЛОТОВ: БУКВЫ / ФРУКТЫ / ЦИФРЫ ====================
+let slotMode = localStorage.getItem('slot_mode') || 'letters';
+
+const fruitAlphabet = ['🍎','🍊','🍋','🍇','🍓','🍒','🍑','🥝','🍌','🍐','🍏','🥭','🍍','🫐','🥥','🍈','🍉','🍔','🍕','🍟','🌭','🍿','🥨','🍩','🍪','🎂','🍰','🧁','🍫','🍬','🍭','🍮','🍯'];
+const numberAlphabet = ['0','1','2','3','4','5','6','7','8','9'];
+
+function changeSlotMode() {
+    let select = document.getElementById('slot-mode-select');
+    slotMode = select.value;
+    localStorage.setItem('slot_mode', slotMode);
+    location.reload();
+}
+
+function getCurrentAlphabet() {
+    if (slotMode === 'fruits') return fruitAlphabet;
+    if (slotMode === 'numbers') return numberAlphabet;
+    return "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".split('');
+}
+
 // ==================== РЕЖИМ ДЛЯ СЛАБЫХ ПК ====================
 function toggleLowPcMode() {
     let checkbox = document.getElementById('low-pc-checkbox');
@@ -2162,10 +2223,12 @@ if (isLowPcMode()) {
             </label>
         `;
     }
-    
-    console.log('💻 Режим для слабых ПК активирован!');
 }
+
+// Установка режима слотов при загрузке
+document.getElementById('slot-mode-select').value = slotMode;
 
 console.log('🐕 Хуеглот загружен и готов к гаву!');
 console.log('💥 Система взрывов активирована!');
+console.log('🎰 Режим слотов: ' + slotMode);
 console.log('✅ Script.js полностью загружен!');
