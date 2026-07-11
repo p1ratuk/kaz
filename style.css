@@ -235,3 +235,206 @@ select, input {
     font-weight: 900; font-size: 12px; opacity: 0; transition: all 0.15s;
     white-space: nowrap; pointer-events: none; z-index: 20; font-family: 'Inter', sans-serif;
 }
+
+/* ==================== НЕОНОВЫЙ ТЕМНО-КРАСНЫЙ ДИЗАЙН ==================== */
+body {
+    background-color: #0a0000;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 0, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(139, 0, 0, 0.2) 0%, transparent 50%);
+}
+.casino-card {
+    background-color: #120000;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.3), 0 0 60px rgba(255, 0, 0, 0.1), inset 0 0 30px rgba(255, 0, 0, 0.05);
+}
+.balance-main {
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.3);
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+.balance-letters { color: #ff6666; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+.label-text { color: #ff4444; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+select, input {
+    background-color: #1a0000;
+    border: 1px solid #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2), inset 0 0 10px rgba(255, 0, 0, 0.1);
+    color: #ffcccc;
+}
+select:focus, input:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), 0 0 40px rgba(255, 0, 0, 0.2);
+}
+.slots-container {
+    background-color: #0a0000;
+    border: 1px solid #330000;
+    box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.1);
+}
+.slot-box {
+    background-color: #1a0000;
+    border: 2px solid #ff0000;
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.5);
+    font-size: 24px;
+}
+.slot-box.spinning {
+    animation: neonSlotSpin 0.1s infinite;
+    background-color: #2a0000;
+    border-color: #ff0000;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), 0 0 60px rgba(255, 0, 0, 0.5);
+}
+@keyframes neonSlotSpin {
+    0% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+    50% { transform: scale(1.15); text-shadow: 0 0 30px rgba(255, 0, 0, 1), 0 0 60px rgba(255, 0, 0, 0.8); }
+    100% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+}
+.lever-base {
+    background: linear-gradient(180deg, #2a0000, #1a0000);
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+.lever-stick {
+    background: linear-gradient(90deg, #ffcccc, #ff9999, #ffcccc);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+.lever-ball {
+    background: radial-gradient(circle at 35% 35%, #ff6666, #cc0000);
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 4px 12px rgba(255, 0, 0, 0.6);
+}
+.lever-stick.pulled .lever-ball {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 1), 0 0 80px rgba(255, 0, 0, 0.8), 0 6px 20px rgba(255, 0, 0, 0.9);
+}
+.lever-text {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+}
+.btn-achievements {
+    background-color: #1a0000;
+    color: #ff3333;
+    border: 2px solid #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+.btn-achievements:hover {
+    background-color: #2a0000;
+    color: #ff0000;
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.5), 0 8px 30px rgba(255, 0, 0, 0.4);
+    text-shadow: 0 0 20px rgba(255, 0, 0, 1), 0 0 40px rgba(255, 0, 0, 0.8);
+    transform: translateY(-2px);
+}
+.btn-pay-taxes {
+    background-color: #1a0000;
+    color: #ff6600;
+    border: 2px solid #ff3300;
+    text-shadow: 0 0 10px rgba(255, 100, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 50, 0, 0.3);
+}
+.btn-pay-taxes:hover {
+    background-color: #2a0000;
+    color: #ff8800;
+    box-shadow: 0 0 40px rgba(255, 50, 0, 0.5);
+    text-shadow: 0 0 20px rgba(255, 100, 0, 1);
+}
+.btn-belarus {
+    background-color: #1a0000;
+    color: #ff4444;
+    border: 3px solid #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+}
+.btn-belarus:hover {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+    border-color: #ff3333;
+}
+.winrate-meter {
+    background: #120000;
+    border: 1px solid #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.winrate-label { color: #ff3333; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+.bar-bg { background: #1a0000; border: 1px solid #ff0000; }
+.fill-winrate {
+    background: linear-gradient(90deg, #ff0000, #ff3333, #ff6666);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+.result-message { color: #ff3333; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+.cooldown-indicator { color: #ff4444; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+.tax-paid { color: #ff3333; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+.tax-unpaid {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    animation: taxWarning 0.5s infinite;
+}
+@keyframes taxWarning {
+    0%, 100% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+    50% { text-shadow: 0 0 30px rgba(255, 0, 0, 1), 0 0 60px rgba(255, 0, 0, 0.8); }
+}
+
+/* ==================== ВЗРЫВ БУКВ ПРИ ВЫИГРЫШЕ ==================== */
+@keyframes letterExplode {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+    50% { transform: translate(var(--lx), var(--ly)) rotate(var(--lr)) scale(1.5); opacity: 0.8; text-shadow: 0 0 40px rgba(255, 0, 0, 1), 0 0 80px rgba(255, 100, 0, 0.8); }
+    100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+}
+@keyframes letterMegaExplode {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+    30% { transform: translate(var(--lx), var(--ly)) rotate(var(--lr)) scale(2); opacity: 0.6; text-shadow: 0 0 60px rgba(255, 0, 0, 1), 0 0 120px rgba(255, 100, 0, 1); }
+    100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+}
+.slot-box.win-explode { --lx: 0px; --ly: 0px; --lr: 0deg; animation: letterExplode 0.5s ease-in-out; }
+.slot-box.win-mega-explode { --lx: 0px; --ly: 0px; --lr: 0deg; animation: letterMegaExplode 0.8s ease-in-out; }
+
+/* ==================== ВЗРЫВ РЫЧАГА ==================== */
+@keyframes leverWinShake {
+    0%, 100% { transform: rotate(0deg); }
+    10%, 50%, 90% { transform: rotate(-10deg); }
+    30%, 70% { transform: rotate(10deg); }
+}
+@keyframes leverMegaShake {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    10%, 30%, 50%, 70%, 90% { transform: rotate(-15deg) scale(1.1); }
+    20%, 40%, 60%, 80% { transform: rotate(15deg) scale(1.2); }
+}
+@keyframes leverExplode {
+    0% { transform: rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: rotate(35deg) scale(1.5); opacity: 0.5; }
+    100% { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+.lever-stick.win-shake { animation: leverWinShake 0.5s ease-in-out; }
+.lever-stick.mega-shake { animation: leverMegaShake 0.8s ease-in-out; }
+.lever-stick.explode { animation: leverExplode 0.6s ease-in-out; }
+.lever-ball.win-glow {
+    box-shadow: 0 0 40px rgba(255, 0, 0, 1), 0 0 80px rgba(255, 50, 0, 0.8) !important;
+    background: radial-gradient(circle at 35% 35%, #ff4444, #ff0000) !important;
+}
+.lever-ball.mega-glow {
+    box-shadow: 0 0 60px rgba(255, 0, 0, 1), 0 0 120px rgba(255, 100, 0, 1), 0 0 200px rgba(255, 0, 0, 0.5) !important;
+    background: radial-gradient(circle at 35% 35%, #ff8888, #ff3333) !important;
+}
+
+/* ==================== НЕОНОВЫЙ ФОН ПРИ ВЫИГРЫШЕ ==================== */
+@keyframes winBgPulse {
+    0%, 100% { background: rgba(255, 0, 0, 0); }
+    50% { background: rgba(255, 0, 0, 0.3); }
+}
+@keyframes megaWinBgPulse {
+    0%, 100% { background: rgba(255, 0, 0, 0); }
+    25% { background: rgba(255, 0, 0, 0.5); }
+    50% { background: rgba(255, 100, 0, 0.4); }
+    75% { background: rgba(255, 0, 0, 0.5); }
+}
+.win-background { animation: winBgPulse 0.5s ease-in-out 3; }
+.mega-win-background { animation: megaWinBgPulse 1s ease-in-out 5; }
+
+#win-particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10001;
+}
