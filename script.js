@@ -895,6 +895,7 @@ function spin() {
             }
             
             triggerHueglotByWin(multiplier);
+            triggerWinEffects(multiplier);
         } else {
             lossesCount++;
             loseStreak++;
@@ -1148,7 +1149,6 @@ setInterval(() => { startIllusion(); }, 180000);
 setTimeout(() => { startIllusion(); }, 60000);
 
 // ==================== ПЬЯНЕЦ БРАУЗЕР ====================
-
 function openBrowser() {
     let overlay = document.getElementById('browser-overlay');
     if (!overlay) {
@@ -1299,7 +1299,6 @@ function showRefSys() {
 }
 
 // ==================== 14XBET88 ====================
-
 function open14xbet() {
     closeBrowser();
     
@@ -1941,5 +1940,232 @@ function triggerHueglotByWin(multiplier) {
     }
 }
 
+// ==================== ВЗРЫВ БУКВ И РЫЧАГА ПРИ ВЫИГРЫШЕ ====================
+function triggerWinEffects(multiplier) {
+    if (isLowPcMode()) return;
+    
+    let boxes = document.querySelectorAll('.slot-box');
+    boxes.forEach(function(box, index) {
+        box.style.setProperty('--lx', (Math.random() - 0.5) * 100 + 'px');
+        box.style.setProperty('--ly', (Math.random() - 0.5) * 100 - 30 + 'px');
+        box.style.setProperty('--lr', (Math.random() - 0.5) * 2 + 'rad');
+        
+        if (multiplier >= 1000n) {
+            box.classList.add('win-mega-explode');
+            setTimeout(function() { box.classList.remove('win-mega-explode'); }, 800);
+        } else if (multiplier >= 200n) {
+            box.classList.add('win-mega-explode');
+            setTimeout(function() { box.classList.remove('win-mega-explode'); }, 800);
+        } else if (multiplier >= 50n) {
+            box.classList.add('win-explode');
+            setTimeout(function() { box.classList.remove('win-explode'); }, 500);
+        }
+    });
+    
+    let lever = document.getElementById('lever-stick');
+    let ball = lever ? lever.querySelector('.lever-ball') : null;
+    
+    if (lever && ball) {
+        if (multiplier >= 1000n) {
+            lever.classList.add('explode');
+            ball.classList.add('mega-glow');
+            setTimeout(function() {
+                lever.classList.remove('explode');
+                ball.classList.remove('mega-glow');
+            }, 600);
+        } else if (multiplier >= 200n) {
+            lever.classList.add('mega-shake');
+            ball.classList.add('win-glow');
+            setTimeout(function() {
+                lever.classList.remove('mega-shake');
+                ball.classList.remove('win-glow');
+            }, 800);
+        } else if (multiplier >= 50n) {
+            lever.classList.add('win-shake');
+            ball.classList.add('win-glow');
+            setTimeout(function() {
+                lever.classList.remove('win-shake');
+                ball.classList.remove('win-glow');
+            }, 500);
+        }
+    }
+    
+    let card = document.querySelector('.casino-card');
+    if (card) {
+        if (multiplier >= 1000n) {
+            card.classList.add('mega-win-background');
+            setTimeout(function() { card.classList.remove('mega-win-background'); }, 5000);
+        } else if (multiplier >= 50n) {
+            card.classList.add('win-background');
+            setTimeout(function() { card.classList.remove('win-background'); }, 1500);
+        }
+    }
+    
+    if (multiplier >= 200n) {
+        spawnWinParticles(multiplier);
+    }
+}
+
+function spawnWinParticles(multiplier) {
+    if (isLowPcMode()) return;
+    
+    let canvas = document.getElementById('win-particles-canvas');
+    if (!canvas) return;
+    
+    let ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    let count = multiplier >= 1000n ? 80 : 40;
+    let particles = [];
+    
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            vx: (Math.random() - 0.5) * 20,
+            vy: (Math.random() - 0.5) * 20 - 10,
+            size: 3 + Math.random() * 8,
+            alpha: 1,
+            color: ['#ff0000', '#ff3333', '#ff6666', '#ff9900', '#ffcc00'][Math.floor(Math.random() * 5)]
+        });
+    }
+    
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.2;
+            p.alpha -= 0.015;
+            
+            if (p.alpha > 0) {
+                alive = true;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        ctx.shadowBlur = 0;
+        if (alive) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+// ==================== РЕЖИМ ДЛЯ СЛАБЫХ ПК ====================
+function toggleLowPcMode() {
+    let checkbox = document.getElementById('low-pc-checkbox');
+    if (checkbox.checked) {
+        document.getElementById('low-pc-modal').style.display = 'flex';
+    }
+}
+
+function closeLowPcModal() {
+    document.getElementById('low-pc-modal').style.display = 'none';
+    document.getElementById('low-pc-checkbox').checked = false;
+}
+
+function applyLowPcMode() {
+    localStorage.setItem('low_pc_mode', 'true');
+    location.reload();
+}
+
+function isLowPcMode() {
+    return localStorage.getItem('low_pc_mode') === 'true';
+}
+
+function disableLowPcMode() {
+    localStorage.removeItem('low_pc_mode');
+    location.reload();
+}
+
+if (isLowPcMode()) {
+    let style = document.createElement('style');
+    style.id = 'low-pc-style';
+    style.textContent = `
+        body {
+            background-color: #0b0c0d !important;
+            background-image: none !important;
+        }
+        .casino-card {
+            background-color: #141619 !important;
+            border: 1px solid #1f2326 !important;
+            box-shadow: 0 0 20px rgba(0, 255, 100, 0.05) !important;
+        }
+        .balance-main {
+            color: #4ef060 !important;
+            text-shadow: none !important;
+        }
+        .slot-box {
+            background-color: #202428 !important;
+            border: 2px solid #31373e !important;
+            color: #4ef060 !important;
+            text-shadow: none !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+        }
+        select, input {
+            background-color: #202428 !important;
+            border: 1px solid #31373e !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+        .lever-base {
+            background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+            border: 2px solid #444 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+        }
+        .lever-ball {
+            background: radial-gradient(circle at 35% 35%, #ff4444, #990000) !important;
+            box-shadow: 0 4px 12px rgba(255,0,0,0.6) !important;
+        }
+        .win-background, .mega-win-background {
+            animation: none !important;
+        }
+        #win-particles-canvas {
+            display: none !important;
+        }
+        #hueglot-canvas {
+            display: none !important;
+        }
+        .hueglot-exploding, .hueglot-shake-heavy, .hueglot-shake-light, .hueglot-shake-win {
+            animation: none !important;
+        }
+        .slot-box.win-explode, .slot-box.win-mega-explode {
+            animation: none !important;
+        }
+        .lever-stick.win-shake, .lever-stick.mega-shake, .lever-stick.explode {
+            animation: none !important;
+        }
+        .lever-ball.win-glow, .lever-ball.mega-glow {
+            box-shadow: 0 4px 12px rgba(255,0,0,0.6) !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    let indicator = document.getElementById('low-pc-toggle');
+    if (indicator) {
+        indicator.innerHTML = `
+            <label style="display:flex; align-items:center; gap:5px; cursor:pointer; background:#1a0000; padding:8px 12px; border-radius:8px; border:1px solid #00cc52; font-size:11px; color:#00cc52; font-family:'Inter',sans-serif;">
+                <span>✅ Слабый ПК</span>
+                <button onclick="disableLowPcMode()" style="background:none; border:none; color:#ff0000; cursor:pointer; font-size:14px; padding:0; margin:0;">✕</button>
+            </label>
+        `;
+    }
+    
+    console.log('💻 Режим для слабых ПК активирован!');
+}
+
 console.log('🐕 Хуеглот загружен и готов к гаву!');
+console.log('💥 Система взрывов активирована!');
 console.log('✅ Script.js полностью загружен!');
