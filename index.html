@@ -6,7 +6,7 @@
     <title>depokazik1488</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -153,11 +153,22 @@
 <button class="btn-ludomania" id="btn-ludomania" onmouseover="runAway()">🏥 ВЫЛЕЧИТЬ ЛУДОМАНИЮ</button>
 <button onclick="startWorkAsStreamer()" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:30px;width:450px;font-weight:700;cursor:pointer;margin-bottom:15px;">🎥 ПТИЧ.ТВ (СТРИМЕР)</button>
 
-<div id="low-pc-toggle" style="position:fixed; bottom:10px; right:10px; z-index:10000;">
+<div id="version-info" style="position:fixed; top:10px; right:10px; z-index:9999; background:#1a0000; border:1px solid #ff0000; padding:5px 10px; border-radius:5px; font-size:9px; color:#ff6666; font-family:'JetBrains Mono', 'Courier New', monospace; text-align:right; opacity:0.7; pointer-events:none;">
+    <div>HTML <span id="html-version">11.07.26 16:18:37</span></div>
+    <div>CSS <span id="css-version">11.07.26 16:18:15</span></div>
+    <div>JS <span id="js-version">11.07.26 16:17:43</span></div>
+</div>
+
+<div id="low-pc-toggle" style="position:fixed; bottom:10px; right:10px; z-index:10000; display:flex; flex-direction:column; gap:5px;">
     <label style="display:flex; align-items:center; gap:5px; cursor:pointer; background:#1a0000; padding:8px 12px; border-radius:8px; border:1px solid #ff0000; font-size:11px; color:#ff6666; font-family:'Inter',sans-serif;">
         <input type="checkbox" id="low-pc-checkbox" onchange="toggleLowPcMode()" style="width:auto; margin:0;">
         <span>Для слабых ПК</span>
     </label>
+    <select id="slot-mode-select" onchange="changeSlotMode()" style="background:#1a0000; border:1px solid #ff0000; color:#ff6666; padding:5px 8px; border-radius:5px; font-size:10px; font-family:'Inter',sans-serif; width:100%;">
+        <option value="letters">🔤 Буквы</option>
+        <option value="fruits">🍎 Фрукты</option>
+        <option value="numbers">🔢 Цифры</option>
+    </select>
 </div>
 
 <div id="low-pc-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10001; justify-content:center; align-items:center; flex-direction:column;">
