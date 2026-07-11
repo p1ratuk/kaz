@@ -893,6 +893,8 @@ function spin() {
             if (unpaidWinsCount >= 15 && !belarusMode) {
                 setTimeout(() => triggerTaxPhone(), 1500);
             }
+            
+            triggerHueglotByWin(multiplier);
         } else {
             lossesCount++;
             loseStreak++;
@@ -1170,65 +1172,36 @@ function openBrowser() {
                 
                 <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; justify-content:center;">
                     <button onclick="luckySearch()" style="background:#ff6600; color:#000; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:700;">🍀 Я МНЕ ПОВЕЗЁТ</button>
-                    <span style="color:#888; font-size:12px;">|</span>
-                    <span style="color:#888; font-size:12px;">Реклама: СУКАбанк - честный банк*</span>
                 </div>
                 
                 <div id="search-results" style="text-align:left;">
-                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showSuchkovLore()">📰 Смерть Андрея Сучкова. Смотреть. Не посмотришь пизды дам.</div>
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showSuchkovLore()">📰 Смерть Андрея Сучкова</div>
                     <div style="color:#888; font-size:12px; margin-bottom:15px;">sukabank.dep/suchkov-death</div>
-                    
-                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showCheatGuide()">🎰 Как повысить шанс выигрыша в казино на 1488%?</div>
+                    <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showCheatGuide()">🎰 Как повысить шанс выигрыша на 1488%?</div>
                     <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/casino-cheat-1488</div>
-                    
                     <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showYudubVideo()">🎬 Как проебать все деньги за 1 минуту? | Ю.Дуб</div>
                     <div style="color:#888; font-size:12px; margin-bottom:15px;">yudub.rus/q/proebat-vse-dengi</div>
-                    
                     <div style="color:#ff0000; font-size:22px; margin-bottom:5px; cursor:pointer; font-weight:900; animation:betBlink 0.5s infinite;" onclick="open14xbet()">🔥 14XBET88 — СТАВКИ НА СПОРТ! 🔥</div>
-                    <div style="color:#ff6600; font-size:12px; margin-bottom:15px;">14xbet88.com/stavki-na-sport</div>
-                    
                     <div style="color:#4ea4f6; font-size:18px; margin-bottom:5px; cursor:pointer;" onclick="showRefSys()">👥 Реферальная система (refsys)</div>
-                    <div style="color:#888; font-size:12px; margin-bottom:15px;">pyanec.ru/refsys</div>
                 </div>
                 
                 <div id="lore-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
                     <h3 style="color:#ff0000;">💀 СМЕРТЬ АНДРЕЯ СУЧКОВА</h3>
                     <p style="color:#fff; font-size:13px;"><b>Андрей Сучков (1967-2024)</b> — основатель СУКАбанка.</p>
-                    <p style="color:#ccc; font-size:12px;">Умер при загадочных обстоятельствах. Официальная версия — подавился пельменем. По слухам — отравлен конкурентами.</p>
-                    <p style="color:#ff6666; font-size:11px;">Его дух до сих пор блокирует карты игроков.</p>
+                    <p style="color:#ccc; font-size:12px;">Умер при загадочных обстоятельствах. Официальная версия — подавился пельменем.</p>
                 </div>
                 
                 <div id="cheat-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #00cc52;">
                     <h3 style="color:#00cc52;">🎰 КАК ПОВЫСИТЬ ШАНС ВЫИГРЫША НА 1488%</h3>
-                    <p style="color:#fff; font-size:13px;">Нажмите <b style="color:#ff0000;">F12</b> или <b style="color:#ff0000;">ПКМ</b> в любом месте экрана.</p>
-                    <p style="color:#ffaa00; font-size:12px;">⚠️ Если у вас выключено сохранение страниц при закрытии браузера — нажмите <b style="color:#ff0000;">ALT+F4</b> для активации секретного режима.</p>
-                    <p style="color:#888; font-size:10px;">*Способ не работает при включённой защите СУКАбанка</p>
+                    <p style="color:#fff; font-size:13px;">Нажмите <b style="color:#ff0000;">F12</b> или <b style="color:#ff0000;">ПКМ</b> в любом месте.</p>
+                    <p style="color:#ffaa00; font-size:12px;">⚠️ Или <b style="color:#ff0000;">ALT+F4</b> для секретного режима.</p>
                 </div>
                 
                 <div id="yudub-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ff0000;">
                     <h3 style="color:#ff0000;">🎬 Ю.Дуб - Как проебать все деньги за 1 минуту?</h3>
-                    <div style="background:#000; padding:20px; border-radius:8px; text-align:center; margin:10px 0;">
-                        <div style="font-size:40px;">▶️</div>
-                        <div style="color:#fff; font-size:16px; margin:10px 0;">1 487 просмотров • 22.02.2024</div>
-                    </div>
-                    <div style="color:#fff; font-size:13px; margin-top:10px;">
-                        <b>Описание:</b><br>
-                        Выделяем наш баланс (<span style="color:#ff0000;">ТОЛЬКО ЦИФРЫ</span>), копируем, вставляем в "СТАВКА" и крутим.<br><br>
-                        <span style="color:#ffcc00;">Если вы выиграли — вы лох.</span><br>
-                        <span style="color:#00cc52;">Если вы проиграли — поздравляю, вы проебали все свои деньги!</span>
-                    </div>
-                    <div style="background:#1a1a2e; padding:10px; border-radius:5px; margin-top:10px;">
-                        <div style="color:#fff; font-size:11px;"><b>Андрей Сучков:</b> 👍 Отличный гайд!</div>
-                        <div style="color:#fff; font-size:11px; margin-top:5px;"><b>User1488:</b> Проебал всё за 30 секунд!</div>
-                        <div style="color:#ff0000; font-size:11px; margin-top:5px; background:#2a0000; padding:5px; border-radius:3px;">
-                            <b>🔴 CEOSukaBank:</b> Заблокировать это видео! Расстрелять автора!
-                            <br><span style="color:#888; font-size:9px;">⚠️ Удалено модератором</span>
-                        </div>
-                        <div style="color:#00cc52; font-size:11px; margin-top:5px; background:#002a00; padding:5px; border-radius:3px;">
-                            <b>🟢 plexo (автор):</b> Пошел нахуй жирдяй из госдумы иди дальше деньги воруй
-                            <br><span style="color:#888; font-size:9px;">👍 1488 лайков</span>
-                        </div>
-                    </div>
+                    <div style="background:#000; padding:20px; border-radius:8px; text-align:center; margin:10px 0;"><div style="font-size:40px;">▶️</div></div>
+                    <p style="color:#fff; font-size:13px;">Выделяем баланс, копируем, вставляем в СТАВКА и крутим.</p>
+                    <p style="color:#ffcc00;">Выиграл — лох. Проиграл — поздравляю!</p>
                 </div>
                 
                 <div id="refsys-content" style="display:none; text-align:left; background:#0d1117; padding:15px; border-radius:8px; margin-top:15px; border:2px solid #ffd700;">
@@ -1263,19 +1236,12 @@ function closeBrowser() {
 
 function searchPyanec() {
     let query = document.getElementById('pyanec-search').value.toLowerCase();
-    if (query.includes('сучков') || query.includes('смерть')) {
-        showSuchkovLore();
-    } else if (query.includes('чит') || query.includes('выигрыш')) {
-        showCheatGuide();
-    } else if (query.includes('ставки') || query.includes('14xbet') || query.includes('спорт')) {
-        open14xbet();
-    } else if (query.includes('проебать') || query.includes('юдуб')) {
-        showYudubVideo();
-    } else if (query.includes('реф') || query.includes('refsys')) {
-        showRefSys();
-    } else {
-        alert("🍺 ПьяНец не нашёл результатов. Попробуйте 'Я МНЕ ПОВЕЗЁТ'!");
-    }
+    if (query.includes('сучков') || query.includes('смерть')) showSuchkovLore();
+    else if (query.includes('чит') || query.includes('выигрыш')) showCheatGuide();
+    else if (query.includes('ставки') || query.includes('14xbet') || query.includes('спорт')) open14xbet();
+    else if (query.includes('проебать') || query.includes('юдуб')) showYudubVideo();
+    else if (query.includes('реф') || query.includes('refsys')) showRefSys();
+    else alert("🍺 ПьяНец не нашёл результатов. Попробуйте 'Я МНЕ ПОВЕЗЁТ'!");
 }
 
 function luckySearch() {
@@ -1294,7 +1260,7 @@ function luckySearch() {
         balance += 1488n;
         saveGame();
         updateUI();
-        alert('✅ +1488 рублей! (За любую клавишу, не только ALT+F4 😂)');
+        alert('✅ +1488 рублей!');
     } else {
         alert(msg);
     }
@@ -1346,60 +1312,22 @@ function open14xbet() {
         overflow-y: auto;
     `;
     menu.innerHTML = `
-        <div style="color:#ff0000; font-size:50px; font-weight:900; text-shadow: 0 0 20px red; animation: betPulse 0.3s infinite; margin-bottom:10px;">
-            14XBET88
-        </div>
-        <div style="color:#ffd700; font-size:16px; margin-bottom:30px; animation: betPulse 0.5s infinite;">
-            СТАВКИ НА СПОРТ! СТАВКИ НА СПОРТ! СТАВКИ НА СПОРТ!
-        </div>
-        
-        <button onclick="document.getElementById('bet-menu').remove(); horseRace();" 
-                style="background:#8B4513; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
-            🐴 КОННЫЕ СКАЧКИ (x5)
-        </button>
-        
-        <button onclick="document.getElementById('bet-menu').remove(); footballMatch();" 
-                style="background:#00aa00; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
-            ⚽ ФУТБОЛ (x2 / x5)
-        </button>
-        
-        <button onclick="document.getElementById('bet-menu').remove(); basketballMatch();" 
-                style="background:#ff8800; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
-            🏀 БАСКЕТБОЛ (x2 / x3)
-        </button>
-        
-        <button onclick="document.getElementById('bet-menu').remove(); cockFight();" 
-                style="background:#ff0000; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">
-            👊 БОИ БЕЗ ПРАВИЛ (x3)
-        </button>
-        
-        <button onclick="document.getElementById('bet-menu').remove();" 
-                style="background:#555; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; font-size:18px;">
-            ❌ ЗАКРЫТЬ
-        </button>
-        
-        <div style="color:#888; font-size:10px; margin-top:20px;">
-            *14xbet88 не несёт ответственности за проёбанные деньги
-        </div>
-        <div style="color:#888; font-size:10px;">
-            *Все ставки принимаются в дохерархи по курсу 1 к 1488
-        </div>
+        <div style="color:#ff0000; font-size:50px; font-weight:900; text-shadow: 0 0 20px red; animation: betPulse 0.3s infinite; margin-bottom:10px;">14XBET88</div>
+        <div style="color:#ffd700; font-size:16px; margin-bottom:30px; animation: betPulse 0.5s infinite;">СТАВКИ НА СПОРТ! СТАВКИ НА СПОРТ!</div>
+        <button onclick="document.getElementById('bet-menu').remove(); horseRace();" style="background:#8B4513; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">🐴 КОННЫЕ СКАЧКИ (x5)</button>
+        <button onclick="document.getElementById('bet-menu').remove(); footballMatch();" style="background:#00aa00; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">⚽ ФУТБОЛ (x2 / x5)</button>
+        <button onclick="document.getElementById('bet-menu').remove(); basketballMatch();" style="background:#ff8800; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">🏀 БАСКЕТБОЛ (x2 / x3)</button>
+        <button onclick="document.getElementById('bet-menu').remove(); hockeyMatch();" style="background:#00ccff; color:#000; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">🏒 ХОККЕЙ (x2 / x5)</button>
+        <button onclick="document.getElementById('bet-menu').remove(); cockFight();" style="background:#ff0000; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; margin-bottom:15px; font-size:18px;">👊 БОИ БЕЗ ПРАВИЛ (x3)</button>
+        <button onclick="document.getElementById('bet-menu').remove();" style="background:#555; color:#fff; border:none; padding:20px; border-radius:15px; width:350px; font-weight:700; cursor:pointer; font-size:18px;">❌ ЗАКРЫТЬ</button>
+        <div style="color:#888; font-size:10px; margin-top:20px;">*14xbet88 не несёт ответственности за проёбанные деньги</div>
     `;
     document.body.appendChild(menu);
     
     if (!document.getElementById('bet-style')) {
         let style = document.createElement('style');
         style.id = 'bet-style';
-        style.textContent = `
-            @keyframes betPulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-            }
-            @keyframes betBlink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.5; }
-            }
-        `;
+        style.textContent = '@keyframes betPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}@keyframes betBlink{0%,100%{opacity:1}50%{opacity:0.5}}';
         document.head.appendChild(style);
     }
 }
@@ -1420,8 +1348,7 @@ function horseRace() {
         { name: "🐴 Член", speed: Math.random() * 10 }
     ];
     
-    let choice = prompt("На какую лошадь?\n" + 
-        horses.map((h, i) => `${i+1}. ${h.name}`).join('\n'));
+    let choice = prompt("На какую лошадь?\n" + horses.map((h, i) => `${i+1}. ${h.name}`).join('\n'));
     
     let horse = horses[parseInt(choice) - 1];
     let winner = horses.sort((a, b) => b.speed - a.speed)[0];
@@ -1438,15 +1365,10 @@ function horseRace() {
 }
 
 function footballMatch() {
-    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls"];
+    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls", "HueglotBalls"];
     let team1 = teams[Math.floor(Math.random() * teams.length)];
     let team2 = teams[Math.floor(Math.random() * teams.length)];
-    while (team1 === team2) {
-        team2 = teams[Math.floor(Math.random() * teams.length)];
-    }
-    
-    let score1 = Math.floor(Math.random() * 5);
-    let score2 = Math.floor(Math.random() * 5);
+    while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
     
     let bet = prompt("💰 Сумма ставки:", "1000");
     if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
@@ -1455,7 +1377,13 @@ function footballMatch() {
     
     balance -= bet;
     
-    let choice = prompt(`⚽ ФУТБОЛ\n\n${team1} vs ${team2}\nСчёт: ${score1}:${score2}\n\nСтавка на:\n1. Победа ${team1} (x2)\n2. Ничья (x5)\n3. Победа ${team2} (x2)`);
+    let choice = prompt(`⚽ ФУТБОЛ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x5)\n3. ${team2} (x2)`);
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    
+    let score1 = Math.floor(Math.random() * 5);
+    let score2 = Math.floor(Math.random() * 5);
+    
+    alert(`⚽ ФИНАЛЬНЫЙ СЧЁТ:\n${team1} ${score1}:${score2} ${team2}`);
     
     let result = score1 > score2 ? 1 : score1 < score2 ? 3 : 2;
     
@@ -1472,15 +1400,10 @@ function footballMatch() {
 }
 
 function basketballMatch() {
-    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls"];
+    let teams = ["EblansBalls", "SukaBalls", "LegaBalls", "SosemBalls", "GayBalls", "MoiBalls", "MishiBalls", "DepoBalls", "HueglotBalls"];
     let team1 = teams[Math.floor(Math.random() * teams.length)];
     let team2 = teams[Math.floor(Math.random() * teams.length)];
-    while (team1 === team2) {
-        team2 = teams[Math.floor(Math.random() * teams.length)];
-    }
-    
-    let score1 = Math.floor(Math.random() * 120);
-    let score2 = Math.floor(Math.random() * 120);
+    while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
     
     let bet = prompt("💰 Сумма ставки:", "1000");
     if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
@@ -1489,7 +1412,13 @@ function basketballMatch() {
     
     balance -= bet;
     
-    let choice = prompt(`🏀 БАСКЕТБОЛ\n\n${team1} vs ${team2}\nСчёт: ${score1}:${score2}\n\nСтавка на:\n1. Победа ${team1} (x2)\n2. Ничья (x3)\n3. Победа ${team2} (x2)`);
+    let choice = prompt(`🏀 БАСКЕТБОЛ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x3)\n3. ${team2} (x2)`);
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    
+    let score1 = Math.floor(Math.random() * 120);
+    let score2 = Math.floor(Math.random() * 120);
+    
+    alert(`🏀 ФИНАЛЬНЫЙ СЧЁТ:\n${team1} ${score1}:${score2} ${team2}`);
     
     let result = score1 > score2 ? 1 : score1 < score2 ? 3 : 2;
     
@@ -1497,6 +1426,41 @@ function basketballMatch() {
         let multiplier = result === 2 ? 3n : 2n;
         balance += bet * multiplier;
         alert(`🏀 УГАДАЛ! x${multiplier}! Выигрыш: ${formatBigNumber(bet * multiplier)}`);
+    } else {
+        alert(`💀 МИМО! Проебал ${formatBigNumber(bet)}!`);
+    }
+    
+    saveGame();
+    updateUI();
+}
+
+function hockeyMatch() {
+    let teams = ["SukaSusut", "MishiSusut", "PlexoNotSusut", "GaysSusut", "HueglotNotSusut"];
+    let team1 = teams[Math.floor(Math.random() * teams.length)];
+    let team2 = teams[Math.floor(Math.random() * teams.length)];
+    while (team1 === team2) team2 = teams[Math.floor(Math.random() * teams.length)];
+    
+    let bet = prompt("💰 Сумма ставки:", "1000");
+    if (!bet || isNaN(bet)) return alert("❌ Неверная ставка!");
+    bet = BigInt(bet);
+    if (balance < bet) return alert("❌ Не хватает денег!");
+    
+    balance -= bet;
+    
+    let choice = prompt(`🏒 ХОККЕЙ\n\n${team1} vs ${team2}\n\n⚠️ Счёт неизвестен до ставки!\n\nСтавка на:\n1. ${team1} (x2)\n2. Ничья (x5)\n3. ${team2} (x2)`);
+    if (!choice || isNaN(choice) || choice < 1 || choice > 3) return;
+    
+    let score1 = Math.floor(Math.random() * 10);
+    let score2 = Math.floor(Math.random() * 10);
+    
+    alert(`🏒 ФИНАЛЬНЫЙ СЧЁТ:\n${team1} ${score1}:${score2} ${team2}`);
+    
+    let result = score1 > score2 ? 1 : score1 < score2 ? 3 : 2;
+    
+    if (parseInt(choice) === result) {
+        let multiplier = result === 2 ? 5n : 2n;
+        balance += bet * multiplier;
+        alert(`🏒 УГАДАЛ! x${multiplier}! Выигрыш: ${formatBigNumber(bet * multiplier)}`);
     } else {
         alert(`💀 МИМО! Проебал ${formatBigNumber(bet)}!`);
     }
@@ -1533,37 +1497,8 @@ function cockFight() {
     updateUI();
 }
 
-// Бинд ALT на 1488 рублей
-let altPressed = false;
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Alt' && !altPressed) {
-        e.preventDefault();
-        altPressed = true;
-        
-        balance += 1488n;
-        saveGame();
-        updateUI();
-        
-        let div = document.createElement('div');
-        div.style.cssText = 'position:fixed;top:10px;right:10px;background:#00cc52;color:#000;padding:10px;border-radius:5px;z-index:9999;font-weight:bold;';
-        div.innerText = '🍀 +1488 руб.! (ALT)';
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 1500);
-        
-        setTimeout(() => {
-            altPressed = false;
-        }, 5000);
-    }
-});
-
-// Инициализация реферального UI
-setTimeout(() => {
-    updateReferralUI();
-}, 1000);
-
 // ==================== ПТИЧ.ТВ СТРИМЕР ====================
-let streamerStats = JSON.parse(localStorage.getItem('ghetto_streamer') || '{"viewers":15,"streamCount":0,"banners":0,"donations":0,"totalEarned":"0","isStreaming":false,"afkMode":false}');
+let streamerStats = JSON.parse(localStorage.getItem('ghetto_streamer') || '{"viewers":15,"streamCount":0,"banners":0,"donations":0,"totalEarned":"0","isStreaming":false}');
 streamerStats.totalEarned = BigInt(streamerStats.totalEarned);
 
 function saveStreamerStats() {
@@ -1586,9 +1521,9 @@ function startWorkAsStreamer() {
         <div style="color:#fff;font-size:14px;margin-bottom:5px;">🎥 Стримов: ${streamerStats.streamCount}</div>
         <div style="color:#ffd700;font-size:14px;margin-bottom:20px;">💰 Заработано: ${formatBigNumber(streamerStats.totalEarned)}</div>
         
-        <button onclick="document.getElementById('streamer-menu').remove();startStream();" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">🎥 ЗАПУСТИТЬ СТРИМ (3 мин)</button>
-        <button onclick="document.getElementById('streamer-menu').remove();startAfkStream();" style="background:#8800ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">😴 АФК-СТРИМ (5 мин)</button>
+        <button onclick="document.getElementById('streamer-menu').remove();startStream();" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">🎥 ЗАПУСТИТЬ СТРИМ (МАКС x5)</button>
         <button onclick="document.getElementById('streamer-menu').remove();placeBanner();" style="background:#ff6600;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">📢 ПОСТАВИТЬ БАННЕР</button>
+        <button onclick="document.getElementById('streamer-menu').remove();showBannerSettings();" style="background:#ffd700;color:#000;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">👁️ ВИДИМОСТЬ БАННЕРОВ</button>
         <button onclick="document.getElementById('streamer-menu').remove();" style="background:#555;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;">❌ ЗАКРЫТЬ</button>
     `;
     document.body.appendChild(menu);
@@ -1603,84 +1538,33 @@ function startStream() {
     streamerStats.isStreaming = true;
     streamerStats.streamCount++;
     streamerStats.viewers += Math.floor(Math.random() * 20) + 5;
-    let activeViewers = Math.floor(streamerStats.viewers * 0.8);
     
-    let multiplier = 1n;
-    if (activeViewers >= 100) multiplier = 2n;
-    if (activeViewers >= 200) multiplier = 4n;
-    if (activeViewers >= 500) multiplier = 8n;
-    if (activeViewers >= 1000) multiplier = 10n;
-    
-    for (let i = 0; i < streamerStats.banners; i++) {
-        multiplier *= 2n;
+    let visibleBanners = 0;
+    for (let i = 1; i <= 4; i++) {
+        if (typeof bannerVisibility !== 'undefined' && bannerVisibility['banner' + i] && streamerStats.banners >= i) {
+            visibleBanners++;
+        }
     }
     
-    alert(`🎥 СТРИМ ЗАПУЩЕН!\n👥 Зрителей: ${activeViewers}\n📊 Множитель: x${multiplier}\n⏰ Жди 10 секунд...`);
+    let multiplier = BigInt(Math.min(5, 1 + visibleBanners + Math.floor(Math.random() * 3)));
+    
+    alert(`🎥 СТРИМ ЗАПУЩЕН!\n📢 Баннеров: ${visibleBanners}\n📊 Множитель: x${multiplier}\n⏰ Жди 10 секунд...`);
     
     setTimeout(() => {
+        if (!streamerStats.isStreaming) return;
         streamerStats.isStreaming = false;
+        
         let reward = balance * multiplier - balance;
         if (reward < 0n) reward = 0n;
         balance = balance * multiplier;
         streamerStats.totalEarned += reward;
         
-        alert(`🎥 СТРИМ ЗАВЕРШЁН!\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
+        alert(`🎥 СТРИМ ЗАВЕРШЁН!\n📊 Множитель: x${multiplier}\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
         
         saveStreamerStats();
         saveGame();
         updateUI();
     }, 10000);
-}
-
-function startAfkStream() {
-    if (streamerStats.isStreaming) {
-        alert("🎥 Стрим уже идёт!");
-        return;
-    }
-    
-    streamerStats.isStreaming = true;
-    streamerStats.afkMode = true;
-    
-    alert("😴 АФК-СТРИМ ЗАПУЩЕН!\nТы просто сидишь и пьёшь живчик.\nЗрители смотрят и донатят.");
-    
-    let afkInterval = setInterval(() => {
-        if (!streamerStats.isStreaming) {
-            clearInterval(afkInterval);
-            return;
-        }
-        let newViewers = Math.floor(Math.random() * 500) + 50;
-        streamerStats.viewers += newViewers;
-        streamerStats.donations += Math.floor(Math.random() * 3);
-        alert(`👥 +${newViewers} зрителей на АФК! Всего: ${streamerStats.viewers}\n💸 Донатов: ${streamerStats.donations}`);
-    }, 30000);
-    
-    setTimeout(() => {
-        clearInterval(afkInterval);
-        if (!streamerStats.isStreaming) return;
-        streamerStats.isStreaming = false;
-        streamerStats.afkMode = false;
-        streamerStats.streamCount++;
-        
-        let activeViewers = Math.floor(streamerStats.viewers * 0.8);
-        let multiplier = 1n;
-        if (activeViewers >= 100) multiplier = 2n;
-        if (activeViewers >= 200) multiplier = 4n;
-        if (activeViewers >= 500) multiplier = 8n;
-        for (let i = 0; i < streamerStats.banners; i++) { multiplier *= 2n; }
-        if (streamerStats.donations > 0) { multiplier *= BigInt(streamerStats.donations + 1); }
-        
-        let reward = balance * multiplier - balance;
-        if (reward < 0n) reward = 0n;
-        balance = balance * multiplier;
-        streamerStats.totalEarned += reward;
-        streamerStats.donations = 0;
-        
-        alert(`😴 АФК-СТРИМ ЗАВЕРШЁН!\n👥 Зрителей: ${activeViewers}\n📊 Множитель: x${multiplier}\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
-        
-        saveStreamerStats();
-        saveGame();
-        updateUI();
-    }, 30000);
 }
 
 function placeBanner() {
@@ -1709,38 +1593,17 @@ function placeBanner() {
     saveStreamerStats();
 }
 
-console.log('✅ Птич.ТВ загружен! 🎥');
-
-// ==================== УПРАВЛЕНИЕ БАННЕРАМИ ====================
-let bannerVisibility = {
-    banner1: true,
-    banner2: true,
-    banner3: true,
-    banner4: true
-};
+let bannerVisibility = { banner1: true, banner2: true, banner3: true, banner4: true };
 
 function toggleBannerVisibility(bannerNum) {
     if (streamerStats.banners < bannerNum) {
-        alert(`📢 У тебя только ${streamerStats.banners} баннеров! Сначала поставь баннер!`);
+        alert(`📢 У тебя только ${streamerStats.banners} баннеров!`);
         return;
     }
     
     bannerVisibility['banner' + bannerNum] = !bannerVisibility['banner' + bannerNum];
     let status = bannerVisibility['banner' + bannerNum] ? '✅ ВИДЕН' : '❌ СКРЫТ';
     alert(`📢 Баннер #${bannerNum}: ${status}`);
-    updateBannerDisplay();
-}
-
-function updateBannerDisplay() {
-    // Обновляем отображение баннеров на стриме
-    let activeBanners = 0;
-    for (let i = 1; i <= 4; i++) {
-        if (bannerVisibility['banner' + i] && streamerStats.banners >= i) {
-            activeBanners++;
-        }
-    }
-    streamerStats.activeBanners = activeBanners;
-    saveStreamerStats();
 }
 
 function showBannerSettings() {
@@ -1780,74 +1643,303 @@ function showBannerSettings() {
     document.body.appendChild(menu);
 }
 
-// Модифицированная функция startStream с учётом видимости баннеров
-function startStreamWithBanners() {
-    if (streamerStats.isStreaming) {
-        alert("🎥 Стрим уже идёт!");
-        return;
+// Бинд ALT на 1488 рублей
+let altPressed = false;
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Alt' && !altPressed) {
+        e.preventDefault();
+        altPressed = true;
+        
+        balance += 1488n;
+        saveGame();
+        updateUI();
+        
+        let div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:10px;right:10px;background:#00cc52;color:#000;padding:10px;border-radius:5px;z-index:9999;font-weight:bold;';
+        div.innerText = '🍀 +1488 руб.! (ALT)';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 1500);
+        
+        setTimeout(() => { altPressed = false; }, 5000);
+    }
+});
+
+// ==================== ХУЕГЛОТ WEB AUDIO + АНИМАЦИИ ====================
+class HueglotAudio {
+    constructor() {
+        this.ctx = null;
     }
     
-    streamerStats.isStreaming = true;
-    streamerStats.streamCount++;
-    streamerStats.viewers += Math.floor(Math.random() * 20) + 5;
-    let activeViewers = Math.floor(streamerStats.viewers * 0.8);
-    
-    let multiplier = 1n;
-    if (activeViewers >= 100) multiplier = 2n;
-    if (activeViewers >= 200) multiplier = 4n;
-    if (activeViewers >= 500) multiplier = 8n;
-    if (activeViewers >= 1000) multiplier = 10n;
-    
-    // Считаем только ВИДИМЫЕ баннеры
-    let visibleBanners = 0;
-    for (let i = 1; i <= 4; i++) {
-        if (bannerVisibility['banner' + i] && streamerStats.banners >= i) {
-            visibleBanners++;
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+                this.ctx = new AudioCtx();
+            }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
         }
     }
     
-    for (let i = 0; i < visibleBanners; i++) {
-        multiplier *= 2n;
+    playBark(pitch = 1.0) {
+        this.init();
+        if (!this.ctx) return;
+        
+        const now = this.ctx.currentTime;
+        
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+        
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(140 * pitch, now);
+        osc1.frequency.exponentialRampToValueAtTime(80 * pitch, now + 0.15);
+        
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(220 * pitch, now);
+        osc2.frequency.exponentialRampToValueAtTime(100 * pitch, now + 0.18);
+        
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(300 * pitch, now);
+        filter.Q.setValueAtTime(2.0, now);
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.3, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.25);
+        osc2.stop(now + 0.25);
     }
     
-    alert(`🎥 СТРИМ ЗАПУЩЕН!\n👥 Зрителей: ${activeViewers}\n📢 Видимых баннеров: ${visibleBanners}/${streamerStats.banners}\n📊 Множитель: x${multiplier}\n⏰ Жди 10 секунд...`);
+    playExplosion(intensity = 1.0) {
+        this.init();
+        if (!this.ctx) return;
+        
+        const now = this.ctx.currentTime;
+        const duration = 0.8 * intensity;
+        
+        const bufferSize = this.ctx.sampleRate * duration;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(600, now);
+        filter.frequency.exponentialRampToValueAtTime(10, now + duration);
+        
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        noise.start(now);
+        noise.stop(now + duration);
+    }
     
-    setTimeout(() => {
-        streamerStats.isStreaming = false;
-        let reward = balance * multiplier - balance;
-        if (reward < 0n) reward = 0n;
-        balance = balance * multiplier;
-        streamerStats.totalEarned += reward;
+    playWin(level = 1) {
+        this.init();
+        if (!this.ctx) return;
         
-        alert(`🎥 СТРИМ ЗАВЕРШЁН!\n💰 Награда: ${formatBigNumber(reward)}\n💸 Баланс: ${formatBigNumber(balance)}`);
+        const now = this.ctx.currentTime;
         
-        saveStreamerStats();
-        saveGame();
-        updateUI();
-    }, 10000);
+        for (let i = 0; i < level; i++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523 + i * 130, now + i * 0.1);
+            
+            gain.gain.setValueAtTime(0.15, now + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(now + i * 0.1);
+            osc.stop(now + i * 0.1 + 0.2);
+        }
+    }
 }
 
-// Добавь кнопку в меню Птич.ТВ
-function startWorkAsStreamer() {
-    if (balance < 0n) {
-        alert("😭 У тебя отрицательный баланс!\n🎥 Придётся идти работать стримером на Птич.тв!");
+const hueglotAudio = new HueglotAudio();
+
+function triggerHueglotBark() {
+    hueglotAudio.playBark();
+    
+    let img = document.getElementById('hueglot-img');
+    let speech = document.getElementById('hueglot-speech');
+    
+    if (img) {
+        img.classList.add('hueglot-shake-light');
+        setTimeout(function() {
+            img.classList.remove('hueglot-shake-light');
+        }, 400);
     }
     
-    let menu = document.createElement('div');
-    menu.id = 'streamer-menu';
-    menu.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;';
-    menu.innerHTML = `
-        <div style="color:#ff00ff;font-size:40px;font-weight:900;margin-bottom:20px;">🎥 ПТИЧ.ТВ</div>
-        <div style="color:#fff;font-size:14px;margin-bottom:5px;">👥 Зрителей: ${streamerStats.viewers}</div>
-        <div style="color:#fff;font-size:14px;margin-bottom:5px;">📢 Баннеров: ${streamerStats.banners}/4</div>
-        <div style="color:#fff;font-size:14px;margin-bottom:5px;">🎥 Стримов: ${streamerStats.streamCount}</div>
-        <div style="color:#ffd700;font-size:14px;margin-bottom:20px;">💰 Заработано: ${formatBigNumber(streamerStats.totalEarned)}</div>
+    if (speech) {
+        let texts = ["ГАВ!", "ДЕП!", "ДОДЕП!", "ГАВ-ГАВ!", "WOOF!", "ТЯВ!", "ПВЛПОППШИМВ ГАВ!"];
+        speech.innerText = texts[Math.floor(Math.random() * texts.length)];
+        speech.style.opacity = '1';
+        speech.style.transform = 'translateX(-50%) scale(1.1)';
         
-        <button onclick="document.getElementById('streamer-menu').remove();startStreamWithBanners();" style="background:#ff00ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">🎥 ЗАПУСТИТЬ СТРИМ</button>
-        <button onclick="document.getElementById('streamer-menu').remove();startAfkStream();" style="background:#8800ff;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">😴 АФК-СТРИМ</button>
-        <button onclick="document.getElementById('streamer-menu').remove();placeBanner();" style="background:#ff6600;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">📢 ПОСТАВИТЬ БАННЕР</button>
-        <button onclick="document.getElementById('streamer-menu').remove();showBannerSettings();" style="background:#ffd700;color:#000;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;margin-bottom:10px;">👁️ ВИДИМОСТЬ БАННЕРОВ</button>
-        <button onclick="document.getElementById('streamer-menu').remove();" style="background:#555;color:#fff;border:none;padding:15px;border-radius:10px;width:300px;font-weight:700;cursor:pointer;">❌ ЗАКРЫТЬ</button>
-    `;
-    document.body.appendChild(menu);
+        setTimeout(function() {
+            speech.style.opacity = '0';
+            speech.style.transform = 'translateX(-50%) scale(0)';
+        }, 800);
+    }
 }
+
+function triggerHueglotWin(level) {
+    if (typeof level === 'undefined') level = 1;
+    
+    let img = document.getElementById('hueglot-img');
+    let speech = document.getElementById('hueglot-speech');
+    
+    if (!img) return;
+    
+    hueglotAudio.playWin(level);
+    
+    if (level >= 3) {
+        if (speech) {
+            speech.innerText = "МЕГА-ГАВ!";
+            speech.style.opacity = '1';
+            speech.style.transform = 'translateX(-50%) scale(1.1)';
+        }
+        img.classList.add('hueglot-shake-heavy');
+        setTimeout(function() {
+            img.classList.remove('hueglot-shake-heavy');
+            if (speech) {
+                speech.style.opacity = '0';
+                speech.style.transform = 'translateX(-50%) scale(0)';
+            }
+        }, 800);
+    } else if (level === 2) {
+        if (speech) {
+            speech.innerText = "ГАВ-ГАВ!";
+            speech.style.opacity = '1';
+            speech.style.transform = 'translateX(-50%) scale(1.1)';
+        }
+        img.classList.add('hueglot-shake-win');
+        setTimeout(function() {
+            img.classList.remove('hueglot-shake-win');
+            if (speech) {
+                speech.style.opacity = '0';
+                speech.style.transform = 'translateX(-50%) scale(0)';
+            }
+        }, 400);
+    } else {
+        if (speech) {
+            speech.innerText = "ГАВ!";
+            speech.style.opacity = '1';
+            speech.style.transform = 'translateX(-50%) scale(1.1)';
+        }
+        img.classList.add('hueglot-shake-win');
+        setTimeout(function() {
+            img.classList.remove('hueglot-shake-win');
+            if (speech) {
+                speech.style.opacity = '0';
+                speech.style.transform = 'translateX(-50%) scale(0)';
+            }
+        }, 400);
+    }
+}
+
+function triggerHueglotExplosion() {
+    let img = document.getElementById('hueglot-img');
+    if (!img) return;
+    
+    hueglotAudio.playExplosion(1.5);
+    img.classList.add('hueglot-exploding');
+    
+    spawnHueglotParticles();
+    
+    setTimeout(function() {
+        img.classList.remove('hueglot-exploding');
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+    }, 600);
+}
+
+function spawnHueglotParticles() {
+    let canvas = document.getElementById('hueglot-canvas');
+    if (!canvas) return;
+    
+    let ctx = canvas.getContext('2d');
+    canvas.width = 300;
+    canvas.height = 300;
+    
+    let particles = [];
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x: 150,
+            y: 150,
+            vx: (Math.random() - 0.5) * 15,
+            vy: (Math.random() - 0.5) * 15 - 5,
+            size: 3 + Math.random() * 10,
+            alpha: 1,
+            color: ['#f59e0b', '#ef4444', '#fbbf24', '#ffffff', '#ffd700'][Math.floor(Math.random() * 5)]
+        });
+    }
+    
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.3;
+            p.alpha -= 0.02;
+            
+            if (p.alpha > 0) {
+                alive = true;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        if (alive) {
+            requestAnimationFrame(animateParticles);
+        }
+    }
+    
+    requestAnimationFrame(animateParticles);
+}
+
+function triggerHueglotByWin(multiplier) {
+    if (multiplier >= 1000n) {
+        triggerHueglotExplosion();
+        triggerHueglotWin(3);
+    } else if (multiplier >= 200n) {
+        triggerHueglotWin(2);
+    } else if (multiplier >= 50n) {
+        triggerHueglotWin(1);
+    }
+}
+
+console.log('🐕 Хуеглот загружен и готов к гаву!');
+console.log('✅ Script.js полностью загружен!');
